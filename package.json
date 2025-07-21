@@ -1,0 +1,24 @@
+{
+  "name": "kopiahhaji.github.io",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kopiahhaji/kopiahhaji.github.io.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/kopiahhaji/kopiahhaji.github.io/issues"
+  },
+  "homepage": "https://github.com/kopiahhaji/kopiahhaji.github.io#readme",
+  "dependencies": {
+    "@google/generative-ai": "^0.24.1"
+  }
+}
