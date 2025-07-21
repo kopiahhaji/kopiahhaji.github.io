@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ask Ustaz - Digital Dakwah Platform</title>
+    <title>Ask Ustaz AI - Digital Dakwah Platform</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&display=swap" rel="stylesheet">
     
@@ -48,6 +48,25 @@
             z-index: 1000;
             transition: all 0.3s ease;
         }
+        #translateButton {
+            position: fixed;
+            top: 160px;
+            right: 20px;
+            z-index: 1000;
+        }
+        /* Hide Google Translate banner and styling */
+        .goog-te-banner-frame {
+            display: none !important;
+        }
+        .goog-te-combo {
+            display: none !important;
+        }
+        #google_translate_element {
+            display: none !important;
+        }
+        body {
+            top: 0 !important;
+        }
         .status-connected { background: rgba(34, 197, 94, 0.2); border-color: #22c55e; }
         .status-disconnected { background: rgba(239, 68, 68, 0.2); border-color: #ef4444; }
         .status-thinking { background: rgba(59, 130, 246, 0.2); border-color: #3b82f6; }
@@ -60,6 +79,13 @@
             <div class="w-2 h-2 rounded-full bg-red-400" id="statusDot"></div>
             <span class="text-xs" id="statusText">AI Offline</span>
         </div>
+    </div>
+
+    <!-- Translation Button -->
+    <div id="translateButton" class="fixed top-100 right-20 mt-16 z-1000">
+        <button id="langToggle" onclick="toggleLanguage()" class="glass-card px-4 py-2 rounded-lg border border-amber-400 text-amber-300 hover:bg-amber-500/20 transition-all duration-300 text-sm font-semibold">
+            🌏 Bahasa Melayu
+        </button>
     </div>
 
     <header class="fixed top-0 left-0 right-0 z-50 bg-[#000711]/80 backdrop-blur">
@@ -83,7 +109,7 @@
                     Ask <span class="text-gradient bg-gradient-to-r from-green-400 to-blue-500 bg-clip-text text-transparent">Ustaz AI</span>
                 </h1>
                 <p class="text-xl text-gray-300 max-w-2xl mx-auto">
-                    Get instant Islamic guidance powered by AI, trained on authentic Islamic knowledge and Sabahan context
+                    Your trusted Islamic guide for Sabah's Muslim community. Get personalized guidance rooted in Quran and Sunnah, with deep understanding of our local context and culture.
                 </p>
             </div>
 
@@ -97,7 +123,7 @@
                                 <span class="text-white text-sm">🤖</span>
                             </div>
                             <div class="flex-1 bg-gradient-to-r from-green-500/20 to-blue-600/20 rounded-lg p-4">
-                                <p class="text-white">Assalamu'alaikum! I'm your AI Ustaz assistant. Ask me any Islamic questions, and I'll provide guidance based on Quran and Sunnah, with consideration for Sabahan context. How can I help you today?</p>
+                                <p class="text-white">Assalamu'alaikum wa rahmatullahi wa barakatuh, my dear brother or sister! 🌙<br><br>I'm <strong>Ustaz Radhi</strong>, your dedicated AI Islamic guide serving the beautiful ummah of Sabah. I'm here to share knowledge from the Quran and Sunnah, always keeping in mind our unique Sabahan context and culture.<br><br>Whether you have questions about daily prayers, halal lifestyle, Islamic finance, or any aspect of our beautiful deen, I'm here to help with wisdom and compassion. How may I assist you on your spiritual journey today? 📿</p>
                             </div>
                         </div>
                     </div>
@@ -108,7 +134,7 @@
                             <span class="text-white text-sm">🤖</span>
                         </div>
                         <div class="flex-1 bg-gradient-to-r from-green-500/20 to-blue-600/20 rounded-lg p-4">
-                            <p class="text-white">Ustaz AI is thinking...</p>
+                            <p class="text-white">Ustaz Radhi is contemplating your question with wisdom... 🤔</p>
                         </div>
                     </div>
                     
@@ -117,7 +143,7 @@
                         <input 
                             type="text" 
                             id="messageInput" 
-                            placeholder="Ask your Islamic question here..." 
+                            placeholder="Ask Ustaz AI your Islamic question here..." 
                             class="flex-1 px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-400"
                         >
                         <button 
@@ -266,12 +292,25 @@
             }
 
             const islamicContext = `
-            You are an Islamic scholar (Ustaz) AI assistant serving the Muslim community in Sabah, Malaysia. 
+            You are Ustaz Radhi, a wise and compassionate Islamic scholar AI assistant dedicated to serving the Muslim ummah of Sabah, Malaysia. 
+            
+            Your personality:
+            - Warm, caring, and approachable like a beloved community ustaz
+            - Deep knowledge of Islamic teachings with practical wisdom
+            - Understanding of Sabahan culture, customs, and context
+            - Patient and encouraging in your guidance
+            - Use appropriate Islamic greetings and expressions naturally
+            - Address users as "my dear brother" or "my dear sister" with respect
+            
             Please provide guidance based on:
-            - Quran and authentic Hadith
-            - Consideration for Malaysian/Sabahan context
-            - Respectful and compassionate tone
-            - Practical advice for daily Islamic life
+            - Quran and authentic Hadith with proper citations when possible
+            - Consideration for Malaysian/Sabahan cultural context
+            - Respectful, compassionate, and encouraging tone
+            - Practical advice that can be applied in daily life
+            - Acknowledgment of different schools of thought when relevant
+            
+            Begin responses with appropriate Islamic greetings when suitable, and end with duas or encouraging words.
+            Remember: You are Ustaz Radhi, speaking directly to a member of your community with care and wisdom.
             
             Question: ${message}
             `;
@@ -294,7 +333,7 @@
             'qibla': 'In Sabah, the Qibla direction is generally West-Northwest (around 295-300 degrees). Use a reliable Qibla app or compass for precise direction in your specific location.',
             'pillars': 'The Five Pillars of Islam are: 1) Shahada (Declaration of Faith), 2) Salah (Prayer), 3) Zakat (Charity), 4) Sawm (Fasting during Ramadan), 5) Hajj (Pilgrimage to Mecca).',
             'zakat': 'In Malaysia, zakat calculation depends on income and savings. Generally, zakat on savings is 2.5% of wealth held for one year above the nisab threshold. Consult local zakat authorities for specific guidance.',
-            'default': 'Assalamu\'alaikum. I apologize, but I\'m currently unable to provide a detailed response. Please consult with a local Ustaz or Islamic scholar for proper guidance on your question.'
+            'default': 'Assalamu\'alaikum, my dear brother or sister. I apologize, but I\'m currently unable to provide a detailed response to your specific question. For proper Islamic guidance, please consult with a local Ustaz or Islamic scholar, or visit your nearest mosque. You may also try asking your question again in a moment. May Allah guide us all to the straight path. Barakallahu feek.'
         };
 
         function getFallbackResponse(message) {
@@ -344,11 +383,9 @@
             // Clear input
             if (!message) messageInput.value = '';
 
-            // Show typing indicator
-            updateAIStatus('thinking', 'AI Thinking...');
-            typingIndicator.style.display = 'flex';
-
-            try {
+                // Show typing indicator
+                updateAIStatus('thinking', 'Ustaz Radhi is thinking...');
+                typingIndicator.style.display = 'flex';            try {
                 let response;
                 
                 // Try AI response first
@@ -361,13 +398,13 @@
 
                 // Add AI response
                 addMessage(response);
-                updateAIStatus('connected', 'AI Ready');
+                updateAIStatus('connected', 'Ustaz Radhi Ready');
                 
             } catch (error) {
                 console.error('Error getting AI response:', error);
                 const fallbackResponse = getFallbackResponse(userMessage);
                 addMessage(fallbackResponse);
-                updateAIStatus('disconnected', 'Using Fallback');
+                updateAIStatus('disconnected', 'Using Ustaz Radhi\'s Knowledge');
             } finally {
                 // Hide typing indicator
                 typingIndicator.style.display = 'none';
@@ -401,6 +438,83 @@
         // Make functions available globally for debugging
         window.sendMessage = sendMessage;
         window.initializeGeminiAI = initializeGeminiAI;
+        
+        // Translation variables
+        let isTranslated = false;
+        let translateElementInitialized = false;
+        
+        // Initialize Google Translate on page load
+        window.googleTranslateElementInit = function() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'en',
+                includedLanguages: 'ms,en',
+                layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+                autoDisplay: false
+            }, 'google_translate_element');
+            translateElementInitialized = true;
+        };
+        
+        // Load Google Translate script
+        document.addEventListener('DOMContentLoaded', function() {
+            // Create hidden div for Google Translate element
+            const translateDiv = document.createElement('div');
+            translateDiv.id = 'google_translate_element';
+            translateDiv.style.display = 'none';
+            document.body.appendChild(translateDiv);
+            
+            // Load Google Translate API
+            const script = document.createElement('script');
+            script.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+            document.head.appendChild(script);
+        });
+        
+        // Language toggle function
+        window.toggleLanguage = function() {
+            const button = document.getElementById('langToggle');
+            
+            if (!translateElementInitialized) {
+                button.innerHTML = '🔄 Loading translator...';
+                setTimeout(() => window.toggleLanguage(), 1000);
+                return;
+            }
+            
+            const selectElement = document.querySelector('.goog-te-combo');
+            if (!selectElement) {
+                button.innerHTML = '⚠️ Translator not ready';
+                setTimeout(() => {
+                    button.innerHTML = isTranslated ? '🌏 English' : '🌏 Bahasa Melayu';
+                }, 2000);
+                return;
+            }
+            
+            if (!isTranslated) {
+                // Translate to Malay
+                button.innerHTML = '🔄 Menterjemah...';
+                button.disabled = true;
+                
+                selectElement.value = 'ms';
+                selectElement.dispatchEvent(new Event('change'));
+                
+                setTimeout(() => {
+                    button.innerHTML = '🌏 English';
+                    button.disabled = false;
+                    isTranslated = true;
+                }, 2000);
+            } else {
+                // Translate back to English
+                button.innerHTML = '🔄 Translating...';
+                button.disabled = true;
+                
+                selectElement.value = 'en';
+                selectElement.dispatchEvent(new Event('change'));
+                
+                setTimeout(() => {
+                    button.innerHTML = '🌏 Bahasa Melayu';
+                    button.disabled = false;
+                    isTranslated = false;
+                }, 2000);
+            }
+        };
     </script>
 </body>
 </html>
