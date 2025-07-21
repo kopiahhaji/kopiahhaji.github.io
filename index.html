@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Dakwah Platform - For the Sabah Ummah</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Sora', sans-serif;
+            background-color: #000711; /* Dark background for contrast */
+        }
+        
+        /* Animated Gradient Background */
+        .animated-gradient-bg {
+            background: linear-gradient(270deg, #001f3f, #1a2a6c, #b21f1f, #fdbb2d);
+            background-size: 800% 800%;
+            animation: gradientAnimation 30s ease infinite;
+        }
+
+        @keyframes gradientAnimation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Glassmorphism Effect */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Animation Classes */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 1s ease-out, transform 0.8s ease-out;
+        }
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Accordion Styles */
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.6s ease-in-out, padding 0.6s ease-in-out;
+        }
+        .accordion-button .icon-plus, .accordion-button .icon-minus {
+            transition: transform 0.4s ease-in-out, opacity 0.4s ease-in-out;
+        }
+        .accordion-button .icon-minus {
+            position: absolute;
+            transform: rotate(-90deg);
+            opacity: 0;
+        }
+        .accordion-button.active .icon-plus {
+            transform: rotate(90deg);
+            opacity: 0;
+        }
+        .accordion-button.active .icon-minus {
+            transform: rotate(0deg);
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="text-gray-200">
+
+    <!-- Animated Background Container -->
+    <div class="animated-gradient-bg relative">
+
+        <!-- Header -->
+        <header id="header" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
+            <div class="container mx-auto px-6 py-4">
+                <div class="glass-card rounded-full px-6 py-2 flex justify-between items-center">
+                    <h1 class="text-lg font-bold text-white">Digital Dakwah Platform</h1>
+                    <nav class="hidden md:flex space-x-6">
+                        <a href="#features" class="text-gray-300 hover:text-white transition">The Pillars</a>
+                        <a href="#community" class="text-gray-300 hover:text-white transition">Community</a>
+                        <a href="#partners" class="text-gray-300 hover:text-white transition">Partners</a>
+                    </nav>
+                    <a href="#contact" class="bg-white text-blue-900 font-bold py-2 px-5 rounded-full hover:bg-gray-200 transition duration-300 transform hover:scale-105 shadow-lg">Get Involved</a>
+                </div>
+            </div>
+        </header>
+
+        <!-- Hero Section -->
+        <main class="relative pt-40 pb-32 text-white overflow-hidden">
+            <div class="container mx-auto px-6 text-center">
+                <div class="max-w-4xl mx-auto">
+                    <h1 class="text-4xl md:text-6xl font-bold mb-6 leading-tight reveal">The Future of Dakwah is Here.</h1>
+                    <p class="text-lg md:text-xl mb-10 text-gray-300 reveal" style="transition-delay: 200ms;">An all-in-one platform for Quranic learning, community connection, and economic empowerment, built with love for the people of Sabah.</p>
+                     <div class="reveal" style="transition-delay: 400ms;">
+                        <a href="#features" class="bg-white text-blue-900 font-bold py-4 px-8 rounded-full hover:bg-gray-200 transition duration-300 transform hover:scale-105 inline-block shadow-2xl hover:shadow-cyan-400/30">Explore Our Mission</a>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <!-- Main Content Section -->
+    <div class="bg-[#000711] relative -mt-1">
+        <!-- Phone Mockup Section -->
+        <div class="container mx-auto px-6 relative -top-32">
+            <div class="relative mx-auto w-80 reveal" style="transition-delay: 600ms;">
+                <img src="https://placehold.co/400x800/111111/FFFFFF?text=App+Screenshot" alt="App Screenshot" class="rounded-3xl shadow-2xl border-2 border-white/10">
+            </div>
+        </div>
+
+        <!-- Features Section with Collapsible Cards -->
+        <section id="features" class="pt-10 pb-20">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16 reveal">
+                    <h2 class="text-3xl md:text-4xl font-bold text-white">A Platform Built on Three Pillars</h2>
+                    <p class="text-gray-400 mt-3 text-lg">Our goals are achieved through a holistic approach focusing on Faith, Community, and Economy.</p>
+                </div>
+                <div class="max-w-3xl mx-auto space-y-4">
+                    <!-- Accordion Item 1: Learn with AI -->
+                    <div class="accordion-item glass-card rounded-lg reveal">
+                        <button class="accordion-button w-full flex justify-between items-center text-left p-6">
+                            <span class="text-xl font-semibold text-cyan-300">Pillar 1: Deepen Your Faith (Iman)</span>
+                            <span class="accordion-icon relative w-6 h-6 text-cyan-300">
+                                <span class="icon-plus absolute inset-0 bg-cyan-300 w-full h-0.5 m-auto"></span>
+                                <span class="icon-plus absolute inset-0 bg-cyan-300 w-0.5 h-full m-auto"></span>
+                                <span class="icon-minus absolute inset-0 bg-cyan-300 w-full h-0.5 m-auto"></span>
+                            </span>
+                        </button>
+                        <div class="accordion-content">
+                            <div class="p-6 pt-0 text-gray-300">
+                                <p class="mb-4">We leverage technology to make authentic Islamic knowledge more accessible and engaging than ever before.</p>
+                                <ul class="list-disc list-inside space-y-2 text-gray-400">
+                                    <li><strong>AI-Powered Tafsir:</strong> Get instant, context-aware explanations for any Quranic verse.</li>
+                                    <li><strong>AI Pronunciation Coach:</strong> Perfect your Tajweed by recording your recitation and receiving immediate feedback.</li>
+                                    <li><strong>Local Sabahan Reciters:</strong> Immerse yourself in the Quran with recitations from respected Qaris across Sabah.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Accordion Item 2: Connect with Community -->
+                    <div class="accordion-item glass-card rounded-lg reveal" style="transition-delay: 200ms;">
+                        <button class="accordion-button w-full flex justify-between items-center text-left p-6">
+                            <span class="text-xl font-semibold text-purple-300">Pillar 2: Strengthen the Community (Jama'ah)</span>
+                             <span class="accordion-icon relative w-6 h-6 text-purple-300">
+                                <span class="icon-plus absolute inset-0 bg-purple-300 w-full h-0.5 m-auto"></span>
+                                <span class="icon-plus absolute inset-0 bg-purple-300 w-0.5 h-full m-auto"></span>
+                                <span class="icon-minus absolute inset-0 bg-purple-300 w-full h-0.5 m-auto"></span>
+                            </span>
+                        </button>
+                        <div class="accordion-content">
+                             <div class="p-6 pt-0 text-gray-300">
+                                <p class="mb-4">Our platform serves as a digital bridge, connecting Muslims across Sabah and providing vital community services.</p>
+                                <ul class="list-disc list-inside space-y-2 text-gray-400">
+                                    <li><strong>Ask a Local Ustaz:</strong> Get clear, compassionate answers directly from vetted, trusted religious teachers in Sabah.</li>
+                                    <li><strong>Community Voice (Suara Komuniti):</strong> Report social issues or request aid, ensuring support reaches those who need it most.</li>
+                                    <li><strong>Mosque & Event Directory:</strong> Find your nearest mosque and stay updated on local Islamic events.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Accordion Item 3: Empower the Economy -->
+                    <div class="accordion-item glass-card rounded-lg reveal" style="transition-delay: 400ms;">
+                        <button class="accordion-button w-full flex justify-between items-center text-left p-6">
+                            <span class="text-xl font-semibold text-amber-300">Pillar 3: Empower the Economy (Tijarah)</span>
+                            <span class="accordion-icon relative w-6 h-6 text-amber-300">
+                                <span class="icon-plus absolute inset-0 bg-amber-300 w-full h-0.5 m-auto"></span>
+                                <span class="icon-plus absolute inset-0 bg-amber-300 w-0.5 h-full m-auto"></span>
+                                <span class="icon-minus absolute inset-0 bg-amber-300 w-full h-0.5 m-auto"></span>
+                            </span>
+                        </button>
+                        <div class="accordion-content">
+                             <div class="p-6 pt-0 text-gray-300">
+                                <p class="mb-4">A strong ummah is an economically empowered one. Our platform creates tangible opportunities for local Muslims.</p>
+                                <ul class="list-disc list-inside space-y-2 text-gray-400">
+                                    <li><strong>Halal Marketplace:</strong> Discover and purchase products from local Muslim entrepreneurs.</li>
+                                    <li><strong>Teacher Marketplace:</strong> Certified local Asatizah can offer paid, personalized lessons.</li>
+                                    <li><strong>Digital Zakat & Waqf:</strong> Fulfill your religious obligations transparently to support local causes.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Testimonials Section -->
+        <section id="community" class="py-20">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16 reveal">
+                    <h2 class="text-3xl md:text-4xl font-bold text-white">Loved by the Community</h2>
+                    <p class="text-gray-400 mt-3 text-lg">Hear what people across Sabah are saying.</p>
+                </div>
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div class="glass-card p-8 rounded-lg reveal transform hover:-translate-y-2 transition-transform duration-300">
+                        <p class="text-gray-300 mb-6">"As a student, the AI coach has transformed my Tajweed. It's patient and points out my exact mistakes. My recitation has improved so much!"</p>
+                        <div class="font-bold text-cyan-300">- Aisyah, 21, Kota Kinabalu</div>
+                    </div>
+                    <div class="glass-card p-8 rounded-lg reveal transform hover:-translate-y-2 transition-transform duration-300" style="transition-delay: 200ms;">
+                        <p class="text-gray-300 mb-6">"Finally, a platform to sell my kuih beyond my kampung! The Halal Marketplace is easy to use and has opened up a new world for my small business."</p>
+                        <div class="font-bold text-purple-300">- Puan Fatimah, 45, Papar</div>
+                    </div>
+                    <div class="glass-card p-8 rounded-lg reveal transform hover:-translate-y-2 transition-transform duration-300" style="transition-delay: 400ms;">
+                        <p class="text-gray-300 mb-6">"Connecting with a trusted Ustaz has never been easier, even from my remote location. The 'Ask a Local Ustaz' feature is a blessing."</p>
+                        <div class="font-bold text-amber-300">- En. Ahmad, 55, Tawau</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Partners Section -->
+        <section id="partners" class="py-16">
+            <div class="container mx-auto px-6 reveal">
+                <h3 class="text-center text-gray-500 font-semibold text-sm uppercase tracking-widest mb-8">In Collaboration With Our Trusted Partners</h3>
+                <div class="flex flex-wrap justify-center items-center gap-x-12 gap-y-8">
+                    <img src="https://placehold.co/150x70/999999/FFFFFF?text=JHEAINS+Logo" alt="JHEAINS Logo" class="h-12 md:h-16 opacity-50 hover:opacity-100 transition duration-300 grayscale hover:grayscale-0">
+                    <img src="https://placehold.co/150x70/999999/FFFFFF?text=MUIS+Logo" alt="MUIS Logo" class="h-12 md:h-16 opacity-50 hover:opacity-100 transition duration-300 grayscale hover:grayscale-0">
+                    <img src="https://placehold.co/150x70/999999/FFFFFF?text=Local+NGO+Logo" alt="Local NGO Logo" class="h-12 md:h-16 opacity-50 hover:opacity-100 transition duration-300 grayscale hover:grayscale-0">
+                </div>
+            </div>
+        </section>
+
+        <!-- Final CTA Section -->
+        <section id="contact" class="py-20">
+            <div class="container mx-auto px-6 text-center reveal">
+                <div class="max-w-2xl mx-auto glass-card rounded-lg p-10">
+                    <h2 class="text-3xl font-bold mb-4 text-white">Join the Movement.</h2>
+                    <p class="text-lg mb-8 text-gray-300">Be part of Sabah's Digital Dakwah. Help us build a stronger ummah through technology.</p>
+                    <a href="#" class="bg-white text-blue-900 font-bold py-3 px-8 rounded-full hover:bg-gray-200 transition duration-300 transform hover:scale-105 inline-block shadow-lg hover:shadow-cyan-400/30">Contact Us to Get Involved</a>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-[#000711] text-gray-500 py-12 border-t border-white/10">
+        <div class="container mx-auto px-6 text-center">
+            <div class="mb-6">
+                <a href="#" class="px-3 hover:text-white transition">Home</a>
+                <a href="#features" class="px-3 hover:text-white transition">The Pillars</a>
+                <a href="#community" class="px-3 hover:text-white transition">Community</a>
+                <a href="#contact" class="px-3 hover:text-white transition">Contact</a>
+            </div>
+            <p class="text-gray-400">&copy; 2025 Digital Dakwah Platform. All Rights Reserved.</p>
+            <p class="text-sm mt-2">Kota Kinabalu, Sabah, Malaysia.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Scroll-triggered animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, {
+            threshold: 0.1
+        });
+
+        const elementsToReveal = document.querySelectorAll('.reveal');
+        elementsToReveal.forEach(el => {
+            observer.observe(el);
+        });
+
+        // Accordion functionality
+        const accordionItems = document.querySelectorAll('.accordion-item');
+        accordionItems.forEach(item => {
+            const button = item.querySelector('.accordion-button');
+            const content = item.querySelector('.accordion-content');
+
+            button.addEventListener('click', () => {
+                const isActive = button.classList.contains('active');
+
+                // Close all accordions
+                accordionItems.forEach(otherItem => {
+                    otherItem.querySelector('.accordion-button').classList.remove('active');
+                    otherItem.querySelector('.accordion-content').style.maxHeight = null;
+                });
+
+                // Toggle current accordion if it wasn't already active
+                if (!isActive) {
+                    button.classList.add('active');
+                    content.style.maxHeight = content.scrollHeight + "px";
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
