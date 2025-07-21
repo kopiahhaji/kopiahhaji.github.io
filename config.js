@@ -17,7 +17,7 @@ const CONFIG = {
     // AI Configuration
     AI: {
         PROVIDER: 'Google Gemini',
-        MODEL: 'gemini-pro',
+        MODEL: 'gemini-1.5-flash',
         MAX_TOKENS: 500,
         TEMPERATURE: 0.7,
         FALLBACK_ENABLED: true
