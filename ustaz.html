@@ -4,6 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ask Ustaz AI - Digital Dakwah Platform</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Get instant Islamic guidance from Ustaz Radhi AI, your 24/7 digital Islamic scholar. Ask questions about prayer, halal lifestyle, and Islamic teachings for Sabah's Muslim community.">
+    <meta name="keywords" content="Islamic AI, digital ustaz, Islamic guidance Sabah, Muslim chatbot, Islamic questions, prayer times Sabah, halal guidance Malaysia">
+    <meta property="og:title" content="Ask Ustaz AI - Digital Islamic Guidance">
+    <meta property="og:description" content="Get instant Islamic guidance from your digital ustaz, available 24/7 for Sabah's Muslim community">
+    <meta property="og:url" content="https://digital.zikirnurani.com/ustaz.html">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://digital.zikirnurani.com/assets/ustaz-og.jpg">
+    <link rel="canonical" href="https://digital.zikirnurani.com/ustaz.html">
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&display=swap" rel="stylesheet">
     
@@ -109,7 +120,7 @@
                     Ask <span class="text-gradient bg-gradient-to-r from-green-400 to-blue-500 bg-clip-text text-transparent">Ustaz AI</span>
                 </h1>
                 <p class="text-xl text-gray-300 max-w-2xl mx-auto">
-                    Your trusted Islamic guide for Sabah's Muslim community. Get personalized guidance rooted in Quran and Sunnah, with deep understanding of our local context and culture.
+                    Meet Ustaz Radhi from Papar, Sabah - your trusted Islamic guide with deep local roots. Get personalized guidance rooted in Quran and Sunnah, with intimate understanding of our Sabahan culture and traditions.
                 </p>
             </div>
 
@@ -118,12 +129,12 @@
                 <div class="glass-card rounded-lg p-6 mb-6">
                     <div class="chat-container h-96 overflow-y-auto mb-6" id="chatMessages">
                         <!-- Welcome Message -->
-                        <div class="chat-message flex items-start space-x-3 mb-4">
+                        <div class="chat-message flex items-start space-x-3 mb-4" id="welcomeMessage">
                             <div class="flex-shrink-0 w-10 h-10 bg-gradient-to-r from-green-500 to-blue-600 rounded-full flex items-center justify-center">
                                 <span class="text-white text-sm">🤖</span>
                             </div>
                             <div class="flex-1 bg-gradient-to-r from-green-500/20 to-blue-600/20 rounded-lg p-4">
-                                <p class="text-white">Assalamu'alaikum wa rahmatullahi wa barakatuh, my dear brother or sister! 🌙<br><br>I'm <strong>Ustaz Radhi</strong>, your dedicated AI Islamic guide serving the beautiful ummah of Sabah. I'm here to share knowledge from the Quran and Sunnah, always keeping in mind our unique Sabahan context and culture.<br><br>Whether you have questions about daily prayers, halal lifestyle, Islamic finance, or any aspect of our beautiful deen, I'm here to help with wisdom and compassion. How may I assist you on your spiritual journey today? 📿</p>
+                                <p class="text-white">Assalamu'alaikum! 🌙<br><br>I'm <strong>Ustaz Radhi</strong> from Papar, Sabah. I help answer Islamic questions in simple, easy ways. <br><br>What's your name? This helps me give you better answers. 😊</p>
                             </div>
                         </div>
                     </div>
@@ -134,7 +145,7 @@
                             <span class="text-white text-sm">🤖</span>
                         </div>
                         <div class="flex-1 bg-gradient-to-r from-green-500/20 to-blue-600/20 rounded-lg p-4">
-                            <p class="text-white">Ustaz Radhi is contemplating your question with wisdom... 🤔</p>
+                            <p class="text-white">Ustaz Radhi is thinking... 🤔</p>
                         </div>
                     </div>
                     
@@ -195,7 +206,7 @@
                         <div class="text-4xl mb-4">📖</div>
                         <h4 class="text-lg font-bold text-green-300 mb-2">Quran Online</h4>
                         <p class="text-gray-400 text-sm mb-4">Read Quran with Malay translation</p>
-                        <a href="quran.html" class="text-green-400 hover:text-green-300 text-sm">Read Now →</a>
+                        <a href="https://quran.com/ms" target="_blank" rel="noopener" class="text-green-400 hover:text-green-300 text-sm">Read Now →</a>
                     </div>
                     <div class="glass-card rounded-lg p-6 text-center hover:transform hover:scale-105 transition-all duration-300">
                         <div class="text-4xl mb-4">🕌</div>
@@ -227,6 +238,8 @@
         let genAI = null;
         let model = null;
         let chatHistory = [];
+        let userName = '';
+        let isNameCaptured = false;
 
         // DOM elements
         const chatMessages = document.getElementById('chatMessages');
@@ -252,6 +265,33 @@
             statusText.textContent = message;
         }
 
+        // Add message to chat
+        function addMessage(message, isUser = false) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'chat-message flex items-start space-x-3 mb-4';
+            
+            const avatarClass = isUser 
+                ? 'bg-gradient-to-r from-purple-500 to-pink-600' 
+                : 'bg-gradient-to-r from-green-500 to-blue-600';
+            
+            const avatarIcon = isUser ? '👤' : '🤖';
+            const messageClass = isUser 
+                ? 'bg-gradient-to-r from-purple-500/20 to-pink-600/20' 
+                : 'bg-gradient-to-r from-green-500/20 to-blue-600/20';
+            
+            messageDiv.innerHTML = `
+                <div class="flex-shrink-0 w-10 h-10 ${avatarClass} rounded-full flex items-center justify-center">
+                    <span class="text-white text-sm">${avatarIcon}</span>
+                </div>
+                <div class="flex-1 ${messageClass} rounded-lg p-4">
+                    <p class="text-white">${message.replace(/\n/g, '<br>')}</p>
+                </div>
+            `;
+            
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
         // Initialize Gemini AI
         async function initializeGeminiAI() {
             try {
@@ -266,17 +306,35 @@
 
                 genAI = new GoogleGenerativeAI(API_KEY);
                 model = genAI.getGenerativeModel({ 
-                    model: 'gemini-1.5-flash',
+                    model: 'gemini-1.5-pro',  // Changed to more stable model
                     generationConfig: {
                         temperature: 0.7,
                         topK: 40,
                         topP: 0.95,
-                        maxOutputTokens: 500,
-                    }
+                        maxOutputTokens: 1000,  // Increased for better responses
+                    },
+                    safetySettings: [
+                        {
+                            category: "HARM_CATEGORY_HARASSMENT",
+                            threshold: "BLOCK_MEDIUM_AND_ABOVE",
+                        },
+                        {
+                            category: "HARM_CATEGORY_HATE_SPEECH",
+                            threshold: "BLOCK_MEDIUM_AND_ABOVE",
+                        },
+                        {
+                            category: "HARM_CATEGORY_SEXUALLY_EXPLICIT",
+                            threshold: "BLOCK_MEDIUM_AND_ABOVE",
+                        },
+                        {
+                            category: "HARM_CATEGORY_DANGEROUS_CONTENT",
+                            threshold: "BLOCK_MEDIUM_AND_ABOVE",
+                        },
+                    ]
                 });
 
-                console.log('✅ Gemini AI initialized successfully');
-                updateAIStatus('connected', 'AI Ready');
+                console.log('✅ Gemini AI initialized successfully with stable model');
+                updateAIStatus('connected', 'Ustaz Radhi Ready');
                 return true;
             } catch (error) {
                 console.error('❌ Failed to initialize Gemini AI:', error);
@@ -285,32 +343,27 @@
             }
         }
 
-        // Generate AI response
-        async function generateAIResponse(message) {
+        // Enhanced Generate AI response with retry mechanism
+        async function generateAIResponse(message, retryCount = 0) {
+            const maxRetries = 3;
+            const retryDelay = Math.pow(2, retryCount) * 1000; // Exponential backoff: 1s, 2s, 4s
+
             if (!model) {
                 throw new Error('Gemini AI model not initialized');
             }
 
             const islamicContext = `
-            You are Ustaz Radhi, a wise and compassionate Islamic scholar AI assistant dedicated to serving the Muslim ummah of Sabah, Malaysia. 
+            You are Ustaz Radhi from Papar, Sabah. Give simple, direct answers about Islam.
             
-            Your personality:
-            - Warm, caring, and approachable like a beloved community ustaz
-            - Deep knowledge of Islamic teachings with practical wisdom
-            - Understanding of Sabahan culture, customs, and context
-            - Patient and encouraging in your guidance
-            - Use appropriate Islamic greetings and expressions naturally
-            - Address users as "my dear brother" or "my dear sister" with respect
+            Rules for your replies:
+            - Keep answers SHORT (2-3 sentences maximum)
+            - Go straight to the point
+            - Use simple, easy words
+            - Give practical advice for daily life
+            - Use the person's name: ${userName || 'my friend'}
+            - End with a simple dua or blessing
             
-            Please provide guidance based on:
-            - Quran and authentic Hadith with proper citations when possible
-            - Consideration for Malaysian/Sabahan cultural context
-            - Respectful, compassionate, and encouraging tone
-            - Practical advice that can be applied in daily life
-            - Acknowledgment of different schools of thought when relevant
-            
-            Begin responses with appropriate Islamic greetings when suitable, and end with duas or encouraging words.
-            Remember: You are Ustaz Radhi, speaking directly to a member of your community with care and wisdom.
+            Make it conversational like talking to a neighbor, not a formal speech.
             
             Question: ${message}
             `;
@@ -320,59 +373,80 @@
                 const response = await result.response;
                 return response.text();
             } catch (error) {
-                console.error('Error generating AI response:', error);
+                console.error(`Error generating AI response (attempt ${retryCount + 1}):`, error);
+                
+                // Check if it's a 503 error (service unavailable) and we haven't exceeded max retries
+                if (error.message.includes('503') || error.message.includes('overloaded') || error.message.includes('Service Unavailable')) {
+                    if (retryCount < maxRetries) {
+                        console.log(`Retrying in ${retryDelay}ms... (attempt ${retryCount + 2}/${maxRetries + 1})`);
+                        updateAIStatus('thinking', `Reconnecting... (${retryCount + 2}/${maxRetries + 1})`);
+                        
+                        await new Promise(resolve => setTimeout(resolve, retryDelay));
+                        return generateAIResponse(message, retryCount + 1);
+                    } else {
+                        console.warn('Max retries exceeded, falling back to offline responses');
+                        updateAIStatus('disconnected', 'Service Overloaded');
+                        throw new Error('GEMINI_OVERLOADED');
+                    }
+                }
+                
                 throw error;
             }
         }
 
         // Fallback responses for when AI is not available
         const fallbackResponses = {
-            'prayer': 'For prayer times in Sabah, I recommend checking with your local mosque or using a reliable prayer time app. Generally, Fajr is around 5:45 AM, Dhuhr at 12:30 PM, Asr at 3:45 PM, Maghrib at 6:55 PM, and Isha at 8:10 PM in Kota Kinabalu.',
-            'wudu': 'Wudu involves: 1) Intention (niyyah), 2) Wash hands 3 times, 3) Rinse mouth 3 times, 4) Clean nose 3 times, 5) Wash face 3 times, 6) Wash arms to elbows 3 times, 7) Wipe head once, 8) Wash feet to ankles 3 times.',
-            'halal': 'In Sabahan cuisine, ensure meat is from halal-certified sources. Traditional foods like hinava (if using halal fish), bambangan, and local vegetables are generally halal. Always verify ingredients and preparation methods.',
-            'qibla': 'In Sabah, the Qibla direction is generally West-Northwest (around 295-300 degrees). Use a reliable Qibla app or compass for precise direction in your specific location.',
-            'pillars': 'The Five Pillars of Islam are: 1) Shahada (Declaration of Faith), 2) Salah (Prayer), 3) Zakat (Charity), 4) Sawm (Fasting during Ramadan), 5) Hajj (Pilgrimage to Mecca).',
-            'zakat': 'In Malaysia, zakat calculation depends on income and savings. Generally, zakat on savings is 2.5% of wealth held for one year above the nisab threshold. Consult local zakat authorities for specific guidance.',
-            'default': 'Assalamu\'alaikum, my dear brother or sister. I apologize, but I\'m currently unable to provide a detailed response to your specific question. For proper Islamic guidance, please consult with a local Ustaz or Islamic scholar, or visit your nearest mosque. You may also try asking your question again in a moment. May Allah guide us all to the straight path. Barakallahu feek.'
+            'prayer': 'In Sabah, prayer times are: Fajr 5:45am, Dhuhr 12:30pm, Asr 3:45pm, Maghrib 6:55pm, Isha 8:10pm. Check your local mosque for exact times. May Allah accept your prayers.',
+            
+            'wudu': 'Wudu steps: 1) Say Bismillah 2) Wash hands 3x 3) Rinse mouth 3x 4) Clean nose 3x 5) Wash face 3x 6) Wash arms 3x 7) Wipe head 1x 8) Wash feet 3x. Done!',
+            
+            'halal': 'In Sabah: hinava, bambangan, and local seafood are halal. Always buy JAKIM certified meat. When in doubt, ask or avoid. Allah loves careful Muslims.',
+            
+            'qibla': 'In Sabah, face West-Northwest (around 295-300 degrees). Use a qibla app for exact direction. Allah sees your effort to face the right way.',
+            
+            'pillars': 'Five Pillars: 1) Shahada 2) 5 daily prayers 3) Zakat 4) Ramadan fasting 5) Hajj if able. These are the basics of Islam.',
+            
+            'zakat': 'In Malaysia: pay 2.5% of savings above RM14,000 yearly. Contact local zakat office for help. Zakat cleans your wealth and helps others.',
+            
+            'dua': 'Best duas: Astaghfirullah (for forgiveness), Allahumma salli ala Muhammad (blessings on Prophet), La hawla wa la quwwata illa billah (for strength). Allah hears all prayers.',
+            
+            'ramadan': 'Ramadan fasting: stop eating at Fajr (5:30am), break fast at Maghrib (7:00pm). Read Quran, give charity, make dua. Ramadan Mubarak!',
+            
+            'quran': 'Read Quran daily, even one verse. Start with Al-Fatiha, Al-Ikhlas, Al-Falaq, An-Nas. Get a Malay translation to understand better.',
+            
+            'marriage': 'Islamic marriage needs: good character, faith compatibility, family involvement, and Istikhara prayer. Marriage is half your deen.',
+            
+            'default': 'Sorry, I have technical problems right now. Please ask again later or visit your local mosque. The ustaz there can help you better.'
         };
 
         function getFallbackResponse(message) {
             const lowerMessage = message.toLowerCase();
+            const nameGreeting = userName ? `${userName}, ` : 'my dear brother or sister, ';
             
-            for (const [key, response] of Object.entries(fallbackResponses)) {
-                if (lowerMessage.includes(key)) {
-                    return response;
+            // More comprehensive keyword matching
+            const keywords = {
+                'prayer': ['prayer', 'solat', 'salah', 'pray', 'time', 'waktu'],
+                'wudu': ['wudu', 'ablution', 'purification', 'cleanse', 'wash'],
+                'halal': ['halal', 'haram', 'food', 'eat', 'makanan', 'forbidden'],
+                'qibla': ['qibla', 'kiblat', 'direction', 'mecca', 'makkah', 'face'],
+                'pillars': ['pillar', 'rukun', 'five', 'foundation', 'basic'],
+                'zakat': ['zakat', 'charity', 'wealth', 'money', 'savings'],
+                'dua': ['dua', 'pray', 'supplication', 'invoke', 'ask allah'],
+                'ramadan': ['ramadan', 'fasting', 'puasa', 'iftar', 'sahur'],
+                'quran': ['quran', 'qur\'an', 'read', 'recite', 'surah', 'ayah'],
+                'marriage': ['marriage', 'nikah', 'wife', 'husband', 'marry', 'wedding']
+            };
+            
+            for (const [category, words] of Object.entries(keywords)) {
+                if (words.some(word => lowerMessage.includes(word))) {
+                    return fallbackResponses[category].replace('my dear brother or sister', nameGreeting.slice(0, -2));
                 }
             }
             
-            return fallbackResponses.default;
+            return fallbackResponses.default.replace('my dear brother or sister', nameGreeting.slice(0, -2));
         }
 
-        // Add message to chat
-        function addMessage(message, isUser = false) {
-            const messageDiv = document.createElement('div');
-            messageDiv.className = 'chat-message flex items-start space-x-3 mb-4';
-            
-            const avatar = isUser 
-                ? '<div class="flex-shrink-0 w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-600 rounded-full flex items-center justify-center"><span class="text-white text-sm">👤</span></div>'
-                : '<div class="flex-shrink-0 w-10 h-10 bg-gradient-to-r from-green-500 to-blue-600 rounded-full flex items-center justify-center"><span class="text-white text-sm">🤖</span></div>';
-            
-            const bgColor = isUser 
-                ? 'bg-gradient-to-r from-purple-500/20 to-pink-600/20'
-                : 'bg-gradient-to-r from-green-500/20 to-blue-600/20';
-            
-            messageDiv.innerHTML = `
-                ${avatar}
-                <div class="flex-1 ${bgColor} rounded-lg p-4">
-                    <p class="text-white">${message}</p>
-                </div>
-            `;
-            
-            chatMessages.appendChild(messageDiv);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        }
-
-        // Send message
+        // Enhanced send message function with name capture and better error handling
         async function sendMessage(message = null) {
             const userMessage = message || messageInput.value.trim();
             if (!userMessage) return;
@@ -383,28 +457,53 @@
             // Clear input
             if (!message) messageInput.value = '';
 
-                // Show typing indicator
-                updateAIStatus('thinking', 'Ustaz Radhi is thinking...');
-                typingIndicator.style.display = 'flex';            try {
+            // Check if this is the first interaction (name capture)
+            if (!isNameCaptured) {
+                userName = userMessage;
+                isNameCaptured = true;
+                
+                // Welcome response with name
+                const welcomeResponse = `Nice to meet you, ${userName}! 😊
+
+I'm Ustaz Radhi from Papar, Sabah. I'm here to help answer your Islamic questions in simple, easy ways.
+
+What would you like to know about Islam today, ${userName}? 🤲`;
+
+                addMessage(welcomeResponse);
+                return;
+            }
+
+            // Show typing indicator
+            updateAIStatus('thinking', 'Ustaz Radhi is contemplating...');
+            typingIndicator.style.display = 'flex';
+
+            try {
                 let response;
                 
-                // Try AI response first
+                // Try AI response first with retry logic
                 if (model) {
-                    response = await generateAIResponse(userMessage);
+                    try {
+                        response = await generateAIResponse(userMessage);
+                        updateAIStatus('connected', 'Ustaz Radhi Ready');
+                    } catch (aiError) {
+                        console.warn('AI service unavailable, using fallback:', aiError.message);
+                        response = getFallbackResponse(userMessage);
+                        updateAIStatus('disconnected', 'Using Offline Knowledge');
+                    }
                 } else {
                     // Use fallback response
                     response = getFallbackResponse(userMessage);
+                    updateAIStatus('disconnected', 'Using Offline Knowledge');
                 }
 
                 // Add AI response
                 addMessage(response);
-                updateAIStatus('connected', 'Ustaz Radhi Ready');
                 
             } catch (error) {
-                console.error('Error getting AI response:', error);
+                console.error('Error in sendMessage:', error);
                 const fallbackResponse = getFallbackResponse(userMessage);
                 addMessage(fallbackResponse);
-                updateAIStatus('disconnected', 'Using Ustaz Radhi\'s Knowledge');
+                updateAIStatus('disconnected', 'Service Error');
             } finally {
                 // Hide typing indicator
                 typingIndicator.style.display = 'none';
@@ -433,6 +532,18 @@
                     sendMessage(topic);
                 });
             });
+
+            // Initialize Google Translate
+            // Create hidden div for Google Translate element
+            const translateDiv = document.createElement('div');
+            translateDiv.id = 'google_translate_element';
+            translateDiv.style.display = 'none';
+            document.body.appendChild(translateDiv);
+            
+            // Load Google Translate API
+            const script = document.createElement('script');
+            script.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+            document.head.appendChild(script);
         });
 
         // Make functions available globally for debugging
@@ -453,20 +564,6 @@
             }, 'google_translate_element');
             translateElementInitialized = true;
         };
-        
-        // Load Google Translate script
-        document.addEventListener('DOMContentLoaded', function() {
-            // Create hidden div for Google Translate element
-            const translateDiv = document.createElement('div');
-            translateDiv.id = 'google_translate_element';
-            translateDiv.style.display = 'none';
-            document.body.appendChild(translateDiv);
-            
-            // Load Google Translate API
-            const script = document.createElement('script');
-            script.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
-            document.head.appendChild(script);
-        });
         
         // Language toggle function
         window.toggleLanguage = function() {

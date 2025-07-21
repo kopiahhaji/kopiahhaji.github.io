@@ -17,10 +17,12 @@ const CONFIG = {
     // AI Configuration
     AI: {
         PROVIDER: 'Google Gemini',
-        MODEL: 'gemini-1.5-flash',
-        MAX_TOKENS: 500,
+        MODEL: 'gemini-1.5-pro',  // Updated to stable model
+        MAX_TOKENS: 1000,        // Increased for better responses
         TEMPERATURE: 0.7,
-        FALLBACK_ENABLED: true
+        FALLBACK_ENABLED: true,
+        RETRY_ATTEMPTS: 3,       // Added retry configuration
+        RETRY_DELAY: 1000        // Added retry delay
     },
     
     // Platform Features

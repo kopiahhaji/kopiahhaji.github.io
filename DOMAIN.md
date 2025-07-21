@@ -3,19 +3,22 @@
 ## 🌐 Custom Domain Setup
 
 ### Primary Domain
-- **Production**: https://digital.zikirnurani.com
+
+- **Production**: <https://digital.zikirnurani.com>
 - **Platform**: Cloudflare Pages
 - **SSL**: Auto-enabled with Cloudflare
 - **CDN**: Global distribution via Cloudflare network
 
 ### Backup Domain
-- **GitHub Pages**: https://kopiahhaji.github.io
+
+- **GitHub Pages**: <https://kopiahhaji.github.io>
 - **Purpose**: Fallback and development testing
 - **SSL**: Auto-enabled with GitHub Pages
 
 ## 🔧 Domain Configuration Details
 
 ### DNS Records (Cloudflare)
+
 ```
 Type: CNAME
 Name: digital
@@ -25,6 +28,7 @@ TTL: Auto
 ```
 
 ### SSL/TLS Settings
+
 - **SSL Mode**: Full (strict)
 - **Edge Certificates**: Active
 - **Always Use HTTPS**: Enabled
@@ -32,6 +36,7 @@ TTL: Auto
 - **Minimum TLS Version**: 1.2
 
 ### Page Rules
+
 ```
 URL: digital.zikirnurani.com/*
 Settings:
@@ -43,6 +48,7 @@ Settings:
 ## 📊 Performance Optimizations
 
 ### Cloudflare Features Enabled
+
 - [x] Auto Minify (HTML, CSS, JS)
 - [x] Brotli Compression
 - [x] HTTP/2 and HTTP/3
@@ -50,6 +56,7 @@ Settings:
 - [x] Enhanced HTTP/2 Prioritization
 
 ### Cache Configuration
+
 - **Static Assets**: 30 days
 - **HTML Files**: 4 hours
 - **API Responses**: No cache
@@ -58,6 +65,7 @@ Settings:
 ## 🔍 SEO Configuration
 
 ### Meta Tags
+
 ```html
 <meta name="description" content="Digital Dakwah Platform - Sabah's leading Islamic education and community platform">
 <meta name="keywords" content="Islamic education, Sabah, Muslim community, digital dakwah">
@@ -68,6 +76,7 @@ Settings:
 ```
 
 ### Structured Data
+
 - Organization markup
 - Website schema
 - Local business schema (for marketplace)
@@ -76,6 +85,7 @@ Settings:
 ## 🚀 Deployment Workflow
 
 ### Automatic Deployment
+
 1. **Git Push**: Code pushed to GitHub repository
 2. **Webhook**: Cloudflare Pages receives notification
 3. **Build**: Automatic deployment triggered
@@ -83,6 +93,7 @@ Settings:
 5. **Cache**: Cloudflare cache automatically purged
 
 ### Build Settings
+
 - **Build Command**: None (static site)
 - **Output Directory**: / (root)
 - **Node Version**: 18.x
@@ -91,6 +102,7 @@ Settings:
 ## 📱 Mobile & PWA Features
 
 ### Progressive Web App
+
 ```json
 {
   "name": "Digital Dakwah Platform",
@@ -103,6 +115,7 @@ Settings:
 ```
 
 ### Service Worker
+
 - Offline capability for core pages
 - Cache strategy for images and assets
 - Background sync for community features
@@ -110,6 +123,7 @@ Settings:
 ## 🔒 Security Headers
 
 ### Content Security Policy
+
 ```
 default-src 'self' https:;
 script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://generativelanguage.googleapis.com;
@@ -119,6 +133,7 @@ img-src 'self' data: https:;
 ```
 
 ### Additional Headers
+
 - X-Frame-Options: DENY
 - X-Content-Type-Options: nosniff
 - Referrer-Policy: strict-origin-when-cross-origin
@@ -127,12 +142,14 @@ img-src 'self' data: https:;
 ## 📊 Analytics & Monitoring
 
 ### Performance Monitoring
+
 - **Core Web Vitals**: Tracked via Cloudflare Analytics
 - **Real User Monitoring**: Enabled
 - **Speed Insights**: Weekly reports
 - **Uptime Monitoring**: 99.9% target
 
 ### Traffic Analytics
+
 - **Page Views**: Daily/Monthly tracking
 - **User Engagement**: Session duration and bounce rate
 - **Geographic Distribution**: Sabah-focused metrics
@@ -141,18 +158,21 @@ img-src 'self' data: https:;
 ## 🎯 Custom Domain Benefits
 
 ### Branding
+
 - Professional appearance: digital.zikirnurani.com
 - Trust factor for users
 - Better social media sharing
 - Memorable URL for marketing
 
 ### SEO Advantages
+
 - Domain authority building
 - Better search rankings
 - Local SEO for Sabah keywords
 - Enhanced click-through rates
 
 ### Technical Benefits
+
 - Full SSL control
 - Advanced caching options
 - Better performance analytics

@@ -18,6 +18,7 @@ A comprehensive Islamic education and community platform designed specifically f
 ## 🌟 Platform Features
 
 ### 🏠 **Community Hub** (`index.html`)
+
 - **Welcome Center**: Modern landing page with glass morphism design
 - **Feature Showcase**: Interactive cards highlighting platform capabilities  
 - **Statistics Dashboard**: Real-time community engagement metrics
@@ -25,6 +26,7 @@ A comprehensive Islamic education and community platform designed specifically f
 - **Responsive Design**: Optimized for all devices and screen sizes
 
 ### 🛒 **Sabahan Marketplace** (`marketplace.html`)
+
 - **Local Halal Section**: 150+ halal food vendors and restaurants
 - **Islamic Products**: 125+ books, accessories, and religious items
 - **Sabahan Art**: 75+ traditional crafts and cultural artifacts
@@ -32,6 +34,7 @@ A comprehensive Islamic education and community platform designed specifically f
 - **Vendor Support**: Platform for local Muslim entrepreneurs
 
 ### 🤖 **Ustaz AI Chatbot** (`ustaz.html`)
+
 - **Islamic Guidance**: AI-powered responses to religious questions
 - **24/7 Availability**: Instant access to Islamic knowledge
 - **Google Gemini Integration**: Advanced natural language processing
@@ -39,6 +42,7 @@ A comprehensive Islamic education and community platform designed specifically f
 - **1,247+ Questions**: Successfully answered with 89% satisfaction rate
 
 ### 🗺️ **Strategic Planning** (`mindmap.html`)
+
 - **Development Roadmap**: Visual representation of platform evolution
 - **Interactive Mind Map**: Explore platform features and future plans
 - **Community Input**: Gathering feedback for continuous improvement
@@ -56,17 +60,20 @@ A comprehensive Islamic education and community platform designed specifically f
 ## 💻 Technical Stack
 
 ### Frontend Technologies
+
 - **HTML5**: Semantic markup and accessibility
 - **CSS3**: Advanced styling with Tailwind CSS framework
 - **JavaScript ES6+**: Modern interactive functionality
 - **Responsive Design**: Mobile-first approach
 
 ### AI & Backend
+
 - **Google Gemini AI**: Advanced language model for Islamic guidance
 - **Node.js**: Server-side JavaScript runtime
 - **Environment Variables**: Secure API key management
 
 ### Deployment & Infrastructure
+
 - **GitHub Pages**: Source code hosting and version control
 - **Cloudflare Pages**: Production deployment and CDN
 - **Automatic Deployment**: Git-based continuous deployment
@@ -97,6 +104,7 @@ Currently serving Muslim communities across:
 ## 🛠️ Local Development
 
 ### Prerequisites
+
 ```bash
 # Required
 - Node.js 16+ 
@@ -111,6 +119,7 @@ Currently serving Muslim communities across:
 ```
 
 ### Quick Start
+
 ```bash
 # Clone the repository
 git clone https://github.com/kopiahhaji/kopiahhaji.github.io.git
@@ -133,7 +142,9 @@ open http://localhost:8000
 ```
 
 ### Environment Setup
+
 Create a `.env` file for API keys:
+
 ```env
 GEMINI_API_KEY=your_actual_api_key_here
 ```
@@ -141,6 +152,7 @@ GEMINI_API_KEY=your_actual_api_key_here
 ## 🔧 Configuration
 
 ### AI Configuration
+
 The Ustaz AI uses Google Gemini API. To set up:
 
 1. **Get API Key**: Visit [Google AI Studio](https://makersuite.google.com/app/apikey)
@@ -148,6 +160,7 @@ The Ustaz AI uses Google Gemini API. To set up:
 3. **Test Integration**: Verify chatbot responses work correctly
 
 ### Deployment Configuration
+
 Platform is configured for multiple deployment options:
 
 - **GitHub Pages**: Automatic deployment from main branch
@@ -157,12 +170,14 @@ Platform is configured for multiple deployment options:
 ## 📱 Mobile Experience
 
 ### Responsive Features
+
 - **Touch-Optimized**: All interactive elements designed for mobile
 - **Fast Loading**: Optimized images and minimal JavaScript
 - **Offline Support**: Core content available without internet
 - **PWA Ready**: Add to home screen capability
 
 ### Mobile Statistics
+
 - **65% Mobile Users**: Majority access via smartphones
 - **3.2s Average Load**: Fast performance on 3G networks
 - **95% Mobile Satisfaction**: High user experience ratings
@@ -170,16 +185,19 @@ Platform is configured for multiple deployment options:
 ## 🤝 Community Impact
 
 ### Educational Impact
+
 - **Islamic Learning**: Accessible religious education for all ages
 - **Cultural Preservation**: Documenting and sharing Sabahan Islamic heritage
 - **Language Support**: Content in Bahasa Malaysia and English
 
 ### Economic Impact  
+
 - **Local Business Support**: Platform for halal entrepreneurs
 - **Digital Economy**: Bridging traditional commerce with online platforms
 - **Job Creation**: Opportunities in digital marketing and e-commerce
 
 ### Social Impact
+
 - **Community Building**: Connecting Muslims across Sabah's diverse geography
 - **Interfaith Understanding**: Promoting Islamic values and cultural awareness
 - **Youth Engagement**: Attracting younger generations to Islamic education
@@ -187,18 +205,21 @@ Platform is configured for multiple deployment options:
 ## 🔮 Roadmap & Future Plans
 
 ### Short Term (3-6 months)
+
 - [ ] **Prayer Time Calculator**: Accurate times for all Sabah districts
 - [ ] **Event Calendar**: Community events and religious observances
 - [ ] **User Accounts**: Personalized experience and preferences
 - [ ] **Advanced Search**: Enhanced marketplace and content discovery
 
 ### Medium Term (6-12 months)
+
 - [ ] **Mobile App**: Native iOS and Android applications
 - [ ] **Payment Gateway**: Secure transactions for marketplace
 - [ ] **Multilingual Support**: Full Bahasa Malaysia localization
 - [ ] **Video Content**: Islamic lectures and educational videos
 
 ### Long Term (1-2 years)
+
 - [ ] **Regional Expansion**: Extend to other Malaysian states
 - [ ] **Advanced AI**: More sophisticated Islamic guidance system
 - [ ] **Blockchain Integration**: Transparent halal certification
@@ -207,12 +228,14 @@ Platform is configured for multiple deployment options:
 ## 🛡️ Security & Privacy
 
 ### Data Protection
+
 - **No Personal Data Storage**: Platform respects user privacy
 - **Secure API Communications**: Encrypted data transmission
 - **GDPR Compliant**: International privacy standards
 - **Regular Security Audits**: Continuous security monitoring
 
 ### Content Moderation
+
 - **Islamic Guidelines**: All content reviewed for religious accuracy
 - **Community Standards**: Clear guidelines for marketplace and discussions
 - **AI Safety**: Responsible AI implementation with human oversight
@@ -220,11 +243,13 @@ Platform is configured for multiple deployment options:
 ## 📞 Support & Contact
 
 ### Technical Support
+
 - **Documentation**: Comprehensive guides in `DEPLOYMENT.md`
 - **Issue Tracking**: GitHub Issues for bug reports and features
 - **Community Forum**: Platform discussions and user support
 
 ### Community Engagement
+
 - **Feedback Welcome**: Continuous improvement based on user input
 - **Volunteer Opportunities**: Join our mission to serve Sabah's Muslim community
 - **Partnership Inquiries**: Collaborate with mosques, schools, and organizations
@@ -241,13 +266,16 @@ Platform is configured for multiple deployment options:
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ### Third-Party Credits
+
 - **Tailwind CSS**: Utility-first CSS framework
 - **Google Gemini**: AI language model for chatbot
 - **Cloudflare**: Hosting and CDN services
 - **GitHub**: Code hosting and collaboration
 
 ### Islamic Content Attribution
+
 All Islamic guidance and content reviewed by qualified religious scholars from:
+
 - Majlis Agama Islam Sabah (MAIS)
 - Local mosque committees
 - Islamic education institutions
