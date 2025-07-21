@@ -22,6 +22,7 @@ class DakwahPlatformMonitor {
     checkPlatformHealth() {
         const health = {
             timestamp: new Date().toISOString(),
+            domain: 'digital.zikirnurani.com',
             pages: this.checkPages(),
             ai: this.checkAI(),
             marketplace: this.checkMarketplace(),

@@ -9,7 +9,8 @@ const CONFIG = {
     DEPLOYMENT: {
         PLATFORM: 'Cloudflare Pages',
         GITHUB_REPO: 'kopiahhaji.github.io',
-        DOMAIN: 'kopiahhaji.github.io', // Update with your actual domain
+        DOMAIN: 'digital.zikirnurani.com',
+        BACKUP_DOMAIN: 'kopiahhaji.github.io',
         CDN: 'Cloudflare'
     },
     

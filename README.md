@@ -45,7 +45,9 @@ A comprehensive Islamic education and community platform designed specifically f
 
 ## 🚀 Live Platform
 
-**🌐 Production URL:** [https://kopiahhaji.github.io](https://kopiahhaji.github.io)
+**🌐 Production URL:** [https://digital.zikirnurani.com](https://digital.zikirnurani.com)
+
+**🔄 Backup URL:** [https://kopiahhaji.github.io](https://kopiahhaji.github.io)
 
 **📱 Mobile Optimized:** Full responsive design for smartphones and tablets
 
