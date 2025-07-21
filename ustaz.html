@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ask Ustaz - Digital Dakwah Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Sora', sans-serif; }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .chat-message {
+            animation: fadeInUp 0.5s ease-out;
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .typing-indicator {
+            display: none;
+        }
+        .typing-indicator.active {
+            display: block;
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+    </style>
+</head>
+<body class="text-gray-200 bg-[#000711]">
+    <header class="fixed top-0 left-0 right-0 z-50 bg-[#000711]/80 backdrop-blur">
+        <div class="container mx-auto px-6 py-4">
+            <div class="glass-card rounded-full px-6 py-2 flex justify-between items-center">
+                <h1 class="text-lg font-bold text-white">Digital Dakwah Platform</h1>
+                <nav class="hidden md:flex space-x-6">
+                    <a href="index.html" class="text-gray-300 hover:text-white transition">Home</a>
+                    <a href="marketplace.html" class="text-gray-300 hover:text-white transition">Marketplace</a>
+                    <a href="ustaz.html" class="text-white">Ask Ustaz</a>
+                    <a href="quran.html" class="text-gray-300 hover:text-white transition">Quran Learning</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main class="pt-32 pb-20">
+        <div class="container mx-auto px-6">
+            <h1 class="text-4xl font-bold text-white mb-8 text-center">Ask Ustaz AI</h1>
+            <p class="text-center text-gray-400 mb-12">Get guidance on Islamic matters from our AI Ustaz, trained with authentic Islamic knowledge</p>
+            
+            <div class="grid lg:grid-cols-3 gap-8">
+                <!-- Chat Interface -->
+                <div class="lg:col-span-2">
+                    <div class="glass-card rounded-lg p-6 h-[600px] flex flex-col">
+                        <div class="flex items-center mb-4 pb-4 border-b border-white/10">
+                            <img src="https://placehold.co/50x50/green/white?text=AI" alt="Ustaz AI" class="w-12 h-12 rounded-full mr-3">
+                            <div>
+                                <h3 class="font-bold text-white">Ustaz AI</h3>
+                                <p class="text-green-400 text-sm">Online • Ready to help</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Chat Messages -->
+                        <div id="chatMessages" class="flex-1 overflow-y-auto mb-4 space-y-4">
+                            <div class="chat-message">
+                                <div class="flex items-start space-x-3">
+                                    <img src="https://placehold.co/40x40/green/white?text=AI" alt="Ustaz" class="w-8 h-8 rounded-full">
+                                    <div class="bg-green-500/20 rounded-lg p-4 max-w-[80%]">
+                                        <p class="text-white">Assalamu'alaikum wa rahmatullahi wa barakatuh!</p>
+                                        <p class="text-white mt-2">Welcome to the Digital Dakwah Platform. I'm here to help you with:</p>
+                                        <ul class="text-white mt-2 space-y-1 text-sm">
+                                            <li>• Islamic jurisprudence (Fiqh)</li>
+                                            <li>• Quranic guidance</li>
+                                            <li>• Hadith explanations</li>
+                                            <li>• Daily Islamic practices</li>
+                                            <li>• Questions about our platform</li>
+                                        </ul>
+                                        <p class="text-white mt-2">How may I assist you today?</p>
+                                        <span class="text-xs text-gray-400 mt-2 block">Just now</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Typing Indicator -->
+                        <div id="typingIndicator" class="typing-indicator">
+                            <div class="flex items-start space-x-3">
+                                <img src="https://placehold.co/40x40/green/white?text=AI" alt="Ustaz" class="w-8 h-8 rounded-full">
+                                <div class="bg-gray-500/20 rounded-lg p-4">
+                                    <p class="text-gray-400">Ustaz AI is typing...</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Message Input -->
+                        <div class="flex space-x-3">
+                            <input type="text" id="messageInput" placeholder="Type your question here..." 
+                                   class="flex-1 px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-400">
+                            <button id="sendButton" class="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-lg transition">
+                                Send
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Questions & Information -->
+                <div class="space-y-6">
+                    <!-- Quick Questions -->
+                    <div class="glass-card rounded-lg p-6">
+                        <h3 class="text-xl font-bold text-purple-300 mb-4">Quick Questions</h3>
+                        <div class="space-y-3">
+                            <button class="quick-question w-full text-left p-3 bg-white/5 hover:bg-white/10 rounded-lg transition text-sm text-gray-300 hover:text-white">
+                                What are the prayer times for today?
+                            </button>
+                            <button class="quick-question w-full text-left p-3 bg-white/5 hover:bg-white/10 rounded-lg transition text-sm text-gray-300 hover:text-white">
+                                How to use the Halal Marketplace?
+                            </button>
+                            <button class="quick-question w-full text-left p-3 bg-white/5 hover:bg-white/10 rounded-lg transition text-sm text-gray-300 hover:text-white">
+                                What is the correct way to perform Wudu?
+                            </button>
+                            <button class="quick-question w-full text-left p-3 bg-white/5 hover:bg-white/10 rounded-lg transition text-sm text-gray-300 hover:text-white">
+                                Is it permissible to trade online?
+                            </button>
+                            <button class="quick-question w-full text-left p-3 bg-white/5 hover:bg-white/10 rounded-lg transition text-sm text-gray-300 hover:text-white">
+                                How to improve my Tajweed?
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Platform Features -->
+                    <div class="glass-card rounded-lg p-6">
+                        <h3 class="text-xl font-bold text-cyan-300 mb-4">Platform Features</h3>
+                        <div class="space-y-3 text-sm">
+                            <div class="flex items-center space-x-3">
+                                <span class="text-2xl">🤖</span>
+                                <div>
+                                    <p class="text-white font-semibold">AI Ustaz Assistant</p>
+                                    <p class="text-gray-400">24/7 Islamic guidance</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-3">
+                                <span class="text-2xl">🛒</span>
+                                <div>
+                                    <p class="text-white font-semibold">Halal Marketplace</p>
+                                    <p class="text-gray-400">Support local businesses</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-3">
+                                <span class="text-2xl">📖</span>
+                                <div>
+                                    <p class="text-white font-semibold">Quran Learning</p>
+                                    <p class="text-gray-400">AI-powered pronunciation</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-3">
+                                <span class="text-2xl">👥</span>
+                                <div>
+                                    <p class="text-white font-semibold">Community Hub</p>
+                                    <p class="text-gray-400">Connect with ummah</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Important Notice -->
+                    <div class="glass-card rounded-lg p-6 border-l-4 border-amber-400">
+                        <h3 class="text-xl font-bold text-amber-300 mb-2">Important Notice</h3>
+                        <p class="text-gray-300 text-sm">
+                            While our AI Ustaz provides guidance based on authentic Islamic sources, 
+                            for complex religious matters, please consult with local scholars or qualified ustaz.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Islamic Resources Section -->
+    <section class="py-20 bg-gradient-to-b from-[#000711] to-[#0a0f1c]">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">Islamic Resources & Guidance</h2>
+                <p class="text-gray-400 text-lg max-w-2xl mx-auto">Explore comprehensive Islamic knowledge and connect with our community</p>
+            </div>
+
+            <!-- Featured Resources Grid -->
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+                <!-- Daily Islamic Practices -->
+                <div class="glass-card rounded-lg p-8 hover:transform hover:scale-105 transition-all duration-500 group">
+                    <div class="text-center mb-6">
+                        <div class="w-16 h-16 bg-gradient-to-r from-green-400 to-green-600 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:rotate-12 transition-transform duration-300">
+                            <span class="text-2xl">🕌</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-green-300 mb-3">Daily Practices</h3>
+                    </div>
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between p-3 bg-white/5 rounded-lg hover:bg-white/10 transition-colors">
+                            <span class="text-gray-300 text-sm">Prayer Times Guide</span>
+                            <span class="text-green-400 text-xs">📱</span>
+                        </div>
+                        <div class="flex items-center justify-between p-3 bg-white/5 rounded-lg hover:bg-white/10 transition-colors">
+                            <span class="text-gray-300 text-sm">Qibla Direction</span>
+                            <span class="text-green-400 text-xs">🧭</span>
+                        </div>
+                        <div class="flex items-center justify-between p-3 bg-white/5 rounded-lg hover:bg-white/10 transition-colors">
+                            <span class="text-gray-300 text-sm">Dua Collections</span>
+                            <span class="text-green-400 text-xs">📚</span>
+                        </div>
+                        <div class="flex items-center justify-between p-3 bg-white/5 rounded-lg hover:bg-white/10 transition-colors">
+                            <span class="text-gray-300 text-sm">99 Names of Allah</span>
+                            <span class="text-green-400 text-xs">✨</span>
+                        </div>
+                    </div>
+                    <button class="w-full mt-6 bg-green-500/20 hover:bg-green-500/30 text-green-300 py-3 rounded-lg transition-all duration-300 hover:shadow-lg">
+                        Explore Practices
+                    </button>
+                </div>
+
+                <!-- Quran & Hadith Study -->
+                <div class="glass-card rounded-lg p-8 hover:transform hover:scale-105 transition-all duration-500 group" style="transition-delay: 100ms;">
+                    <div class="text-center mb-6">
+                        <div class="w-16 h-16 bg-gradient-to-r from-cyan-400 to-cyan-600 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:rotate-12 transition-transform duration-300">
+                            <span class="text-2xl">📖</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-cyan-300 mb-3">Quran & Hadith</h3>
+                    </div>
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between p-3 bg-white/5 rounded-lg hover:bg-white/10 transition-colors">
+                            <span class="text-gray-300 text-sm">Surah Al-Fatihah</span>
+                            <span class="text-cyan-400 text-xs">🎵</span>
+                        </div>
+                        <div class="flex items-center justify-between p-3 bg-white/5 rounded-lg hover:bg-white/10 transition-colors">
+                            <span class="text-gray-300 text-sm">Hadith of the Day</span>
+                            <span class="text-cyan-400 text-xs">💎</span>
+                        </div>
+                        <div class="flex items-center justify-between p-3 bg-white/5 rounded-lg hover:bg-white/10 transition-colors">
+                            <span class="text-gray-300 text-sm">Tafsir Sessions</span>
+                            <span class="text-cyan-400 text-xs">👨‍🏫</span>
+                        </div>
+                        <div class="flex items-center justify-between p-3 bg-white/5 rounded-lg hover:bg-white/10 transition-colors">
+                            <span class="text-gray-300 text-sm">Memorization Tools</span>
+                            <span class="text-cyan-400 text-xs">🧠</span>
+                        </div>
+                    </div>
+                    <button class="w-full mt-6 bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 py-3 rounded-lg transition-all duration-300 hover:shadow-lg">
+                        Start Learning
+                    </button>
+                </div>
+
+                <!-- Community & Events -->
+                <div class="glass-card rounded-lg p-8 hover:transform hover:scale-105 transition-all duration-500 group" style="transition-delay: 200ms;">
+                    <div class="text-center mb-6">
+                        <div class="w-16 h-16 bg-gradient-to-r from-purple-400 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:rotate-12 transition-transform duration-300">
+                            <span class="text-2xl">👥</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-purple-300 mb-3">Community Events</h3>
+                    </div>
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between p-3 bg-white/5 rounded-lg hover:bg-white/10 transition-colors">
+                            <span class="text-gray-300 text-sm">Weekly Majlis</span>
+                            <span class="text-purple-400 text-xs">🗓️</span>
+                        </div>
+                        <div class="flex items-center justify-between p-3 bg-white/5 rounded-lg hover:bg-white/10 transition-colors">
+                            <span class="text-gray-300 text-sm">Youth Programs</span>
+                            <span class="text-purple-400 text-xs">🌟</span>
+                        </div>
+                        <div class="flex items-center justify-between p-3 bg-white/5 rounded-lg hover:bg-white/10 transition-colors">
+                            <span class="text-gray-300 text-sm">Charity Drives</span>
+                            <span class="text-purple-400 text-xs">❤️</span>
+                        </div>
+                        <div class="flex items-center justify-between p-3 bg-white/5 rounded-lg hover:bg-white/10 transition-colors">
+                            <span class="text-gray-300 text-sm">Study Circles</span>
+                            <span class="text-purple-400 text-xs">📝</span>
+                        </div>
+                    </div>
+                    <button class="w-full mt-6 bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 py-3 rounded-lg transition-all duration-300 hover:shadow-lg">
+                        Join Community
+                    </button>
+                </div>
+            </div>
+
+            <!-- Interactive Statistics -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16">
+                <div class="glass-card p-6 text-center rounded-lg hover:transform hover:scale-110 transition-all duration-300 group">
+                    <div class="text-3xl md:text-4xl font-bold text-amber-300 mb-2 group-hover:text-amber-200 transition-colors">
+                        <span class="counter" data-target="1247">0</span>+
+                    </div>
+                    <p class="text-gray-400 text-sm">Questions Answered</p>
+                </div>
+                <div class="glass-card p-6 text-center rounded-lg hover:transform hover:scale-110 transition-all duration-300 group" style="transition-delay: 100ms;">
+                    <div class="text-3xl md:text-4xl font-bold text-green-300 mb-2 group-hover:text-green-200 transition-colors">
+                        <span class="counter" data-target="89">0</span>%
+                    </div>
+                    <p class="text-gray-400 text-sm">User Satisfaction</p>
+                </div>
+                <div class="glass-card p-6 text-center rounded-lg hover:transform hover:scale-110 transition-all duration-300 group" style="transition-delay: 200ms;">
+                    <div class="text-3xl md:text-4xl font-bold text-cyan-300 mb-2 group-hover:text-cyan-200 transition-colors">
+                        <span class="counter" data-target="24">0</span>/7
+                    </div>
+                    <p class="text-gray-400 text-sm">Available Support</p>
+                </div>
+                <div class="glass-card p-6 text-center rounded-lg hover:transform hover:scale-110 transition-all duration-300 group" style="transition-delay: 300ms;">
+                    <div class="text-3xl md:text-4xl font-bold text-purple-300 mb-2 group-hover:text-purple-200 transition-colors">
+                        <span class="counter" data-target="156">0</span>
+                    </div>
+                    <p class="text-gray-400 text-sm">Topics Covered</p>
+                </div>
+            </div>
+
+            <!-- Animated Knowledge Categories -->
+            <div class="text-center mb-12">
+                <h3 class="text-2xl font-bold text-white mb-8">Browse Knowledge by Category</h3>
+                <div class="flex flex-wrap justify-center gap-4">
+                    <div class="category-tag bg-gradient-to-r from-green-500/20 to-green-600/20 border border-green-500/30 text-green-300 px-6 py-3 rounded-full hover:scale-110 hover:shadow-lg transition-all duration-300 cursor-pointer">
+                        Fiqh & Jurisprudence
+                    </div>
+                    <div class="category-tag bg-gradient-to-r from-cyan-500/20 to-cyan-600/20 border border-cyan-500/30 text-cyan-300 px-6 py-3 rounded-full hover:scale-110 hover:shadow-lg transition-all duration-300 cursor-pointer">
+                        Quranic Studies
+                    </div>
+                    <div class="category-tag bg-gradient-to-r from-purple-500/20 to-purple-600/20 border border-purple-500/30 text-purple-300 px-6 py-3 rounded-full hover:scale-110 hover:shadow-lg transition-all duration-300 cursor-pointer">
+                        Islamic History
+                    </div>
+                    <div class="category-tag bg-gradient-to-r from-amber-500/20 to-amber-600/20 border border-amber-500/30 text-amber-300 px-6 py-3 rounded-full hover:scale-110 hover:shadow-lg transition-all duration-300 cursor-pointer">
+                        Daily Worship
+                    </div>
+                    <div class="category-tag bg-gradient-to-r from-rose-500/20 to-rose-600/20 border border-rose-500/30 text-rose-300 px-6 py-3 rounded-full hover:scale-110 hover:shadow-lg transition-all duration-300 cursor-pointer">
+                        Family & Ethics
+                    </div>
+                </div>
+            </div>
+
+            <!-- Call to Action -->
+            <div class="text-center">
+                <div class="glass-card rounded-lg p-8 max-w-2xl mx-auto">
+                    <h3 class="text-2xl font-bold text-white mb-4">Need Personalized Guidance?</h3>
+                    <p class="text-gray-300 mb-6">Our AI Ustaz is always available to provide personalized Islamic guidance tailored to your specific needs and circumstances.</p>
+                    <button onclick="scrollToChat()" class="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold py-4 px-8 rounded-lg transition-all duration-300 hover:scale-105 hover:shadow-xl">
+                        Ask Your Question Now
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const chatMessages = document.getElementById('chatMessages');
+        const messageInput = document.getElementById('messageInput');
+        const sendButton = document.getElementById('sendButton');
+        const typingIndicator = document.getElementById('typingIndicator');
+
+        // Islamic knowledge base for AI responses
+        const islamicResponses = {
+            // Prayer-related questions
+            prayer: {
+                times: "Prayer times vary by location. For Kota Kinabalu today: Fajr 5:45 AM, Dhuhr 12:30 PM, Asr 3:45 PM, Maghrib 6:55 PM, Isha 8:10 PM. You can find accurate times for your location in our Community Hub section.",
+                wudu: "The steps for Wudu are: 1) Niyyah (intention), 2) Wash hands 3 times, 3) Rinse mouth 3 times, 4) Rinse nose 3 times, 5) Wash face 3 times, 6) Wash arms to elbows 3 times, 7) Wipe head once, 8) Wash feet to ankles 3 times. May Allah accept your worship.",
+                qibla: "The Qibla direction for Sabah is approximately 295° (West-Northwest). You can use a compass or our platform's built-in Qibla finder for precise direction."
+            },
+            
+            // Platform-related questions
+            platform: {
+                marketplace: "Our Halal Marketplace connects you with local Muslim entrepreneurs across Sabah. You can browse products, support small businesses, and ensure all purchases are halal-certified. Click on 'Marketplace' in the navigation to start shopping!",
+                quran: "Our Quran Learning feature uses AI to help improve your Tajweed pronunciation. It provides real-time feedback and personalized lessons. Visit the Quran Learning section to start your journey.",
+                community: "The Community Hub allows you to connect with fellow Muslims, join study groups, participate in local events, and seek community support. It's designed to strengthen our ummah bonds."
+            },
+            
+            // Islamic jurisprudence
+            fiqh: {
+                trading: "Online trading is generally permissible in Islam as long as it avoids riba (interest), gharar (excessive uncertainty), and haram goods. Our Halal Marketplace ensures all transactions comply with Islamic principles.",
+                halal: "Halal means 'permissible' in Islam. For food, it must be prepared according to Islamic law, avoiding pork and alcohol, and animals must be slaughtered properly with bismillah.",
+                zakat: "Zakat is obligatory for Muslims who meet the nisab threshold. It's 2.5% of savings held for a lunar year. You can calculate and distribute zakat through verified organizations in our Community Hub."
+            },
+            
+            // Default responses
+            greetings: "Wa'alaikumussalam wa rahmatullahi wa barakatuh! How may I assist you with your Islamic questions or help you navigate our Digital Dakwah Platform?",
+            default: "Thank you for your question. While I strive to provide accurate Islamic guidance, I recommend consulting with local scholars for complex matters. Is there a specific aspect of Islam or our platform I can help clarify?"
+        };
+
+        function addMessage(content, isUser = false, timestamp = new Date()) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'chat-message';
+            
+            const timeStr = timestamp.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+            
+            if (isUser) {
+                messageDiv.innerHTML = `
+                    <div class="flex items-start space-x-3 justify-end">
+                        <div class="bg-blue-500/20 rounded-lg p-4 max-w-[80%]">
+                            <p class="text-white">${content}</p>
+                            <span class="text-xs text-gray-400 mt-2 block">${timeStr}</span>
+                        </div>
+                        <img src="https://placehold.co/40x40/blue/white?text=U" alt="User" class="w-8 h-8 rounded-full">
+                    </div>
+                `;
+            } else {
+                messageDiv.innerHTML = `
+                    <div class="flex items-start space-x-3">
+                        <img src="https://placehold.co/40x40/green/white?text=AI" alt="Ustaz" class="w-8 h-8 rounded-full">
+                        <div class="bg-green-500/20 rounded-lg p-4 max-w-[80%]">
+                            <p class="text-white">${content}</p>
+                            <span class="text-xs text-gray-400 mt-2 block">${timeStr}</span>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function generateResponse(userMessage) {
+            const message = userMessage.toLowerCase();
+            
+            // Greeting responses
+            if (message.includes('salam') || message.includes('hello') || message.includes('hi')) {
+                return islamicResponses.greetings;
+            }
+            
+            // Prayer-related
+            if (message.includes('prayer time') || message.includes('solat time')) {
+                return islamicResponses.prayer.times;
+            }
+            if (message.includes('wudu') || message.includes('ablution')) {
+                return islamicResponses.prayer.wudu;
+            }
+            if (message.includes('qibla') || message.includes('kiblat')) {
+                return islamicResponses.prayer.qibla;
+            }
+            
+            // Platform-related
+            if (message.includes('marketplace') || message.includes('shop')) {
+                return islamicResponses.platform.marketplace;
+            }
+            if (message.includes('quran') || message.includes('tajweed')) {
+                return islamicResponses.platform.quran;
+            }
+            if (message.includes('community') || message.includes('hub')) {
+                return islamicResponses.platform.community;
+            }
+            
+            // Islamic jurisprudence
+            if (message.includes('trading') || message.includes('business')) {
+                return islamicResponses.fiqh.trading;
+            }
+            if (message.includes('halal') || message.includes('haram')) {
+                return islamicResponses.fiqh.halal;
+            }
+            if (message.includes('zakat') || message.includes('charity')) {
+                return islamicResponses.fiqh.zakat;
+            }
+            
+            // Tajweed improvement
+            if (message.includes('improve') && message.includes('tajweed')) {
+                return "To improve your Tajweed: 1) Practice regularly with our AI coach, 2) Listen to expert reciters, 3) Learn the rules of pronunciation, 4) Join study groups in our Community Hub. Our platform provides personalized feedback to help you perfect your recitation, inshaAllah.";
+            }
+            
+            // Default response
+            return islamicResponses.default;
+        }
+
+        function sendMessage() {
+            const message = messageInput.value.trim();
+            if (!message) return;
+            
+            // Add user message
+            addMessage(message, true);
+            messageInput.value = '';
+            
+            // Show typing indicator
+            typingIndicator.classList.add('active');
+            
+            // Simulate thinking time and respond
+            setTimeout(() => {
+                typingIndicator.classList.remove('active');
+                const response = generateResponse(message);
+                addMessage(response, false);
+            }, 1000 + Math.random() * 2000); // 1-3 seconds delay
+        }
+
+        // Event listeners
+        sendButton.addEventListener('click', sendMessage);
+        messageInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        // Quick questions
+        document.querySelectorAll('.quick-question').forEach(button => {
+            button.addEventListener('click', () => {
+                messageInput.value = button.textContent.trim();
+                sendMessage();
+            });
+        });
+
+        // Counter Animation
+        function animateCounters() {
+            const counters = document.querySelectorAll('.counter');
+            const speed = 50; // Lower = faster animation
+
+            counters.forEach(counter => {
+                const updateCount = () => {
+                    const target = +counter.getAttribute('data-target');
+                    const count = +counter.innerText;
+                    const increment = target / speed;
+
+                    if (count < target) {
+                        counter.innerText = Math.ceil(count + increment);
+                        setTimeout(updateCount, 50);
+                    } else {
+                        counter.innerText = target;
+                    }
+                };
+                updateCount();
+            });
+        }
+
+        // Intersection Observer for animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    if (entry.target.querySelector('.counter')) {
+                        animateCounters();
+                    }
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe elements for animation
+        document.querySelectorAll('.glass-card').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(30px)';
+            card.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
+            observer.observe(card);
+        });
+
+        // Category tag interactions
+        document.querySelectorAll('.category-tag').forEach(tag => {
+            tag.addEventListener('click', function() {
+                const category = this.textContent.trim();
+                const categoryQuestions = {
+                    'Fiqh & Jurisprudence': 'What are the basic principles of Islamic jurisprudence?',
+                    'Quranic Studies': 'How can I improve my Quran recitation?',
+                    'Islamic History': 'Tell me about the life of Prophet Muhammad (PBUH)',
+                    'Daily Worship': 'What are the steps for proper Wudu?',
+                    'Family & Ethics': 'What does Islam teach about family relationships?'
+                };
+                
+                if (categoryQuestions[category]) {
+                    document.getElementById('messageInput').value = categoryQuestions[category];
+                    scrollToChat();
+                }
+            });
+        });
+
+        // Scroll to chat function
+        window.scrollToChat = function() {
+            document.getElementById('messageInput').scrollIntoView({ 
+                behavior: 'smooth',
+                block: 'center'
+            });
+            document.getElementById('messageInput').focus();
+        };
+
+        // Enhanced Islamic responses with more categories
+        const enhancedIslamicResponses = {
+            ...islamicResponses, // Keep existing responses
+            
+            // Additional categories
+            history: {
+                prophet: "Prophet Muhammad (PBUH) was born in Mecca in 570 CE. His life teaches us about compassion, justice, and devotion to Allah. He received the first revelation at age 40 and spent 23 years spreading Islam. His Sunnah guides us in all aspects of life.",
+                sahaba: "The Sahaba (companions) were the devoted followers of Prophet Muhammad (PBUH). They sacrificed everything for Islam and serve as role models for Muslims. Their dedication and character exemplify true Islamic values."
+            },
+            
+            family: {
+                relationships: "Islam emphasizes strong family bonds. Parents deserve respect and kindness (Quran 17:23). Spouses should treat each other with love and mercy (Quran 30:21). Children are amanah (trust) from Allah.",
+                marriage: "Marriage in Islam is a sacred bond and half of one's faith. It should be based on compatibility, mutual respect, and shared Islamic values. Both spouses have rights and responsibilities toward each other."
+            },
+            
+            ethics: {
+                honesty: "Honesty (Sidq) is fundamental in Islam. The Prophet (PBUH) was known as 'Al-Amin' (the trustworthy). Muslims must be truthful in speech, dealings, and character.",
+                charity: "Giving charity (Sadaqah) purifies wealth and soul. Beyond obligatory Zakat, voluntary charity brings great reward and helps the community."
+            }
+        };
+
+        // Enhanced response generation
+        function generateEnhancedResponse(userMessage) {
+            const message = userMessage.toLowerCase();
+            
+            // History-related
+            if (message.includes('prophet') || message.includes('muhammad')) {
+                return enhancedIslamicResponses.history.prophet;
+            }
+            if (message.includes('sahaba') || message.includes('companion')) {
+                return enhancedIslamicResponses.history.sahaba;
+            }
+            
+            // Family-related
+            if (message.includes('family') || message.includes('parent') || message.includes('relationship')) {
+                return enhancedIslamicResponses.family.relationships;
+            }
+            if (message.includes('marriage') || message.includes('spouse')) {
+                return enhancedIslamicResponses.family.marriage;
+            }
+            
+            // Ethics-related
+            if (message.includes('honest') || message.includes('truth')) {
+                return enhancedIslamicResponses.ethics.honesty;
+            }
+            if (message.includes('charity') || message.includes('sadaqah')) {
+                return enhancedIslamicResponses.ethics.charity;
+            }
+            
+            // Fall back to original function
+            return generateResponse(userMessage);
+        }
+
+        // Update the sendMessage function to use enhanced responses
+        const originalSendMessage = sendMessage;
+        sendMessage = function() {
+            const message = messageInput.value.trim();
+            if (!message) return;
+            
+            // Add user message
+            addMessage(message, true);
+            messageInput.value = '';
+            
+            // Show typing indicator
+            typingIndicator.classList.add('active');
+            
+            // Simulate thinking time and respond with enhanced responses
+            setTimeout(() => {
+                typingIndicator.classList.remove('active');
+                const response = generateEnhancedResponse(message);
+                addMessage(response, false);
+            }, 1000 + Math.random() * 2000);
+        };
+
+        // Islamic Resources - Smooth Scroll to Chat
+        document.querySelectorAll('button[onclick="scrollToChat()"]').forEach(button => {
+            button.addEventListener('click', function() {
+                setTimeout(() => {
+                    const messageInput = document.getElementById('messageInput');
+                    messageInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    messageInput.focus();
+                }, 500); // Delay to allow scroll animation
+            });
+        });
+    });
+    </script>
+</body>
+</html>

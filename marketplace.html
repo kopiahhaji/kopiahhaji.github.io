@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Halal Marketplace - Digital Dakwah Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Sora', sans-serif; }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .marketplace-item {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .marketplace-item:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+        .category-filter.active {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.3), rgba(52, 211, 153, 0.2));
+            border-color: #10b981;
+        }
+        .section-divider {
+            background: linear-gradient(90deg, transparent, rgba(16, 185, 129, 0.3), transparent);
+            height: 1px;
+            margin: 3rem 0;
+        }
+    </style>
+</head>
+<body class="text-gray-200 bg-[#000711]">
+    <header class="fixed top-0 left-0 right-0 z-50 bg-[#000711]/80 backdrop-blur">
+        <div class="container mx-auto px-6 py-4">
+            <div class="glass-card rounded-full px-6 py-2 flex justify-between items-center">
+                <h1 class="text-lg font-bold text-white">Digital Dakwah Platform</h1>
+                <nav class="hidden md:flex space-x-6">
+                    <a href="index.html" class="text-gray-300 hover:text-white transition">Home</a>
+                    <a href="marketplace.html" class="text-white">Marketplace</a>
+                    <a href="ustaz.html" class="text-gray-300 hover:text-white transition">Ask Ustaz</a>
+                    <a href="mindmap.html" class="text-gray-300 hover:text-white transition">Mindmap</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main class="pt-32 pb-20">
+        <div class="container mx-auto px-6">
+            <h1 class="text-4xl font-bold text-white mb-8 text-center">Halal Marketplace</h1>
+            <p class="text-center text-gray-400 mb-12">Supporting Local Muslim Entrepreneurs Across Sabah</p>
+            
+            <!-- Search and Filter -->
+            <div class="max-w-4xl mx-auto mb-12">
+                <div class="flex flex-col md:flex-row gap-4">
+                    <input type="text" id="searchInput" placeholder="Search products..." 
+                           class="flex-1 px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-amber-400">
+                    <select id="locationFilter" class="px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white">
+                        <option value="">All Locations</option>
+                        <option value="kk">Kota Kinabalu</option>
+                        <option value="sandakan">Sandakan</option>
+                        <option value="tawau">Tawau</option>
+                        <option value="papar">Papar</option>
+                        <option value="keningau">Keningau</option>
+                        <option value="tuaran">Tuaran</option>
+                        <option value="lahad-datu">Lahad Datu</option>
+                    </select>
+                    <select id="categoryFilter" class="px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white">
+                        <option value="">All Categories</option>
+                        <option value="food">Halal Food</option>
+                        <option value="accessories">Islamic Accessories</option>
+                        <option value="books">Books & Learning</option>
+                        <option value="clothing">Islamic Clothing</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- LOCAL HALAL SECTION - Ready Made Food -->
+            <section class="mb-20">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">
+                        <span class="text-gradient bg-gradient-to-r from-amber-400 to-orange-500 bg-clip-text text-transparent">Local Halal</span>
+                    </h2>
+                    <p class="text-gray-400 text-lg">Authentic Sabahan ready-made food and traditional kuih</p>
+                </div>
+
+                <!-- Category Filter for Local Halal -->
+                <div class="flex flex-wrap justify-center gap-4 mb-8">
+                    <button class="halal-filter active bg-gradient-to-r from-amber-500/20 to-orange-600/20 border border-amber-500/30 text-amber-300 px-6 py-3 rounded-full hover:scale-105 transition-all duration-300" data-category="all">
+                        All Food
+                    </button>
+                    <button class="halal-filter bg-gradient-to-r from-orange-500/20 to-red-600/20 border border-orange-500/30 text-orange-300 px-6 py-3 rounded-full hover:scale-105 transition-all duration-300" data-category="kuih">
+                        Traditional Kuih
+                    </button>
+                    <button class="halal-filter bg-gradient-to-r from-yellow-500/20 to-amber-600/20 border border-yellow-500/30 text-yellow-300 px-6 py-3 rounded-full hover:scale-105 transition-all duration-300" data-category="snacks">
+                        Packaged Snacks
+                    </button>
+                    <button class="halal-filter bg-gradient-to-r from-red-500/20 to-pink-600/20 border border-red-500/30 text-red-300 px-6 py-3 rounded-full hover:scale-105 transition-all duration-300" data-category="meals">
+                        Ready Meals
+                    </button>
+                </div>
+
+                <!-- Local Halal Product Grid -->
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" id="halalGrid">
+                    
+                    <!-- Traditional Kuih -->
+                    <div class="halal-item marketplace-item glass-card rounded-lg overflow-hidden hover:transform hover:scale-105 transition-all duration-300 group" data-category="kuih">
+                        <div class="relative">
+                            <img src="https://placehold.co/300x200/f59e0b/white?text=Kuih+Baulu" alt="Kuih Baulu" class="w-full h-48 object-cover">
+                            <div class="absolute top-3 right-3 bg-amber-500/20 backdrop-blur rounded-full px-3 py-1 text-amber-300 text-xs">
+                                Traditional
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="font-bold text-white mb-2 group-hover:text-amber-300 transition-colors">Kuih Baulu Tradisional</h3>
+                            <p class="text-gray-400 text-sm mb-3">Soft sponge cake with traditional Sabahan flavor, perfect for tea time</p>
+                            <div class="flex items-center mb-3">
+                                <span class="text-amber-300 text-sm">★★★★★</span>
+                                <span class="text-gray-400 text-xs ml-2">(42 reviews)</span>
+                            </div>
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="text-amber-300 font-bold text-lg">RM 18</span>
+                                <span class="text-gray-500 text-sm">by Puan Fatimah, Papar</span>
+                            </div>
+                            <button class="w-full bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 py-2 rounded-lg transition-colors">Add to Cart</button>
+                        </div>
+                    </div>
+
+                    <div class="halal-item marketplace-item glass-card rounded-lg overflow-hidden hover:transform hover:scale-105 transition-all duration-300 group" data-category="kuih">
+                        <div class="relative">
+                            <img src="https://placehold.co/300x200/ea580c/white?text=Kuih+Cincin" alt="Kuih Cincin" class="w-full h-48 object-cover">
+                            <div class="absolute top-3 right-3 bg-orange-500/20 backdrop-blur rounded-full px-3 py-1 text-orange-300 text-xs">
+                                Fresh Daily
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="font-bold text-white mb-2 group-hover:text-orange-300 transition-colors">Kuih Cincin Sabah</h3>
+                            <p class="text-gray-400 text-sm mb-3">Ring-shaped traditional kuih, crispy outside and soft inside</p>
+                            <div class="flex items-center mb-3">
+                                <span class="text-amber-300 text-sm">★★★★☆</span>
+                                <span class="text-gray-400 text-xs ml-2">(28 reviews)</span>
+                            </div>
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="text-orange-300 font-bold text-lg">RM 12</span>
+                                <span class="text-gray-500 text-sm">by Puan Siti, Tuaran</span>
+                            </div>
+                            <button class="w-full bg-orange-500/20 hover:bg-orange-500/30 text-orange-300 py-2 rounded-lg transition-colors">Add to Cart</button>
+                        </div>
+                    </div>
+
+                    <div class="halal-item marketplace-item glass-card rounded-lg overflow-hidden hover:transform hover:scale-105 transition-all duration-300 group" data-category="kuih">
+                        <div class="relative">
+                            <img src="https://placehold.co/300x200/eab308/white?text=Kuih+Lapis" alt="Kuih Lapis" class="w-full h-48 object-cover">
+                            <div class="absolute top-3 right-3 bg-yellow-500/20 backdrop-blur rounded-full px-3 py-1 text-yellow-300 text-xs">
+                                Colorful
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="font-bold text-white mb-2 group-hover:text-yellow-300 transition-colors">Kuih Lapis Pandan</h3>
+                            <p class="text-gray-400 text-sm mb-3">Multi-layered steamed cake with natural pandan flavor</p>
+                            <div class="flex items-center mb-3">
+                                <span class="text-amber-300 text-sm">★★★★★</span>
+                                <span class="text-gray-400 text-xs ml-2">(35 reviews)</span>
+                            </div>
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="text-yellow-300 font-bold text-lg">RM 25</span>
+                                <span class="text-gray-500 text-sm">by Cik Aminah, KK</span>
+                            </div>
+                            <button class="w-full bg-yellow-500/20 hover:bg-yellow-500/30 text-yellow-300 py-2 rounded-lg transition-colors">Add to Cart</button>
+                        </div>
+                    </div>
+
+                    <!-- Packaged Snacks -->
+                    <div class="halal-item marketplace-item glass-card rounded-lg overflow-hidden hover:transform hover:scale-105 transition-all duration-300 group" data-category="snacks">
+                        <div class="relative">
+                            <img src="https://placehold.co/300x200/0ea5e9/white?text=Keropok+Ikan" alt="Keropok Ikan" class="w-full h-48 object-cover">
+                            <div class="absolute top-3 right-3 bg-cyan-500/20 backdrop-blur rounded-full px-3 py-1 text-cyan-300 text-xs">
+                                Crispy
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="font-bold text-white mb-2 group-hover:text-cyan-300 transition-colors">Keropok Ikan Sandakan</h3>
+                            <p class="text-gray-400 text-sm mb-3">Traditional fish crackers made from fresh Sandakan fish</p>
+                            <div class="flex items-center mb-3">
+                                <span class="text-amber-300 text-sm">★★★★☆</span>
+                                <span class="text-gray-400 text-xs ml-2">(52 reviews)</span>
+                            </div>
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="text-cyan-300 font-bold text-lg">RM 15</span>
+                                <span class="text-gray-500 text-sm">by Tuan Ahmad, Sandakan</span>
+                            </div>
+                            <button class="w-full bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 py-2 rounded-lg transition-colors">Add to Cart</button>
+                        </div>
+                    </div>
+
+                    <div class="halal-item marketplace-item glass-card rounded-lg overflow-hidden hover:transform hover:scale-105 transition-all duration-300 group" data-category="snacks">
+                        <div class="relative">
+                            <img src="https://placehold.co/300x200/dc2626/white?text=Serunding+Daging" alt="Serunding Daging" class="w-full h-48 object-cover">
+                            <div class="absolute top-3 right-3 bg-red-500/20 backdrop-blur rounded-full px-3 py-1 text-red-300 text-xs">
+                                Spicy
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="font-bold text-white mb-2 group-hover:text-red-300 transition-colors">Serunding Daging Special</h3>
+                            <p class="text-gray-400 text-sm mb-3">Spiced meat floss with authentic Sabahan spices blend</p>
+                            <div class="flex items-center mb-3">
+                                <span class="text-amber-300 text-sm">★★★★★</span>
+                                <span class="text-gray-400 text-xs ml-2">(61 reviews)</span>
+                            </div>
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="text-red-300 font-bold text-lg">RM 28</span>
+                                <span class="text-gray-500 text-sm">by En. Hassan, Tawau</span>
+                            </div>
+                            <button class="w-full bg-red-500/20 hover:bg-red-500/30 text-red-300 py-2 rounded-lg transition-colors">Add to Cart</button>
+                        </div>
+                    </div>
+
+                    <!-- Ready Meals -->
+                    <div class="halal-item marketplace-item glass-card rounded-lg overflow-hidden hover:transform hover:scale-105 transition-all duration-300 group" data-category="meals">
+                        <div class="relative">
+                            <img src="https://placehold.co/300x200/059669/white?text=Rendang+Pack" alt="Rendang Pack" class="w-full h-48 object-cover">
+                            <div class="absolute top-3 right-3 bg-emerald-500/20 backdrop-blur rounded-full px-3 py-1 text-emerald-300 text-xs">
+                                Ready to Eat
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="font-bold text-white mb-2 group-hover:text-emerald-300 transition-colors">Rendang Daging Frozen</h3>
+                            <p class="text-gray-400 text-sm mb-3">Traditional beef rendang, frozen pack ready to heat and serve</p>
+                            <div class="flex items-center mb-3">
+                                <span class="text-amber-300 text-sm">★★★★★</span>
+                                <span class="text-gray-400 text-xs ml-2">(38 reviews)</span>
+                            </div>
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="text-emerald-300 font-bold text-lg">RM 45</span>
+                                <span class="text-gray-500 text-sm">by Warung Kak Yah, KK</span>
+                            </div>
+                            <button class="w-full bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 py-2 rounded-lg transition-colors">Add to Cart</button>
+                        </div>
+                    </div>
+
+                    <div class="halal-item marketplace-item glass-card rounded-lg overflow-hidden hover:transform hover:scale-105 transition-all duration-300 group" data-category="meals">
+                        <div class="relative">
+                            <img src="https://placehold.co/300x200/7c3aed/white?text=Nasi+Lemak+Pack" alt="Nasi Lemak Pack" class="w-full h-48 object-cover">
+                            <div class="absolute top-3 right-3 bg-violet-500/20 backdrop-blur rounded-full px-3 py-1 text-violet-300 text-xs">
+                                Complete Meal
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="font-bold text-white mb-2 group-hover:text-violet-300 transition-colors">Nasi Lemak Sabah Pack</h3>
+                            <p class="text-gray-400 text-sm mb-3">Complete nasi lemak with sambal, anchovies, and egg</p>
+                            <div class="flex items-center mb-3">
+                                <span class="text-amber-300 text-sm">★★★★☆</span>
+                                <span class="text-gray-400 text-xs ml-2">(29 reviews)</span>
+                            </div>
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="text-violet-300 font-bold text-lg">RM 12</span>
+                                <span class="text-gray-500 text-sm">by Gerai Mak Su, Keningau</span>
+                            </div>
+                            <button class="w-full bg-violet-500/20 hover:bg-violet-500/30 text-violet-300 py-2 rounded-lg transition-colors">Add to Cart</button>
+                        </div>
+                    </div>
+
+                    <div class="halal-item marketplace-item glass-card rounded-lg overflow-hidden hover:transform hover:scale-105 transition-all duration-300 group" data-category="snacks">
+                        <div class="relative">
+                            <img src="https://placehold.co/300x200/f97316/white?text=Dodol+Durian" alt="Dodol Durian" class="w-full h-48 object-cover">
+                            <div class="absolute top-3 right-3 bg-orange-500/20 backdrop-blur rounded-full px-3 py-1 text-orange-300 text-xs">
+                                Premium
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="font-bold text-white mb-2 group-hover:text-orange-300 transition-colors">Dodol Durian Tawau</h3>
+                            <p class="text-gray-400 text-sm mb-3">Sweet sticky confection made from premium Tawau durian</p>
+                            <div class="flex items-center mb-3">
+                                <span class="text-amber-300 text-sm">★★★★★</span>
+                                <span class="text-gray-400 text-xs ml-2">(44 reviews)</span>
+                            </div>
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="text-orange-300 font-bold text-lg">RM 35</span>
+                                <span class="text-gray-500 text-sm">by Puan Maryam, Tawau</span>
+                            </div>
+                            <button class="w-full bg-orange-500/20 hover:bg-orange-500/30 text-orange-300 py-2 rounded-lg transition-colors">Add to Cart</button>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- Section Divider -->
+            <div class="section-divider"></div>
+
+            <!-- LOCAL PRODUCTS SECTION - Islamic Accessories -->
+            <section class="mb-20">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">
+                        <span class="text-gradient bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">Local Products</span>
+                    </h2>
+                    <p class="text-gray-400 text-lg">Authentic Islamic accessories crafted by local Sabahan artisans</p>
+                </div>
+
+                <!-- Category Filter for Local Products -->
+                <div class="flex flex-wrap justify-center gap-4 mb-8">
+                    <button class="products-filter active bg-gradient-to-r from-cyan-500/20 to-blue-600/20 border border-cyan-500/30 text-cyan-300 px-6 py-3 rounded-full hover:scale-105 transition-all duration-300" data-category="all">
+                        All Products
+                    </button>
+                    <button class="products-filter bg-gradient-to-r from-green-500/20 to-emerald-600/20 border border-green-500/30 text-green-300 px-6 py-3 rounded-full hover:scale-105 transition-all duration-300" data-category="prayer">
+                        Prayer Items
+                    </button>
+                    <button class="products-filter bg-gradient-to-r from-purple-500/20 to-violet-600/20 border border-purple-500/30 text-purple-300 px-6 py-3 rounded-full hover:scale-105 transition-all duration-300" data-category="jewelry">
+                        Islamic Jewelry
+                    </button>
+                    <button class="products-filter bg-gradient-to-r from-amber-500/20 to-yellow-600/20 border border-amber-500/30 text-amber-300 px-6 py-3 rounded-full hover:scale-105 transition-all duration-300" data-category="books">
+                        Books & Calligraphy
+                    </button>
+                    <button class="products-filter bg-gradient-to-r from-rose-500/20 to-pink-600/20 border border-rose-500/30 text-rose-300 px-6 py-3 rounded-full hover:scale-105 transition-all duration-300" data-category="clothing">
+                        Islamic Clothing
+                    </button>
+                </div>
+
+                <!-- Local Products Grid -->
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" id="productsGrid">
+                    
+                    <!-- Prayer Items -->
+                    <div class="products-item marketplace-item glass-card rounded-lg overflow-hidden hover:transform hover:scale-105 transition-all duration-300 group" data-category="prayer">
+                        <div class="relative">
+                            <img src="https://placehold.co/300x200/10b981/white?text=Tasbih+Kayu+Gaharu" alt="Tasbih Kayu Gaharu" class="w-full h-48 object-cover">
+                            <div class="absolute top-3 right-3 bg-green-500/20 backdrop-blur rounded-full px-3 py-1 text-green-300 text-xs">
+                                Handmade
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="font-bold text-white mb-2 group-hover:text-green-300 transition-colors">Tasbih Kayu Gaharu Premium</h3>
+                            <p class="text-gray-400 text-sm mb-3">99 beads, authentic agarwood from Sabahan forests</p>
+                            <div class="flex items-center mb-3">
+                                <span class="text-amber-300 text-sm">★★★★★</span>
+                                <span class="text-gray-400 text-xs ml-2">(24 reviews)</span>
+                            </div>
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="text-green-300 font-bold text-lg">RM 85</span>
+                                <span class="text-gray-500 text-sm">by Ustaz Halim, Tawau</span>
+                            </div>
+                            <button class="w-full bg-green-500/20 hover:bg-green-500/30 text-green-300 py-2 rounded-lg transition-colors">Add to Cart</button>
+                        </div>
+                    </div>
+
+                    <div class="products-item marketplace-item glass-card rounded-lg overflow-hidden hover:transform hover:scale-105 transition-all duration-300 group" data-category="prayer">
+                        <div class="relative">
+                            <img src="https://placehold.co/300x200/0ea5e9/white?text=Sajadah+Songket" alt="Sajadah Songket" class="w-full h-48 object-cover">
+                            <div class="absolute top-3 right-3 bg-cyan-500/20 backdrop-blur rounded-full px-3 py-1 text-cyan-300 text-xs">
+                                Traditional
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="font-bold text-white mb-2 group-hover:text-cyan-300 transition-colors">Sajadah Songket Sabah</h3>
+                            <p class="text-gray-400 text-sm mb-3">Handwoven prayer mat with traditional Sabahan patterns</p>
+                            <div class="flex items-center mb-3">
+                                <span class="text-amber-300 text-sm">★★★★☆</span>
+                                <span class="text-gray-400 text-xs ml-2">(18 reviews)</span>
+                            </div>
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="text-cyan-300 font-bold text-lg">RM 120</span>
+                                <span class="text-gray-500 text-sm">by Puan Salmah, Papar</span>
+                            </div>
+                            <button class="w-full bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 py-2 rounded-lg transition-colors">Add to Cart</button>
+                        </div>
+                    </div>
+
+                    <div class="products-item marketplace-item glass-card rounded-lg overflow-hidden hover:transform hover:scale-105 transition-all duration-300 group" data-category="prayer">
+                        <div class="relative">
+                            <img src="https://placehold.co/300x200/065f46/white?text=Al+Quran+Cover" alt="Al Quran Cover" class="w-full h-48 object-cover">
+                            <div class="absolute top-3 right-3 bg-emerald-500/20 backdrop-blur rounded-full px-3 py-1 text-emerald-300 text-xs">
+                                Leather
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="font-bold text-white mb-2 group-hover:text-emerald-300 transition-colors">Al-Quran Cover Songket</h3>
+                            <p class="text-gray-400 text-sm mb-3">Premium leather cover with songket design for Al-Quran</p>
+                            <div class="flex items-center mb-3">
+                                <span class="text-amber-300 text-sm">★★★★★</span>
+                                <span class="text-gray-400 text-xs ml-2">(31 reviews)</span>
+                            </div>
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="text-emerald-300 font-bold text-lg">RM 65</span>
+                                <span class="text-gray-500 text-sm">by Cik Zainab, KK</span>
+                            </div>
+                            <button class="w-full bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 py-2 rounded-lg transition-colors">Add to Cart</button>
+                        </div>
+                    </div>
+
+                    <!-- Islamic Jewelry -->
+                    <div class="products-item marketplace-item glass-card rounded-lg overflow-hidden hover:transform hover:scale-105 transition-all duration-300 group" data-category="jewelry">
+                        <div class="relative">
+                            <img src="https://placehold.co/300x200/8b5cf6/white?text=Cincin+Akik" alt="Cincin Akik" class="w-full h-48 object-cover">
+                            <div class="absolute top-3 right-3 bg-purple-500/20 backdrop-blur rounded-full px-3 py-1 text-purple-300 text-xs">
+                                Natural Stone
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="font-bold text-white mb-2 group-hover:text-purple-300 transition-colors">Cincin Akik Sulaiman</h3>
+                            <p class="text-gray-400 text-sm mb-3">Natural agate ring with Islamic calligraphy engraving</p>
+                            <div class="flex items-center mb-3">
+                                <span class="text-amber-300 text-sm">★★★★★</span>
+                                <span class="text-gray-400 text-xs ml-2">(31 reviews)</span>
+                            </div>
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="text-purple-300 font-bold text-lg">RM 65</span>
+                                <span class="text-gray-500 text-sm">by En. Ibrahim, KK</span>
+                            </div>
+                            <button class="w-full bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 py-2 rounded-lg transition-colors">Add to Cart</button>
+                        </div>
+                    </div>
+
+                    <div class="products-item marketplace-item glass-card rounded-lg overflow-hidden hover:transform hover:scale-105 transition-all duration-300 group" data-category="jewelry">
+                        <div class="relative">
+                            <img src="https://placehold.co/300x200/a855f7/white?text=Gelang+Doa" alt="Gelang Doa" class="w-full h-48 object-cover">
+                            <div class="absolute top-3 right-3 bg-purple-500/20 backdrop-blur rounded-full px-3 py-1 text-purple-300 text-xs">
+                                Blessed
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="font-bold text-white mb-2 group-hover:text-purple-300 transition-colors">Gelang Doa 99 Asmaul Husna</h3>
+                            <p class="text-gray-400 text-sm mb-3">Silver bracelet with the 99 beautiful names of Allah</p>
+                            <div class="flex items-center mb-3">
+                                <span class="text-amber-300 text-sm">★★★★☆</span>
+                                <span class="text-gray-400 text-xs ml-2">(15 reviews)</span>
+                            </div>
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="text-purple-300 font-bold text-lg">RM 95</span>
+                                <span class="text-gray-500 text-sm">by Cik Nur, Sandakan</span>
+                            </div>
+                            <button class="w-full bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 py-2 rounded-lg transition-colors">Add to Cart</button>
+                        </div>
+                    </div>
+
+                    <!-- Books & Calligraphy -->
+                    <div class="products-item marketplace-item glass-card rounded-lg overflow-hidden hover:transform hover:scale-105 transition-all duration-300 group" data-category="books">
+                        <div class="relative">
+                            <img src="https://placehold.co/300x200/f59e0b/white?text=Mushaf+Sabah" alt="Mushaf Sabah" class="w-full h-48 object-cover">
+                            <div class="absolute top-3 right-3 bg-amber-500/20 backdrop-blur rounded-full px-3 py-1 text-amber-300 text-xs">
+                                Limited Edition
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="font-bold text-white mb-2 group-hover:text-amber-300 transition-colors">Mushaf Al-Quran Sabah Edition</h3>
+                            <p class="text-gray-400 text-sm mb-3">Beautifully bound Quran with Malay translation</p>
+                            <div class="flex items-center mb-3">
+                                <span class="text-amber-300 text-sm">★★★★★</span>
+                                <span class="text-gray-400 text-xs ml-2">(42 reviews)</span>
+                            </div>
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="text-amber-300 font-bold text-lg">RM 180</span>
+                                <span class="text-gray-500 text-sm">by Pustaka Islam KK</span>
+                            </div>
+                            <button class="w-full bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 py-2 rounded-lg transition-colors">Add to Cart</button>
+                        </div>
+                    </div>
+
+                    <div class="products-item marketplace-item glass-card rounded-lg overflow-hidden hover:transform hover:scale-105 transition-all duration-300 group" data-category="books">
+                        <div class="relative">
+                            <img src="https://placehold.co/300x200/eab308/white?text=Kaligrafi+Ayat" alt="Kaligrafi Ayat" class="w-full h-48 object-cover">
+                            <div class="absolute top-3 right-3 bg-amber-500/20 backdrop-blur rounded-full px-3 py-1 text-amber-300 text-xs">
+                                Handwritten
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="font-bold text-white mb-2 group-hover:text-amber-300 transition-colors">Kaligrafi Ayat Kursi</h3>
+                            <p class="text-gray-400 text-sm mb-3">Hand-written Arabic calligraphy on premium canvas</p>
+                            <div class="flex items-center mb-3">
+                                <span class="text-amber-300 text-sm">★★★★☆</span>
+                                <span class="text-gray-400 text-xs ml-2">(8 reviews)</span>
+                            </div>
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="text-amber-300 font-bold text-lg">RM 150</span>
+                                <span class="text-gray-500 text-sm">by Ustaz Yusof, Lahad Datu</span>
+                            </div>
+                            <button class="w-full bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 py-2 rounded-lg transition-colors">Add to Cart</button>
+                        </div>
+                    </div>
+
+                    <!-- Islamic Clothing -->
+                    <div class="products-item marketplace-item glass-card rounded-lg overflow-hidden hover:transform hover:scale-105 transition-all duration-300 group" data-category="clothing">
+                        <div class="relative">
+                            <img src="https://placehold.co/300x200/ec4899/white?text=Jubah+Lelaki" alt="Jubah Lelaki" class="w-full h-48 object-cover">
+                            <div class="absolute top-3 right-3 bg-rose-500/20 backdrop-blur rounded-full px-3 py-1 text-rose-300 text-xs">
+                                Premium Cotton
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="font-bold text-white mb-2 group-hover:text-rose-300 transition-colors">Jubah Lelaki Sabahan</h3>
+                            <p class="text-gray-400 text-sm mb-3">Traditional men's robe with modern Sabahan design</p>
+                            <div class="flex items-center mb-3">
+                                <span class="text-amber-300 text-sm">★★★★☆</span>
+                                <span class="text-gray-400 text-xs ml-2">(12 reviews)</span>
+                            </div>
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="text-rose-300 font-bold text-lg">RM 220</span>
+                                <span class="text-gray-500 text-sm">by Butik Muslimah KK</span>
+                            </div>
+                            <button class="w-full bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 py-2 rounded-lg transition-colors">Add to Cart</button>
+                        </div>
+                    </div>
+
+                    <div class="products-item marketplace-item glass-card rounded-lg overflow-hidden hover:transform hover:scale-105 transition-all duration-300 group" data-category="clothing">
+                        <div class="relative">
+                            <img src="https://placehold.co/300x200/f43f5e/white?text=Tudung+Satin" alt="Tudung Satin" class="w-full h-48 object-cover">
+                            <div class="absolute top-3 right-3 bg-rose-500/20 backdrop-blur rounded-full px-3 py-1 text-rose-300 text-xs">
+                                Silk Blend
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="font-bold text-white mb-2 group-hover:text-rose-300 transition-colors">Tudung Satin Premium</h3>
+                            <p class="text-gray-400 text-sm mb-3">Elegant hijab with traditional Sabahan embroidery</p>
+                            <div class="flex items-center mb-3">
+                                <span class="text-amber-300 text-sm">★★★★★</span>
+                                <span class="text-gray-400 text-xs ml-2">(27 reviews)</span>
+                            </div>
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="text-rose-300 font-bold text-lg">RM 75</span>
+                                <span class="text-gray-500 text-sm">by Puan Aminah, Tuaran</span>
+                            </div>
+                            <button class="w-full bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 py-2 rounded-lg transition-colors">Add to Cart</button>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- Section Divider -->
+            <div class="section-divider"></div>
+
+            <!-- SABAHAN ART SECTION - Handmade Art Products -->
+            <section class="mb-20">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">
+                        <span class="text-gradient bg-gradient-to-r from-indigo-400 to-purple-500 bg-clip-text text-transparent">Sabahan Art</span>
+                    </h2>
+                    <p class="text-gray-400 text-lg">Authentic handmade art pieces celebrating Sabahan culture and Islamic heritage</p>
+                </div>
+
+                <!-- Category Filter for Sabahan Art -->
+                <div class="flex flex-wrap justify-center gap-4 mb-8">
+                    <button class="art-filter active bg-gradient-to-r from-indigo-500/20 to-purple-600/20 border border-indigo-500/30 text-indigo-300 px-6 py-3 rounded-full hover:scale-105 transition-all duration-300" data-category="all">
+                        All Art
+                    </button>
+                    <button class="art-filter bg-gradient-to-r from-violet-500/20 to-fuchsia-600/20 border border-violet-500/30 text-violet-300 px-6 py-3 rounded-full hover:scale-105 transition-all duration-300" data-category="traditional">
+                        Traditional Crafts
+                    </button>
+                    <button class="art-filter bg-gradient-to-r from-blue-500/20 to-indigo-600/20 border border-blue-500/30 text-blue-300 px-6 py-3 rounded-full hover:scale-105 transition-all duration-300" data-category="pottery">
+                        Pottery & Ceramics
+                    </button>
+                    <button class="art-filter bg-gradient-to-r from-teal-500/20 to-cyan-600/20 border border-teal-500/30 text-teal-300 px-6 py-3 rounded-full hover:scale-105 transition-all duration-300" data-category="textiles">
+                        Textiles & Weaving
+                    </button>
+                    <button class="art-filter bg-gradient-to-r from-pink-500/20 to-rose-600/20 border border-pink-500/30 text-pink-300 px-6 py-3 rounded-full hover:scale-105 transition-all duration-300" data-category="decorative">
+                        Decorative Art
+                    </button>
+                </div>
+
+                <!-- Sabahan Art Product Grid -->
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" id="artGrid">
+                    
+                    <!-- Traditional Crafts -->
+                    <div class="art-item marketplace-item glass-card rounded-lg overflow-hidden hover:transform hover:scale-105 transition-all duration-300 group" data-category="traditional">
+                        <div class="relative">
+                            <img src="https://placehold.co/300x200/8b5cf6/white?text=Sumpit+Kadazan" alt="Sumpit Kadazan" class="w-full h-48 object-cover">
+                            <div class="absolute top-3 right-3 bg-violet-500/20 backdrop-blur rounded-full px-3 py-1 text-violet-300 text-xs">
+                                Handcarved
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="font-bold text-white mb-2 group-hover:text-violet-300 transition-colors">Sumpit Kadazan Traditional</h3>
+                            <p class="text-gray-400 text-sm mb-3">Authentic Kadazan bamboo blowpipe with intricate carvings</p>
+                            <div class="flex items-center mb-3">
+                                <span class="text-amber-300 text-sm">★★★★★</span>
+                                <span class="text-gray-400 text-xs ml-2">(18 reviews)</span>
+                            </div>
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="text-violet-300 font-bold text-lg">RM 350</span>
+                                <span class="text-gray-500 text-sm">by Tuan Joseph, Papar</span>
+                            </div>
+                            <button class="w-full bg-violet-500/20 hover:bg-violet-500/30 text-violet-300 py-2 rounded-lg transition-colors">Add to Cart</button>
+                        </div>
+                    </div>
+
+                    <div class="art-item marketplace-item glass-card rounded-lg overflow-hidden hover:transform hover:scale-105 transition-all duration-300 group" data-category="traditional">
+                        <div class="relative">
+                            <img src="https://placehold.co/300x200/a855f7/white?text=Parang+Bajau" alt="Parang Bajau" class="w-full h-48 object-cover">
+                            <div class="absolute top-3 right-3 bg-purple-500/20 backdrop-blur rounded-full px-3 py-1 text-purple-300 text-xs">
+                                Museum Quality
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="font-bold text-white mb-2 group-hover:text-purple-300 transition-colors">Parang Bajau Heritage</h3>
+                            <p class="text-gray-400 text-sm mb-3">Traditional Bajau ceremonial knife with ornate silver handle</p>
+                            <div class="flex items-center mb-3">
+                                <span class="text-amber-300 text-sm">★★★★★</span>
+                                <span class="text-gray-400 text-xs ml-2">(12 reviews)</span>
+                            </div>
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="text-purple-300 font-bold text-lg">RM 485</span>
+                                <span class="text-gray-500 text-sm">by Haji Mohd, Semporna</span>
+                            </div>
+                            <button class="w-full bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 py-2 rounded-lg transition-colors">Add to Cart</button>
+                        </div>
+                    </div>
+
+                    <div class="art-item marketplace-item glass-card rounded-lg overflow-hidden hover:transform hover:scale-105 transition-all duration-300 group" data-category="traditional">
+                        <div class="relative">
+                            <img src="https://placehold.co/300x200/7c3aed/white?text=Gong+Murut" alt="Gong Murut" class="w-full h-48 object-cover">
+                            <div class="absolute top-3 right-3 bg-violet-500/20 backdrop-blur rounded-full px-3 py-1 text-violet-300 text-xs">
+                                Authentic Sound
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="font-bold text-white mb-2 group-hover:text-violet-300 transition-colors">Gong Murut Miniature</h3>
+                            <p class="text-gray-400 text-sm mb-3">Mini traditional Murut gong set with authentic bronze crafting</p>
+                            <div class="flex items-center mb-3">
+                                <span class="text-amber-300 text-sm">★★★★☆</span>
+                                <span class="text-gray-400 text-xs ml-2">(8 reviews)</span>
+                            </div>
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="text-violet-300 font-bold text-lg">RM 280</span>
+                                <span class="text-gray-500 text-sm">by Bapa Martin, Keningau</span>
+                            </div>
+                            <button class="w-full bg-violet-500/20 hover:bg-violet-500/30 text-violet-300 py-2 rounded-lg transition-colors">Add to Cart</button>
+                        </div>
+                    </div>
+
+                    <!-- Pottery & Ceramics -->
+                    <div class="art-item marketplace-item glass-card rounded-lg overflow-hidden hover:transform hover:scale-105 transition-all duration-300 group" data-category="pottery">
+                        <div class="relative">
+                            <img src="https://placehold.co/300x200/3b82f6/white?text=Tempayan+Antik" alt="Tempayan Antik" class="w-full h-48 object-cover">
+                            <div class="absolute top-3 right-3 bg-blue-500/20 backdrop-blur rounded-full px-3 py-1 text-blue-300 text-xs">
+                                Antique Style
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="font-bold text-white mb-2 group-hover:text-blue-300 transition-colors">Tempayan Sabah Replica</h3>
+                            <p class="text-gray-400 text-sm mb-3">Handcrafted ceramic jar inspired by ancient Sabahan designs</p>
+                            <div class="flex items-center mb-3">
+                                <span class="text-amber-300 text-sm">★★★★★</span>
+                                <span class="text-gray-400 text-xs ml-2">(25 reviews)</span>
+                            </div>
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="text-blue-300 font-bold text-lg">RM 165</span>
+                                <span class="text-gray-500 text-sm">by Cik Rosiah, KK</span>
+                            </div>
+                            <button class="w-full bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 py-2 rounded-lg transition-colors">Add to Cart</button>
+                        </div>
+                    </div>
+
+                    <div class="art-item marketplace-item glass-card rounded-lg overflow-hidden hover:transform hover:scale-105 transition-all duration-300 group" data-category="pottery">
+                        <div class="relative">
+                            <img src="https://placehold.co/300x200/1d4ed8/white?text=Mangkuk+Tanah" alt="Mangkuk Tanah" class="w-full h-48 object-cover">
+                            <div class="absolute top-3 right-3 bg-indigo-500/20 backdrop-blur rounded-full px-3 py-1 text-indigo-300 text-xs">
+                                Eco-Friendly
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="font-bold text-white mb-2 group-hover:text-indigo-300 transition-colors">Mangkuk Tanah Set</h3>
+                            <p class="text-gray-400 text-sm mb-3">Set of 6 traditional clay bowls with natural Sabahan earth</p>
+                            <div class="flex items-center mb-3">
+                                <span class="text-amber-300 text-sm">★★★★☆</span>
+                                <span class="text-gray-400 text-xs ml-2">(19 reviews)</span>
+                            </div>
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="text-indigo-300 font-bold text-lg">RM 95</span>
+                                <span class="text-gray-500 text-sm">by En. Suhaimi, Tuaran</span>
+                            </div>
+                            <button class="w-full bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-300 py-2 rounded-lg transition-colors">Add to Cart</button>
+                        </div>
+                    </div>
+
+                    <!-- Textiles & Weaving -->
+                    <div class="art-item marketplace-item glass-card rounded-lg overflow-hidden hover:transform hover:scale-105 transition-all duration-300 group" data-category="textiles">
+                        <div class="relative">
+                            <img src="https://placehold.co/300x200/0d9488/white?text=Kain+Dastar" alt="Kain Dastar" class="w-full h-48 object-cover">
+                            <div class="absolute top-3 right-3 bg-teal-500/20 backdrop-blur rounded-full px-3 py-1 text-teal-300 text-xs">
+                                Handwoven
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="font-bold text-white mb-2 group-hover:text-teal-300 transition-colors">Kain Dastar Dusun</h3>
+                            <p class="text-gray-400 text-sm mb-3">Traditional Dusun headcloth with geometric tribal patterns</p>
+                            <div class="flex items-center mb-3">
+                                <span class="text-amber-300 text-sm">★★★★★</span>
+                                <span class="text-gray-400 text-xs ml-2">(31 reviews)</span>
+                            </div>
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="text-teal-300 font-bold text-lg">RM 135</span>
+                                <span class="text-gray-500 text-sm">by Puan Maria, Ranau</span>
+                            </div>
+                            <button class="w-full bg-teal-500/20 hover:bg-teal-500/30 text-teal-300 py-2 rounded-lg transition-colors">Add to Cart</button>
+                        </div>
+                    </div>
+
+                    <div class="art-item marketplace-item glass-card rounded-lg overflow-hidden hover:transform hover:scale-105 transition-all duration-300 group" data-category="textiles">
+                        <div class="relative">
+                            <img src="https://placehold.co/300x200/06b6d4/white?text=Selendang+Songket" alt="Selendang Songket" class="w-full h-48 object-cover">
+                            <div class="absolute top-3 right-3 bg-cyan-500/20 backdrop-blur rounded-full px-3 py-1 text-cyan-300 text-xs">
+                                Gold Thread
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="font-bold text-white mb-2 group-hover:text-cyan-300 transition-colors">Selendang Songket Sabah</h3>
+                            <p class="text-gray-400 text-sm mb-3">Elegant silk shawl with golden songket weaving technique</p>
+                            <div class="flex items-center mb-3">
+                                <span class="text-amber-300 text-sm">★★★★★</span>
+                                <span class="text-gray-400 text-xs ml-2">(22 reviews)</span>
+                            </div>
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="text-cyan-300 font-bold text-lg">RM 385</span>
+                                <span class="text-gray-500 text-sm">by Puan Hajjah Zain, KK</span>
+                            </div>
+                            <button class="w-full bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 py-2 rounded-lg transition-colors">Add to Cart</button>
+                        </div>
+                    </div>
+
+                    <div class="art-item marketplace-item glass-card rounded-lg overflow-hidden hover:transform hover:scale-105 transition-all duration-300 group" data-category="textiles">
+                        <div class="relative">
+                            <img src="https://placehold.co/300x200/0891b2/white?text=Bakul+Mengkuang" alt="Bakul Mengkuang" class="w-full h-48 object-cover">
+                            <div class="absolute top-3 right-3 bg-cyan-500/20 backdrop-blur rounded-full px-3 py-1 text-cyan-300 text-xs">
+                                Natural Fiber
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="font-bold text-white mb-2 group-hover:text-cyan-300 transition-colors">Bakul Mengkuang Set</h3>
+                            <p class="text-gray-400 text-sm mb-3">Traditional pandan leaf baskets in various sizes</p>
+                            <div class="flex items-center mb-3">
+                                <span class="text-amber-300 text-sm">★★★★☆</span>
+                                <span class="text-gray-400 text-xs ml-2">(14 reviews)</span>
+                            </div>
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="text-cyan-300 font-bold text-lg">RM 85</span>
+                                <span class="text-gray-500 text-sm">by Nenek Kalsom, Sandakan</span>
+                            </div>
+                            <button class="w-full bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 py-2 rounded-lg transition-colors">Add to Cart</button>
+                        </div>
+                    </div>
+
+                    <!-- Decorative Art -->
+                    <div class="art-item marketplace-item glass-card rounded-lg overflow-hidden hover:transform hover:scale-105 transition-all duration-300 group" data-category="decorative">
+                        <div class="relative">
+                            <img src="https://placehold.co/300x200/ec4899/white?text=Ukiran+Kayu" alt="Ukiran Kayu" class="w-full h-48 object-cover">
+                            <div class="absolute top-3 right-3 bg-pink-500/20 backdrop-blur rounded-full px-3 py-1 text-pink-300 text-xs">
+                                Intricate Design
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="font-bold text-white mb-2 group-hover:text-pink-300 transition-colors">Ukiran Kayu Borneo</h3>
+                            <p class="text-gray-400 text-sm mb-3">Hand-carved wooden panel with traditional Bornean motifs</p>
+                            <div class="flex items-center mb-3">
+                                <span class="text-amber-300 text-sm">★★★★★</span>
+                                <span class="text-gray-400 text-xs ml-2">(36 reviews)</span>
+                            </div>
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="text-pink-300 font-bold text-lg">RM 245</span>
+                                <span class="text-gray-500 text-sm">by Pak Jali, Lahad Datu</span>
+                            </div>
+                            <button class="w-full bg-pink-500/20 hover:bg-pink-500/30 text-pink-300 py-2 rounded-lg transition-colors">Add to Cart</button>
+                        </div>
+                    </div>
+
+                    <div class="art-item marketplace-item glass-card rounded-lg overflow-hidden hover:transform hover:scale-105 transition-all duration-300 group" data-category="decorative">
+                        <div class="relative">
+                            <img src="https://placehold.co/300x200/f43f5e/white?text=Topeng+Hudoq" alt="Topeng Hudoq" class="w-full h-48 object-cover">
+                            <div class="absolute top-3 right-3 bg-rose-500/20 backdrop-blur rounded-full px-3 py-1 text-rose-300 text-xs">
+                                Cultural Heritage
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="font-bold text-white mb-2 group-hover:text-rose-300 transition-colors">Topeng Hudoq Replica</h3>
+                            <p class="text-gray-400 text-sm mb-3">Traditional ritual mask replica with authentic designs</p>
+                            <div class="flex items-center mb-3">
+                                <span class="text-amber-300 text-sm">★★★★☆</span>
+                                <span class="text-gray-400 text-xs ml-2">(9 reviews)</span>
+                            </div>
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="text-rose-300 font-bold text-lg">RM 195</span>
+                                <span class="text-gray-500 text-sm">by Tuan Richard, Kudat</span>
+                            </div>
+                            <button class="w-full bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 py-2 rounded-lg transition-colors">Add to Cart</button>
+                        </div>
+                    </div>
+
+                    <div class="art-item marketplace-item glass-card rounded-lg overflow-hidden hover:transform hover:scale-105 transition-all duration-300 group" data-category="decorative">
+                        <div class="relative">
+                            <img src="https://placehold.co/300x200/be185d/white?text=Kris+Miniature" alt="Kris Miniature" class="w-full h-48 object-cover">
+                            <div class="absolute top-3 right-3 bg-pink-500/20 backdrop-blur rounded-full px-3 py-1 text-pink-300 text-xs">
+                                Collector's Item
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="font-bold text-white mb-2 group-hover:text-pink-300 transition-colors">Kris Sabah Miniature</h3>
+                            <p class="text-gray-400 text-sm mb-3">Miniature traditional dagger with ornate handle and stand</p>
+                            <div class="flex items-center mb-3">
+                                <span class="text-amber-300 text-sm">★★★★★</span>
+                                <span class="text-gray-400 text-xs ml-2">(16 reviews)</span>
+                            </div>
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="text-pink-300 font-bold text-lg">RM 155</span>
+                                <span class="text-gray-500 text-sm">by En. Karim, Beaufort</span>
+                            </div>
+                            <button class="w-full bg-pink-500/20 hover:bg-pink-500/30 text-pink-300 py-2 rounded-lg transition-colors">Add to Cart</button>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Sabahan Art Highlights -->
+                <div class="mt-16 text-center">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+                        <div class="glass-card p-8 rounded-lg hover:transform hover:scale-105 transition-all duration-300">
+                            <div class="text-4xl mb-4">🎨</div>
+                            <h4 class="text-lg font-bold text-indigo-300 mb-2">Cultural Heritage</h4>
+                            <p class="text-gray-400 text-sm">Preserving traditional Sabahan art forms and passing them to future generations</p>
+                        </div>
+                        
+                        <div class="glass-card p-8 rounded-lg hover:transform hover:scale-105 transition-all duration-300">
+                            <div class="text-4xl mb-4">🖐️</div>
+                            <h4 class="text-lg font-bold text-violet-300 mb-2">Handmade Quality</h4>
+                            <p class="text-gray-400 text-sm">Every piece is uniquely crafted by skilled local artisans using traditional techniques</p>
+                        </div>
+                        
+                        <div class="glass-card p-8 rounded-lg hover:transform hover:scale-105 transition-all duration-300">
+                            <div class="text-4xl mb-4">🌿</div>
+                            <h4 class="text-lg font-bold text-teal-300 mb-2">Sustainable Materials</h4>
+                            <p class="text-gray-400 text-sm">Using locally sourced, eco-friendly materials that respect our environment</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Updated Marketplace Statistics -->
+            <div class="mt-16 text-center">
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
+                    <div class="glass-card p-6 rounded-lg hover:transform hover:scale-105 transition-all duration-300">
+                        <div class="text-3xl font-bold text-green-300 mb-2">350+</div>
+                        <div class="text-sm text-gray-400">Total Products</div>
+                    </div>
+                    <div class="glass-card p-6 rounded-lg hover:transform hover:scale-105 transition-all duration-300">
+                        <div class="text-3xl font-bold text-cyan-300 mb-2">125</div>
+                        <div class="text-sm text-gray-400">Local Artisans</div>
+                    </div>
+                    <div class="glass-card p-6 rounded-lg hover:transform hover:scale-105 transition-all duration-300">
+                        <div class="text-3xl font-bold text-purple-300 mb-2">98%</div>
+                        <div class="text-sm text-gray-400">Customer Satisfaction</div>
+                    </div>
+                    <div class="glass-card p-6 rounded-lg hover:transform hover:scale-105 transition-all duration-300">
+                        <div class="text-3xl font-bold text-amber-300 mb-2">RM 650k</div>
+                        <div class="text-sm text-gray-400">Supporting Local Economy</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Call to Action -->
+            <div class="text-center mt-12">
+                <div class="glass-card rounded-lg p-8 max-w-2xl mx-auto">
+                    <h3 class="text-2xl font-bold text-white mb-4">Showcase Your Sabahan Art?</h3>
+                    <p class="text-gray-300 mb-6">Join our marketplace and share your traditional art with collectors and culture enthusiasts worldwide. We support local artisans and cultural preservation.</p>
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                        <button class="bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-bold py-3 px-6 rounded-lg transition-all duration-300 hover:scale-105">
+                            Become an Artist Seller
+                        </button>
+                        <a href="ustaz.html" class="bg-gradient-to-r from-teal-500 to-cyan-600 hover:from-teal-600 hover:to-cyan-700 text-white font-bold py-3 px-6 rounded-lg transition-all duration-300 hover:scale-105">
+                            Learn About Islamic Art
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Enhanced marketplace functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('searchInput');
+            const locationFilter = document.getElementById('locationFilter');
+            const categoryFilter = document.getElementById('categoryFilter');
+            
+            // Local Halal filters
+            const halalFilters = document.querySelectorAll('.halal-filter');
+            const halalItems = document.querySelectorAll('.halal-item');
+            
+            // Local Products filters
+            const productsFilters = document.querySelectorAll('.products-filter');
+            const productsItems = document.querySelectorAll('.products-item');
+
+            // Sabahan Art filters
+            const artFilters = document.querySelectorAll('.art-filter');
+            const artItems = document.querySelectorAll('.art-item');
+
+            // Filter function for Local Halal section
+            function filterHalalItems(category) {
+                halalItems.forEach((item, index) => {
+                    if (category === 'all' || item.getAttribute('data-category') === category) {
+                        item.style.display = 'block';
+                        setTimeout(() => {
+                            item.style.opacity = '1';
+                            item.style.transform = 'translateY(0)';
+                        }, index * 50);
+                    } else {
+                        item.style.opacity = '0';
+                        item.style.transform = 'translateY(-20px)';
+                        setTimeout(() => {
+                            item.style.display = 'none';
+                        }, 300);
+                    }
+                });
+            }
+
+            // Filter function for Local Products section
+            function filterProductsItems(category) {
+                productsItems.forEach((item, index) => {
+                    if (category === 'all' || item.getAttribute('data-category') === category) {
+                        item.style.display = 'block';
+                        setTimeout(() => {
+                            item.style.opacity = '1';
+                            item.style.transform = 'translateY(0)';
+                        }, index * 50);
+                    } else {
+                        item.style.opacity = '0';
+                        item.style.transform = 'translateY(-20px)';
+                        setTimeout(() => {
+                            item.style.display = 'none';
+                        }, 300);
+                    }
+                });
+            }
+
+            // Filter function for Sabahan Art section
+            function filterArtItems(category) {
+                artItems.forEach((item, index) => {
+                    if (category === 'all' || item.getAttribute('data-category') === category) {
+                        item.style.display = 'block';
+                        setTimeout(() => {
+                            item.style.opacity = '1';
+                            item.style.transform = 'translateY(0)';
+                        }, index * 50);
+                    } else {
+                        item.style.opacity = '0';
+                        item.style.transform = 'translateY(-20px)';
+                        setTimeout(() => {
+                            item.style.display = 'none';
+                        }, 300);
+                    }
+                });
+            }
+
+            // Local Halal filter event listeners
+            halalFilters.forEach(filter => {
+                filter.addEventListener('click', function() {
+                    halalFilters.forEach(f => f.classList.remove('active'));
+                    this.classList.add('active');
+                    const category = this.getAttribute('data-category');
+                    filterHalalItems(category);
+                });
+            });
+
+            // Local Products filter event listeners
+            productsFilters.forEach(filter => {
+                filter.addEventListener('click', function() {
+                    productsFilters.forEach(f => f.classList.remove('active'));
+                    this.classList.add('active');
+                    const category = this.getAttribute('data-category');
+                    filterProductsItems(category);
+                });
+            });
+
+            // Sabahan Art filter event listeners
+            artFilters.forEach(filter => {
+                filter.addEventListener('click', function() {
+                    artFilters.forEach(f => f.classList.remove('active'));
+                    this.classList.add('active');
+                    const category = this.getAttribute('data-category');
+                    filterArtItems(category);
+                });
+            });
+
+            // Enhanced global search and filter functionality
+            function filterAllItems() {
+                const searchTerm = searchInput.value.toLowerCase();
+                const selectedLocation = locationFilter.value.toLowerCase();
+                const selectedCategory = categoryFilter.value;
+
+                // Filter all items including art items
+                const allItems = [...halalItems, ...productsItems, ...artItems];
+                
+                allItems.forEach(item => {
+                    const title = item.querySelector('h3').textContent.toLowerCase();
+                    const seller = item.querySelector('.text-gray-500').textContent.toLowerCase();
+                    const matchesSearch = title.includes(searchTerm) || seller.includes(searchTerm);
+                    const matchesLocation = !selectedLocation || seller.includes(selectedLocation);
+                    
+                    let matchesCategory = !selectedCategory;
+                    if (selectedCategory === 'food' && item.classList.contains('halal-item')) {
+                        matchesCategory = true;
+                    } else if (selectedCategory === 'accessories' && item.classList.contains('products-item') && 
+                               ['prayer', 'jewelry'].includes(item.getAttribute('data-category'))) {
+                        matchesCategory = true;
+                    } else if (selectedCategory === 'books' && item.getAttribute('data-category') === 'books') {
+                        matchesCategory = true;
+                    } else if (selectedCategory === 'clothing' && item.getAttribute('data-category') === 'clothing') {
+                        matchesCategory = true;
+                    } else if (item.classList.contains('art-item')) {
+                        matchesCategory = true; // Art items are always shown in global search
+                    }
+
+                    if (matchesSearch && matchesLocation && matchesCategory) {
+                        item.style.display = 'block';
+                        item.style.opacity = '1';
+                        item.style.transform = 'translateY(0)';
+                    } else {
+                        item.style.opacity = '0';
+                        item.style.transform = 'translateY(-20px)';
+                        setTimeout(() => {
+                            item.style.display = 'none';
+                        }, 300);
+                    }
+                });
+            }
+
+            // Update category filter options
+            categoryFilter.innerHTML += '<option value="art">Sabahan Art</option>';
+
+            // Shopping cart functionality
+            let cartCount = 0;
+            document.querySelectorAll('button').forEach(button => {
+                if (button.textContent.trim() === 'Add to Cart') {
+                    button.addEventListener('click', function() {
+                        cartCount++;
+                        
+                        // Visual feedback
+                        const originalText = this.textContent;
+                        const originalBg = this.style.backgroundColor;
+                        
+                        this.textContent = 'Added! ✓';
+                        this.style.backgroundColor = 'rgba(34, 197, 94, 0.4)';
+                        
+                        setTimeout(() => {
+                            this.textContent = originalText;
+                            this.style.backgroundColor = originalBg;
+                        }, 1500);
+                        
+                        console.log(`Added to cart. Total items: ${cartCount}`);
+                    });
+                }
+            });
+
+            // Initialize with staggered animation for all items including art
+            const allMarketplaceItems = document.querySelectorAll('.marketplace-item');
+            allMarketplaceItems.forEach((item, index) => {
+                item.style.opacity = '0';
+                item.style.transform = 'translateY(30px)';
+                item.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
+                
+                setTimeout(() => {
+                    item.style.opacity = '1';
+                    item.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+        });
+    </script>
+</body>
+</html>

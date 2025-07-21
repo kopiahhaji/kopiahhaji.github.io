@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Mindmap - Digital Dakwah Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { 
+            font-family: 'Sora', sans-serif; 
+            color: #e2e8f0;
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .animated-gradient-bg {
+            background: linear-gradient(-45deg, #000711, #1a1b3a, #0f1419, #1e293b);
+            background-size: 400% 400%;
+            animation: gradientAnimation 15s ease infinite;
+        }
+        
+        @keyframes gradientAnimation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .floating-patterns {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .pattern {
+            position: absolute;
+            background: rgba(16, 185, 129, 0.1);
+            border-radius: 50%;
+            animation: float 20s ease-in-out infinite;
+        }
+        
+        .pattern:nth-child(1) {
+            width: 120px;
+            height: 120px;
+            left: 10%;
+            top: 20%;
+            animation-duration: 30s;
+        }
+        
+        .pattern:nth-child(2) {
+            width: 80px;
+            height: 80px;
+            left: 60%;
+            top: 60%;
+            animation-duration: 24s;
+        }
+        
+        .pattern:nth-child(3) {
+            width: 60px;
+            height: 60px;
+            left: 25%;
+            top: 70%;
+            animation-duration: 18s;
+        }
+        
+        .pattern:nth-child(4) {
+            width: 100px;
+            height: 100px;
+            left: 80%;
+            top: 10%;
+            animation-duration: 21s;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(0deg); opacity: 0.3; }
+            50% { transform: translateY(-20px) rotate(5deg); opacity: 0.6; }
+            100% { transform: translateY(0px) rotate(0deg); opacity: 0.3; }
+        }
+        
+        .section-title {
+            position: relative;
+            font-weight: 600;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            color: #10b981;
+            padding-left: 0.75rem;
+            display: inline-block;
+            transition: transform 0.2s ease;
+        }
+        
+        .section-title:before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(to bottom, #10b981, #0f766e);
+            border-radius: 4px;
+        }
+        
+        .section-title:hover {
+            transform: translateX(4px);
+        }
+        
+        .mindmap-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .mindmap-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(16, 185, 129, 0.1);
+        }
+        
+        ul.mindmap {
+            margin-left: 1.5rem;
+        }
+        
+        ul.mindmap > li {
+            margin-bottom: 1.5rem;
+            transition: transform 0.2s ease;
+            opacity: 0;
+            transform: translateX(-20px);
+            animation: slideInLeft 0.6s ease forwards;
+        }
+        
+        ul.mindmap > li:nth-child(1) { animation-delay: 0.1s; }
+        ul.mindmap > li:nth-child(2) { animation-delay: 0.2s; }
+        ul.mindmap > li:nth-child(3) { animation-delay: 0.3s; }
+        ul.mindmap > li:nth-child(4) { animation-delay: 0.4s; }
+        ul.mindmap > li:nth-child(5) { animation-delay: 0.5s; }
+        ul.mindmap > li:nth-child(6) { animation-delay: 0.6s; }
+        ul.mindmap > li:nth-child(7) { animation-delay: 0.7s; }
+        ul.mindmap > li:nth-child(8) { animation-delay: 0.8s; }
+        ul.mindmap > li:nth-child(9) { animation-delay: 0.9s; }
+        ul.mindmap > li:nth-child(10) { animation-delay: 1.0s; }
+        ul.mindmap > li:nth-child(11) { animation-delay: 1.1s; }
+        ul.mindmap > li:nth-child(12) { animation-delay: 1.2s; }
+        ul.mindmap > li:nth-child(13) { animation-delay: 1.3s; }
+        ul.mindmap > li:nth-child(14) { animation-delay: 1.4s; }
+        
+        @keyframes slideInLeft {
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        ul.mindmap > li:hover {
+            transform: translateX(8px);
+        }
+        
+        ul.mindmap ul {
+            margin-left: 1.5rem;
+            margin-top: 0.5rem;
+        }
+        
+        ul.mindmap ul li {
+            position: relative;
+            padding-left: 1.25rem;
+            margin-bottom: 0.5rem;
+            transition: all 0.2s ease;
+            color: #cbd5e1;
+        }
+        
+        ul.mindmap ul li:hover {
+            transform: translateX(6px);
+            color: #e2e8f0;
+        }
+        
+        ul.mindmap ul li:before {
+            content: "•";
+            color: #10b981;
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+            transition: color 0.2s ease;
+        }
+        
+        ul.mindmap ul li:hover:before {
+            color: #34d399;
+        }
+        
+        .callout {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(52, 211, 153, 0.05));
+            border-left: 4px solid #10b981;
+            transition: all 0.3s ease;
+        }
+        
+        .callout:hover {
+            transform: translateX(6px);
+            border-left-color: #34d399;
+        }
+        
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+        }
+        
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="animated-gradient-bg relative min-h-screen">
+    <!-- Floating Patterns -->
+    <div class="floating-patterns">
+        <div class="pattern"></div>
+        <div class="pattern"></div>
+        <div class="pattern"></div>
+        <div class="pattern"></div>
+    </div>
+
+    <!-- Header -->
+    <header class="fixed top-0 left-0 right-0 z-50 bg-[#000711]/80 backdrop-blur">
+        <div class="container mx-auto px-6 py-4">
+            <div class="glass-card rounded-full px-6 py-2 flex justify-between items-center">
+                <h1 class="text-lg font-bold text-white">Digital Dakwah Platform</h1>
+                <nav class="hidden md:flex space-x-6">
+                    <a href="index.html" class="text-gray-300 hover:text-white transition">Home</a>
+                    <a href="marketplace.html" class="text-gray-300 hover:text-white transition">Marketplace</a>
+                    <a href="ustaz.html" class="text-gray-300 hover:text-white transition">Ask Ustaz</a>
+                    <a href="mindmap.html" class="text-white">Mindmap</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="pt-32 pb-20 relative z-10">
+        <div class="container mx-auto px-6 text-center">
+            <div class="max-w-4xl mx-auto">
+                <h1 class="text-4xl md:text-5xl font-bold text-white mb-6 reveal">
+                    Sabah Digital Islamic Education Platform
+                    <span class="inline-block bg-gradient-to-r from-green-400 to-emerald-500 text-transparent bg-clip-text ml-3">Mindmap</span>
+                </h1>
+                <p class="text-xl text-gray-300 mb-8 reveal">
+                    Comprehensive overview of project strategy, features, and stakeholder alignment for building a world-class Islamic education platform in Sabah, Borneo.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="relative z-10 pb-20">
+        <div class="container mx-auto px-6">
+            <!-- Context Sidebar -->
+            <div class="max-w-6xl mx-auto mb-12">
+                <div class="glass-card rounded-lg p-8 reveal">
+                    <h3 class="text-2xl font-bold text-green-300 mb-4">Mindmap Context</h3>
+                    <p class="text-gray-300 text-lg leading-relaxed">
+                        This mindmap synthesizes key takeaways from the project planning guide, highlighting strategic models, engagement tactics, technical resilience, and cultural sensitivity for building a world-class Islamic education platform in Sabah, Borneo.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Mindmap Content -->
+            <div class="max-w-6xl mx-auto">
+                <div class="mindmap-card glass-card rounded-lg p-8 reveal">
+                    <ul class="mindmap text-gray-200">
+                        <li>
+                            <span class="section-title">1. Project Models & Focus</span>
+                            <ul>
+                                <li>Digital Islamic Education Platform – Quran learning bridging urban & rural gaps (modern + traditional)</li>
+                                <li>Community-Based Religious Knowledge Network – Connect teachers, share resources, address needs</li>
+                                <li>Islamic Economic Empowerment – Online teaching, content creation, product marketplace</li>
+                                <li>Cultural Heritage Preservation – Digitize practices, oral histories, arts</li>
+                            </ul>
+                        </li>
+                        <li>
+                            <span class="section-title">2. Community-Centric Engagement</span>
+                            <ul>
+                                <li>Hyper-Localization – Multilingual: Bahasa Sabah, Kadazan, Dusun, Bajau</li>
+                                <li>Institutional Integration – JHEAINS partnership, system integration</li>
+                                <li>Cross-Generational Bridges – Elders share wisdom, youth learn</li>
+                            </ul>
+                        </li>
+                        <li>
+                            <span class="section-title">3. Building Resilience & Accessibility</span>
+                            <ul>
+                                <li>Digital Accessibility – Offline-first, caching, low-bandwidth modes</li>
+                                <li>Multi-Modal Delivery – Radio, kiosks, ambassadors</li>
+                                <li>Sustainable Economic Model – Teacher marketplaces, micro-waqf, ethical entrepreneurship</li>
+                            </ul>
+                        </li>
+                        <li>
+                            <span class="section-title">4. Ethical Action Checklist</span>
+                            <ul>
+                                <li>Community Wisdom Centered</li>
+                                <li>Digital Sovereignty</li>
+                                <li>Technical Resilience</li>
+                                <li>Cultural Sensitivity</li>
+                                <li>Intergenerational Connections</li>
+                                <li>Economic Empowerment</li>
+                            </ul>
+                        </li>
+                        <li>
+                            <span class="section-title">5. Implementation & Development Approach</span>
+                            <ul>
+                                <li>Phased Development – Core Quran reader, partnerships, beta testing, roadshows</li>
+                                <li>Technical Architecture – PWA, GIS mapping, community servers & mesh networks</li>
+                            </ul>
+                        </li>
+                        <li>
+                            <span class="section-title">6. Technology Integration for Knowledge</span>
+                            <ul>
+                                <li>Adaptive Content Framework – AI Tajweed, mind-mapping, micro-learning</li>
+                                <li>Multimodal Accessibility – Audio-first, IVR, print-digital hybrid</li>
+                            </ul>
+                        </li>
+                        <li>
+                            <span class="section-title">7. Economic Resilience</span>
+                            <ul>
+                                <li>Micro-Investment (Shariah-compliant)</li>
+                                <li>Teacher Cooperatives</li>
+                                <li>Digital Zakat Management</li>
+                                <li>Creator Academy, Arts Digitization, Certification</li>
+                            </ul>
+                        </li>
+                        <li>
+                            <span class="section-title">8. Governance & Government Integration</span>
+                            <ul>
+                                <li>Multi-Stakeholder Board, Transparent Reporting, Feature Voting</li>
+                                <li>Social Services Portal, Curriculum Alignment, Data Protocols</li>
+                            </ul>
+                        </li>
+                        <li>
+                            <span class="section-title">9. Cultural Preservation</span>
+                            <ul>
+                                <li>Disappearing Knowledge Initiative</li>
+                                <li>Practice Archive, Cultural Timeline</li>
+                                <li>Translation Layer, Indigenous Integration</li>
+                            </ul>
+                        </li>
+                        <li>
+                            <span class="section-title">10. Educational Excellence & Innovation</span>
+                            <ul>
+                                <li>Evidence-based Pedagogy, Cognitive Science, Multilingual Learning</li>
+                                <li>Proficiency Frameworks, Peer Review</li>
+                            </ul>
+                        </li>
+                        <li>
+                            <span class="section-title">11. Technology Sovereignty & Sustainability</span>
+                            <ul>
+                                <li>Local Tech Ownership, Open Source, Distributed Infrastructure</li>
+                                <li>Revenue Diversification, Technical Debt Management</li>
+                            </ul>
+                        </li>
+                        <li>
+                            <span class="section-title">12. Intergenerational Knowledge Transfer</span>
+                            <ul>
+                                <li>Elder Wisdom Capture, Oral History Database, Legacy Profiles</li>
+                                <li>Youth Da'wah Training, Teacher Pathway, Innovation Challenges</li>
+                            </ul>
+                        </li>
+                        <li>
+                            <span class="section-title">13. Community Cohesion & Well-being</span>
+                            <ul>
+                                <li>Social Support Networks</li>
+                                <li>Holistic Well-being (spiritual, physical, financial)</li>
+                                <li>Virtual Community Circles</li>
+                            </ul>
+                        </li>
+                        <li>
+                            <span class="section-title">14. Strategies for Acceptance</span>
+                            <ul>
+                                <li>Government Engagement, Policy Alignment, Multi-Agency Partnerships</li>
+                                <li>Local Authority Endorsement, Participatory Development</li>
+                                <li>Cultural Sensitivity, Trust Building</li>
+                                <li>Economic Sustainability, Technological Adaptation, Accessibility</li>
+                                <li>Pilot Programs, Research Partnerships</li>
+                                <li>Multi-Channel Communication & Perception Management</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Key Insights -->
+            <div class="max-w-6xl mx-auto mt-12 grid md:grid-cols-2 gap-8">
+                <div class="callout glass-card rounded-lg p-8 reveal">
+                    <h3 class="text-2xl font-bold text-green-300 mb-4">Central Theme</h3>
+                    <p class="text-gray-300 leading-relaxed">
+                        Empower Sabah's Muslim community through a culturally-sensitive, economically-resilient, and digitally-accessible Islamic education platform, rooted in local wisdom and inclusive of all generations.
+                    </p>
+                </div>
+
+                <div class="callout glass-card rounded-lg p-8 reveal">
+                    <h3 class="text-2xl font-bold text-green-300 mb-4">Guiding Values</h3>
+                    <ul class="text-gray-300 space-y-2">
+                        <li class="flex items-center"><span class="text-green-400 mr-2">•</span>Architectural Integrity & Scalability</li>
+                        <li class="flex items-center"><span class="text-green-400 mr-2">•</span>Community Wisdom & Knowledge Transfer</li>
+                        <li class="flex items-center"><span class="text-green-400 mr-2">•</span>Economic Sustainability & Digital Sovereignty</li>
+                        <li class="flex items-center"><span class="text-green-400 mr-2">•</span>Cultural Heritage Preservation</li>
+                        <li class="flex items-center"><span class="text-green-400 mr-2">•</span>Respect for Islamic Educational Traditions</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Intersection Observer for reveal animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        // Observe all reveal elements
+        document.querySelectorAll('.reveal').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Enhanced mouse move effect for patterns
+        document.addEventListener('mousemove', function(e) {
+            const patterns = document.querySelectorAll('.pattern');
+            const x = e.clientX / window.innerWidth;
+            const y = e.clientY / window.innerHeight;
+            
+            patterns.forEach((pattern, index) => {
+                const offsetX = (index + 1) * 8 * (x - 0.5);
+                const offsetY = (index + 1) * 8 * (y - 0.5);
+                pattern.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+            });
+        });
+
+        // Add smooth scrolling for internal links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>
