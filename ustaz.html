@@ -144,7 +144,7 @@
                 <h3 class="text-green-300 font-semibold mb-2">🌟 Ustaz Radhi Siap Membantu Anda:</h3>
                 <div class="grid md:grid-cols-2 gap-2 text-sm text-gray-300">
                     <div>💪 <strong>Motivator:</strong> Nasihat & semangat hidup</div>
-                    <div>👂 <strong>Pendengar:</strong> Tempat curhat yang aman</div>
+                    <div>👂 <strong>Pendengar:</strong> Tempat meluahkan perasaan</div>
                     <div>💭 <strong>Deep-Talk:</strong> Bicara mendalam tentang hidup</div>
                     <div>📖 <strong>Guru Agama:</strong> Fiqh & Ibadah (Mazhab Syafie)</div>
                     <div>🤲 <strong>Spiritual Guide:</strong> Al-Quran & Hadith</div>
@@ -613,7 +613,7 @@ Sila berasa selesa untuk bertanya apa sahaja! Mari kita teruskan pembelajaran ya
                     button.addEventListener('click', () => {
                         const question = this.getFullQuestionFromTopic(button.textContent.trim());
                         this.messageInput.value = question;
-                        this.messageInput.focus();
+                        this.sendMessage(); // Auto-send the question
                     });
                 });
 
@@ -1009,35 +1009,8 @@ Sila berikan jawapan yang komprehensif, penuh empati, dan mudah difahami. Jika p
                     return this.getCasualChatResponse(message);
                 }
                 
-                // For Islamic questions, enhance Gemini response with our structured format
-                const enhancedResponse = `${geminiResponse}
-
----
-
-**📚 Maklumat Tambahan dari Platform:**
-${this.getAdditionalContext(message)}`;
-
-                return enhancedResponse;
-            }
-
-            getAdditionalContext(message) {
-                // Check if we have specific static knowledge for this topic
-                const staticKnowledge = this.getResponsePatterns();
-                
-                for (const pattern of staticKnowledge) {
-                    if (pattern.keywords.some(keyword => 
-                        message.toLowerCase().includes(keyword.toLowerCase())
-                    )) {
-                        // Extract key points from our static response
-                        const response = pattern.response;
-                        const lines = response.split('\n').filter(line => 
-                            line.includes('•') || line.includes('**') || line.includes('Dalil')
-                        );
-                        return lines.slice(0, 3).join('\n') || 'Rujuk panduan Islam yang sahih dalam konteks Mazhab Syafie.';
-                    }
-                }
-                
-                return 'Sentiasa rujuk kepada ulama berkelayakan untuk keputusan penting dalam agama.';
+                // For Islamic questions, return the Gemini response directly
+                return geminiResponse;
             }
 
             getStaticResponse(message) {
@@ -1128,11 +1101,29 @@ Wallahu a'lam bissawab. 🤲✨`;
             }
 
             isCasualChat(message) {
+                // First check if it's an Islamic question - these should NOT be considered casual
+                const islamicKeywords = [
+                    'islam', 'allah', 'solat', 'prayer', 'zakat', 'puasa', 'haji', 'quran', 'al-quran',
+                    'hadith', 'rasulullah', 'nabi', 'prophet', 'halal', 'haram', 'hukum', 'syariat',
+                    'mazhab', 'syafie', 'fiqh', 'akhlaq', 'adab', 'doa', 'zikir', 'taubat', 'dosa',
+                    'pahala', 'surga', 'neraka', 'akhirat', 'agama', 'imam', 'ustaz', 'ulama'
+                ];
+                
+                // If it contains Islamic keywords, it's NOT casual chat
+                const hasIslamicContent = islamicKeywords.some(keyword => 
+                    message.toLowerCase().includes(keyword.toLowerCase())
+                );
+                
+                if (hasIslamicContent) {
+                    return false; // Islamic questions are never casual
+                }
+                
+                // Now check for actual casual conversation patterns
                 const casualWords = [
                     'apa khabar', 'siapa nama', 'umur berapa', 'dari mana',
                     'what is your name', 'how old', 'where are you from', 'hobby',
                     'suka apa', 'minat apa', 'kerja apa', 'belajar apa', 'tinggal mana',
-                    'favourite', 'kegemaran', 'makanan', 'warna', 'tempat', 'negara'
+                    'favourite', 'kegemaran', 'warna', 'tempat', 'negara', 'weather', 'cuaca'
                 ];
                 
                 const messageWords = message.toLowerCase().split(' ');
@@ -1349,6 +1340,302 @@ Silakan bertanya tentang mana-mana topik di atas. Saya siap membantu! 😊`;
 
             getResponsePatterns() {
                 return [
+                    // Popular Questions - Specific responses
+                    {
+                        keywords: ['doa selepas solat', 'doa setelah solat', 'doa mustajab', 'wirid selepas solat'],
+                        response: `**🤲 Doa Selepas Solat Yang Mustajab**
+
+Assalamualaikum! Soalan yang sangat baik tentang **wirid dan doa selepas solat** - saat yang mustajab untuk berdoa.
+
+**🌟 Doa Utama Selepas Solat:**
+
+**1️⃣ Istighfar (3 kali):**
+\`\`\`
+أَسْتَغْفِرُ اللهَ الْعَظِيْمَ الَّذِيْ لاَ إِلَهَ إِلاَّ هُوَ الْحَيُّ الْقَيُّوْمُ وَأَتُوْبُ إِلَيْهِ
+\`\`\`
+*"Astaghfirullah al-'azhim alladzi la ilaha illa huwal hayyul qayyum wa atubu ilaih"*
+
+**2️⃣ Tasbih, Tahmid, Takbir:**
+• **Subhanallah** (33 kali)
+• **Alhamdulillahi** (33 kali)  
+• **Allahu Akbar** (34 kali)
+
+**3️⃣ Ayat Kursi:**
+\`\`\`
+اللّهُ لاَ إِلَـهَ إِلاَّ هُوَ الْحَيُّ الْقَيُّومُ...
+\`\`\`
+
+**4️⃣ Surah Al-Ikhlas, Al-Falaq, An-Nas** (masing-masing 3 kali selepas Maghrib & Subuh)
+
+**5️⃣ Doa Penutup:**
+\`\`\`
+اللَّهُمَّ أَعِنِّي عَلَى ذِكْرِكَ وَشُكْرِكَ وَحُسْنِ عِبَادَتِكَ
+\`\`\`
+*"Allahumma a'inni 'ala dzikrika wa syukrika wa husni 'ibadatik"*
+*"Ya Allah, tolonglah aku untuk mengingatiMu, bersyukur kepadaMu, dan beribadah dengan baik kepadaMu"*
+
+**📖 Dalil:**
+**Hadith Rasulullah ﷺ:**
+*"Barangsiapa yang bertasbih kepada Allah selepas setiap solat sebanyak 33 kali, bertahmid 33 kali, dan bertakbir 34 kali, maka itu menjadi 100. Barangsiapa yang melakukannya, dosanya akan diampuni walaupun sebanyak buih di lautan"* (HR. Muslim)
+
+**💡 Tips Khusyuk:**
+• Fahami makna setiap doa yang dibaca
+• Berdoa dengan penuh harapan dan yakin
+• Variasikan doa dengan keperluan harian
+• Doakan ibu bapa, keluarga, dan umat Islam
+
+Wallahu a'lam bissawab. Semoga doa kita dimakbulkan Allah! 🌟`
+                    },
+                    {
+                        keywords: ['cara bertaubat', 'bertaubat yang betul', 'taubat nasuha', 'ampunan allah'],
+                        response: `**📿 Cara Bertaubat Yang Betul - Taubat Nasuha**
+
+Masya Allah! Soalan yang sangat mulia - **bertaubat adalah pintu rahmat** Allah yang sentiasa terbuka.
+
+**🔄 4 Syarat Taubat Yang Sahih:**
+
+**1️⃣ PENYESALAN (Nadam):**
+• Menyesal dengan tulus atas dosa yang dilakukan
+• Mengakui kesilapan tanpa alasan atau justifikasi
+• Merasai beban dosa di hati
+
+**2️⃣ BERHENTI SEGERA (Iqla'):**
+• Tinggalkan dosa itu **sekarang juga**
+• Jangan ditangguh atau dibuat secara beransur
+• Putuskan hubungan dengan segala yang membawa kepada dosa
+
+**3️⃣ AZAM TIDAK MENGULANGI (Azm):**
+• Tekad bulat untuk tidak mengulangi dosa tersebut
+• Buat planning untuk elakkan situasi yang membawa kepada dosa
+• Minta kekuatan daripada Allah
+
+**4️⃣ GANTI RUGI (jika berkaitan hak manusia):**
+• Minta maaf kepada yang teraniaya
+• Bayar hutang atau ganti kerugian
+• Perbaiki hubungan yang terputus
+
+**🤲 Doa Taubat:**
+\`\`\`
+اللَّهُمَّ أَنْتَ رَبِّي لاَ إِلَهَ إِلاَّ أَنْتَ خَلَقْتَنِي وَأَنَا عَبْدُكَ وَأَنَا عَلَى عَهْدِكَ وَوَعْدِكَ مَا اسْتَطَعْتُ أَعُوذُ بِكَ مِنْ شَرِّ مَا صَنَعْتُ أَبُوءُ لَكَ بِنِعْمَتِكَ عَلَيَّ وَأَبُوءُ بِذَنْبِي فَاغْفِرْ لِي فَإِنَّهُ لاَ يَغْفِرُ الذُّنُوبَ إِلاَّ أَنْتَ
+\`\`\`
+
+**📖 Dalil Al-Quran:**
+"وَمَن يَعْمَلْ سُوءًا أَوْ يَظْلِمْ نَفْسَهُ ثُمَّ يَسْتَغْفِرِ اللَّهَ يَجِدِ اللَّهَ غَفُورًا رَّحِيمًا"
+*"Dan barangsiapa yang berbuat kejahatan atau menganiaya dirinya, kemudian dia memohon ampun kepada Allah, niscaya dia akan mendapati Allah Maha Pengampun lagi Maha Penyayang"* (An-Nisa: 110)
+
+**💪 Langkah Praktis Selepas Taubat:**
+• **Perbanyak amal soleh** sebagai pengganti
+• **Bergaul dengan orang soleh** yang mengingatkan kebaikan
+• **Elakkan tempat dan situasi** yang membawa kepada dosa
+• **Istiqamah dalam ibadah** untuk menjaga iman
+
+**🌈 Janji Allah:**
+*"Sesungguhnya Allah mengampuni segala dosa"* (Az-Zumar: 53)
+
+Jangan putus asa dengan rahmat Allah! Dia sangat menyayangi hamba-Nya yang bertaubat.
+
+Wallahu a'lam bissawab. Semoga Allah terima taubat kita! 🤲✨`
+                    },
+                    {
+                        keywords: ['hukum simpan wang', 'bank', 'faedah bank', 'riba', 'simpanan bank'],
+                        response: `**💰 Hukum Simpan Wang Dalam Bank**
+
+Assalamualaikum! Soalan yang sangat penting tentang **muamalat dalam sistem perbankan** moden.
+
+**📊 Pandangan Ulama Mazhab Syafie:**
+
+**✅ DIBENARKAN:**
+**1️⃣ Akaun Semasa (Current Account):**
+• Tiada faedah yang diberikan
+• Sekadar tempat simpan wang dengan selamat
+• Bayaran caj perkhidmatan adalah dibenarkan
+
+**2️⃣ Akaun Simpanan Tanpa Faedah:**
+• Bank Islam yang tidak melibatkan riba
+• Sistem mudharabah atau wakalah
+• Keuntungan dari pelaburan halal
+
+**⚠️ PERLU BERHATI-HATI:**
+**1️⃣ Akaun Simpanan Berfaedah:**
+• Faedah yang diberikan adalah **riba**
+• Dalam mazhab Syafie: **haram** mengambil faedah
+• Boleh simpan wang untuk keperluan, tapi tolak faedah
+
+**2️⃣ Langkah Jika Terpaksa Guna Bank Konvensional:**
+• Niatkan hanya untuk **simpan** wang dengan selamat
+• **Dermakan faedah** kepada fakir miskin
+• **Jangan ambil** faedah untuk kegunaan sendiri
+• Cari alternatif bank Islam secepat mungkin
+
+**📖 Dalil Syar'i:**
+"وَأَحَلَّ اللَّهُ الْبَيْعَ وَحَرَّمَ الرِّبَا"
+*"Allah menghalalkan jual beli dan mengharamkan riba"* (Al-Baqarah: 275)
+
+**💡 Alternatif Yang Disarankan:**
+• **Bank Islam** - Public Islamic, Maybank Islamic, etc.
+• **Akaun Simpanan Islam** - mengikut prinsip Syariah
+• **Skim ASB/ASN** - keuntungan dari pelaburan halal
+• **Tabung Haji** - untuk muslim dan pelaburan halal
+
+**🎯 Prinsip Utama:**
+1. **Hindari riba** dalam segala bentuk
+2. **Cari alternatif halal** yang tersedia
+3. **Jika terpaksa**, dermakan faedah yang terima
+4. **Niat yang betul** - hanya untuk simpan, bukan cari untung dari riba
+
+**📞 Nasihat:**
+Untuk kepastian yang lebih tepat mengikut situasi peribadi, sila rujuk **ustaz tempatan** atau **Mufti Negeri** kerana ada perbezaan pendapat dalam isu kontemporari ini.
+
+Wallahu a'lam bissawab. Semoga Allah mudahkan urusan kewangan kita mengikut syariah! 💚`
+                    },
+                    {
+                        keywords: ['adab bergaul', 'pergaulan islam', 'akhlaq bergaul', 'etika islam'],
+                        response: `**👥 Adab Bergaul Dalam Islam**
+
+Masya Allah! Soalan yang sangat penting tentang **akhlaq dan adab muamalah** - asas kehidupan bermasyarakat yang harmoni.
+
+**🌟 Prinsip Asas Pergaulan Islam:**
+
+**1️⃣ DENGAN SESAMA MUSLIM:**
+• **Salam & Menjawab Salam** - hak dan kewajiban
+• **Senyuman** - sedekah yang mudah dan berkat
+• **Hormat menghormati** tanpa mengira status sosial
+• **Tolong menolong** dalam kebaikan dan takwa
+
+**2️⃣ DENGAN NON-MUSLIM:**
+• **Berlaku adil** dan baik dalam urusan dunia
+• **Hormati** kepercayaan mereka (tidak paksa agama)
+• **Jujur** dalam perniagaan dan kontrak
+• **Jadi contoh** akhlaq Islam yang mulia
+
+**🤝 Adab Pergaulan Harian:**
+
+**📱 Di Era Digital:**
+• **Jaga tutur kata** di media sosial
+• **Verify maklumat** sebelum share
+• **Hormati privacy** orang lain
+• **Gunakan teknologi** untuk kebaikan
+
+**🏢 Di Tempat Kerja:**
+• **Amanah dalam kerja** - beri yang terbaik
+• **Jujur dengan masa** - datang tepat waktu  
+• **Hormati majikan** dan rakan sekerja
+• **Elakkan fitnah** dan gosip tidak berfaedah
+
+**👨‍👩‍👧‍👦 Dalam Keluarga:**
+• **Berbakti kepada ibu bapa** - syurga di bawah kaki ibu
+• **Sayang pasangan** dengan akhlaq mulia
+• **Didik anak** dengan contoh yang baik
+• **Sambung silaturrahim** dengan saudara-mara
+
+**📖 Dalil Al-Quran:**
+"وَقُولُوا لِلنَّاسِ حُسْنًا"
+*"Dan berkatalah kepada manusia dengan perkataan yang baik"* (Al-Baqarah: 83)
+
+**🌟 Hadith Rasulullah ﷺ:**
+"خَيْرُ النَّاسِ أَنْفَعُهُمْ لِلنَّاسِ"
+*"Sebaik-baik manusia adalah yang paling bermanfaat kepada manusia"* (HR. Ahmad)
+
+**💡 Tips Praktis:**
+• **Dengar lebih daripada bercakap**
+• **Elakkan topik kontroversi** yang tidak perlu
+• **Bantu yang memerlukan** tanpa mengharap balasan
+• **Maafkan kesilapan** orang lain dengan hati terbuka
+• **Jaga rahsia** yang diamanahkan kepada kita
+
+**⚠️ Yang Perlu Dielakkan:**
+• **Ghibah (mengumpat)** - walaupun benar
+• **Namimah (fitnah)** - bawa-bawa cerita
+• **Takabbur (sombong)** - merendahkan orang lain
+• **Hasad (dengki)** - tidak redha dengan rezeki orang
+• **Khianat** - pecah amanah dan kepercayaan
+
+**🎯 Matlamat Pergaulan Islam:**
+Menjadi **rahmatan lil alamin** - rahmat untuk semua makhluk, seperti akhlaq Rasulullah ﷺ yang mulia.
+
+Wallahu a'lam bissawab. Semoga Allah jadikan kita hamba yang berakhlaq mulia! 🌈✨`
+                    },
+                    {
+                        keywords: ['makanan halal', 'haram', 'halal haram', 'makanan haram', 'panduan halal', 'tahu makanan halal', 'tahu makanan haram', 'makanan dalam islam', 'bagaimana nak tahu makanan', 'halal dan haram', 'halal or haram', 'food halal'],
+                        response: `**🍽️ Panduan Makanan Halal & Haram Dalam Islam**
+
+Assalamualaikum! Soalan penting tentang **halal dan haram** - asas makanan yang baik untuk tubuh dan roh.
+
+**🚫 MAKANAN YANG HARAM:**
+
+**1️⃣ BINATANG:**
+• **Babi** - dan segala produk turunannya
+• **Anjing** - haram dimakan dalam mazhab Syafie
+• **Bangkai** - binatang mati tanpa disembelih
+• **Darah** - yang mengalir dari binatang
+• **Binatang buas** - harimau, singa, serigala
+• **Burung pemangsa** - helang, burung hantu
+
+**2️⃣ MINUMAN:**
+• **Arak** dan segala jenis alkohol
+• **Minuman memabukkan** walaupun sedikit
+• **Air yang dicampur dengan najis**
+
+**3️⃣ CARA PENYEMBELIHAN:**
+• **Tidak disebut nama Allah** ketika menyembelih
+• **Disembelih untuk selain Allah** (untuk berhala, dll)
+• **Tercekik, terpukul, jatuh** hingga mati
+
+**✅ MAKANAN YANG HALAL:**
+
+**🐄 BINATANG HALAL:**
+• **Lembu, kambing, ayam, itik**
+• **Ikan** - semua jenis ikan laut
+• **Udang, ketam** - makhluk laut (mazhab Syafie)
+• **Rusa, arnab** - binatang liar yang halal
+
+**📋 SYARAT HALAL:**
+**1️⃣ Penyembelihan Syar'i:**
+• Potong **3 saluran**: urat darah, tekak, kerongkong
+• Sebut **"Bismillah, Allahu Akbar"**
+• Gunakan **pisau tajam**
+• **Menghadap kiblat** (sunat)
+
+**2️⃣ Bebas Najis:**
+• Tempat masak dan peralatan bersih
+• Tidak tercampur dengan bahan haram
+• Diproses dengan cara yang bersih
+
+**🔍 CARA MENGENAL PASTI:**
+
+**🏷️ Label & Sijil:**
+• **Logo HALAL JAKIM** - yang rasmi di Malaysia
+• **MUIS, MUIS** - bagi Singapura dan Brunei
+• **Baca ingredients** - elakkan yang syubhah
+
+**🛒 Beli-Belah:**
+• **Kedai/restoran Muslim** - lebih selamat
+• **Baca label dengan teliti** - elakkan gelatin babi
+• **Tanya jika ragu** - "syubhah tinggalkan"
+
+**📖 Dalil Al-Quran:**
+"يَا أَيُّهَا الَّذِينَ آمَنُوا كُلُوا مِن طَيِّبَاتِ مَا رَزَقْنَاكُمْ"
+*"Wahai orang yang beriman! Makanlah dari rezeki yang baik-baik yang Kami berikan kepada kamu"* (Al-Baqarah: 172)
+
+**⚠️ BAHAN YANG PERLU BERHATI-HATI:**
+• **Gelatin** - ada yang dari khinzir
+• **Vanilla extract** - mungkin ada alkohol
+• **Coklat import** - check halal certification
+• **Vitamin** - ada yang menggunakan gelatin haram
+• **Cheese** - ada yang guna rennet khinzir
+
+**💡 Prinsip Mudah:**
+**"Asal halal sehingga terbukti haram"** - untuk makanan asli
+**"Asal haram sehingga terbukti halal"** - untuk makanan processed
+
+**🎯 Hikmah Makanan Halal:**
+• **Kesihatan fizikal** - makanan yang baik
+• **Kesucian rohani** - jiwa yang bersih
+• **Keberkatan rezeki** - diterima Allah
+• **Kemudahan ibadah** - doa lebih makbul
+
+Wallahu a'lam bissawab. Semoga Allah kurniakan rezeki yang halal dan berkat! 🌟💚`
+                    },
                     {
                         keywords: ['solat', 'sembahyang', 'prayer', 'sholat', 'rukun solat', 'cara solat'],
                         response: `**🕌 Solat dalam Mazhab Syafie**
