@@ -1,35 +1,22 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="ms">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ask Ustaz AI - Digital Dakwah Platform</title>
-    
-    <!-- SEO Meta Tags -->
-    <meta name="description" content="Get instant Islamic guidance from Ustaz Radhi AI, your 24/7 digital Islamic scholar. Ask questions about prayer, halal lifestyle, and Islamic teachings for Sabah's Muslim community.">
-    <meta name="keywords" content="Islamic AI, digital ustaz, Islamic guidance Sabah, Muslim chatbot, Islamic questions, prayer times Sabah, halal guidance Malaysia">
-    <meta property="og:title" content="Ask Ustaz AI - Digital Islamic Guidance">
-    <meta property="og:description" content="Get instant Islamic guidance from your digital ustaz, available 24/7 for Sabah's Muslim community">
-    <meta property="og:url" content="https://digital.zikirnurani.com/ustaz.html">
-    <meta property="og:type" content="website">
-    <meta property="og:image" content="https://digital.zikirnurani.com/assets/ustaz-og.jpg">
-    <link rel="canonical" href="https://digital.zikirnurani.com/ustaz.html">
-    
+    <title>Ustaz AI - Digital Dakwah Platform</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Load Google Generative AI SDK -->
-    <script type="importmap">
-    {
-        "imports": {
-            "@google/generative-ai": "https://esm.run/@google/generative-ai"
-        }
-    }
+    <script>
+        // Gemini AI Configuration
+        const GEMINI_CONFIG = {
+            API_KEY: 'AIzaSyCpJ2hv2x4AJeofGNlISs-_9AEebuDF7OA',
+            API_URL: 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent',
+            MAX_TOKENS: 1000,
+            TEMPERATURE: 0.7,
+            RETRY_ATTEMPTS: 2,
+            TIMEOUT: 10000
+        };
     </script>
-    
-    <!-- Load Configuration -->
-    <script src="config.js"></script>
-    
     <style>
         body { font-family: 'Sora', sans-serif; }
         .glass-card {
@@ -37,581 +24,1298 @@
             backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
-        .chat-message {
-            animation: fadeInUp 0.5s ease-out;
+        .chat-bubble-user {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
         }
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        .chat-bubble-ustaz {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
         }
         .typing-indicator {
-            display: none;
-            animation: pulse 1.5s infinite;
+            animation: pulse 1.5s ease-in-out infinite;
         }
         @keyframes pulse {
-            0%, 100% { opacity: 0.5; }
+            0%, 100% { opacity: 0.4; }
             50% { opacity: 1; }
         }
-        .ai-status {
-            position: fixed;
-            top: 100px;
-            right: 20px;
-            z-index: 1000;
-            transition: all 0.3s ease;
+        
+        /* Mobile menu animations */
+        #mobileMenu {
+            transition: all 0.3s ease-in-out;
+            max-height: 0;
+            overflow: hidden;
         }
-        #translateButton {
-            position: fixed;
-            top: 160px;
-            right: 20px;
-            z-index: 1000;
+        #mobileMenu:not(.hidden) {
+            max-height: 400px;
         }
-        /* Hide Google Translate banner and styling */
-        .goog-te-banner-frame {
-            display: none !important;
+        
+        /* Ensure mobile menu is hidden on desktop */
+        @media (min-width: 768px) {
+            #mobileMenu {
+                display: none !important;
+            }
         }
-        .goog-te-combo {
-            display: none !important;
+        
+        /* Ensure header is always visible */
+        header {
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
         }
-        #google_translate_element {
-            display: none !important;
+        
+        /* Backup backdrop blur for better browser support */
+        .backdrop-blur {
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
         }
-        body {
-            top: 0 !important;
-        }
-        .status-connected { background: rgba(34, 197, 94, 0.2); border-color: #22c55e; }
-        .status-disconnected { background: rgba(239, 68, 68, 0.2); border-color: #ef4444; }
-        .status-thinking { background: rgba(59, 130, 246, 0.2); border-color: #3b82f6; }
     </style>
 </head>
-<body class="text-gray-200 bg-[#000711]">
-    <!-- AI Status Indicator -->
-    <div id="aiStatus" class="ai-status glass-card px-4 py-2 rounded-lg border status-disconnected">
-        <div class="flex items-center space-x-2">
-            <div class="w-2 h-2 rounded-full bg-red-400" id="statusDot"></div>
-            <span class="text-xs" id="statusText">AI Offline</span>
-        </div>
-    </div>
+<body class="bg-[#000711] text-gray-200 min-h-screen">
 
-    <!-- Translation Button -->
-    <div id="translateButton" class="fixed top-100 right-20 mt-16 z-1000">
-        <button id="langToggle" onclick="toggleLanguage()" class="glass-card px-4 py-2 rounded-lg border border-amber-400 text-amber-300 hover:bg-amber-500/20 transition-all duration-300 text-sm font-semibold">
-            🌏 Bahasa Melayu
-        </button>
-    </div>
-
-    <header class="fixed top-0 left-0 right-0 z-50 bg-[#000711]/80 backdrop-blur">
+    <!-- Header Navigation -->
+    <header id="header" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-[#000711]/90 backdrop-blur border-b border-white/10">
         <div class="container mx-auto px-6 py-4">
             <div class="glass-card rounded-full px-6 py-2 flex justify-between items-center">
                 <h1 class="text-lg font-bold text-white">Digital Dakwah Platform</h1>
+                
+                <!-- Desktop Navigation -->
                 <nav class="hidden md:flex space-x-6">
                     <a href="index.html" class="text-gray-300 hover:text-white transition">Home</a>
                     <a href="marketplace.html" class="text-gray-300 hover:text-white transition">Marketplace</a>
-                    <a href="ustaz.html" class="text-white">Ask Ustaz</a>
+                    <a href="ustaz.html" class="text-white bg-green-500/20 px-3 py-1 rounded-lg border border-green-400/30">Ask Ustaz</a>
                     <a href="mindmap.html" class="text-gray-300 hover:text-white transition">Mindmap</a>
                 </nav>
+
+                <!-- Mobile Menu Button -->
+                <button id="mobileMenuToggle" class="md:hidden text-white p-2 rounded-lg hover:bg-white/10 transition-colors focus:outline-none focus:ring-2 focus:ring-green-400" aria-label="Toggle mobile menu">
+                    <svg class="w-6 h-6 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path id="menuIcon" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+
+                <!-- Desktop Get Involved Button -->
+                <a href="index.html#contact" class="hidden md:block bg-white text-blue-900 font-bold py-2 px-5 rounded-full hover:bg-gray-200 transition duration-300 transform hover:scale-105 shadow-lg">Get Involved</a>
+            </div>
+
+            <!-- Mobile Navigation Menu -->
+            <div id="mobileMenu" class="md:hidden mt-4 hidden">
+                <div class="glass-card rounded-lg px-4 py-4 space-y-2">
+                    <a href="index.html" class="block text-gray-300 hover:text-white transition py-3 px-4 rounded-lg hover:bg-white/10 border-b border-white/10">
+                        🏠 Home
+                    </a>
+                    <a href="marketplace.html" class="block text-gray-300 hover:text-white transition py-3 px-4 rounded-lg hover:bg-white/10 border-b border-white/10">
+                        🛒 Marketplace
+                    </a>
+                    <a href="ustaz.html" class="block text-white bg-green-500/20 py-3 px-4 rounded-lg border border-green-400/30">
+                        🤖 Ask Ustaz (Current)
+                    </a>
+                    <a href="mindmap.html" class="block text-gray-300 hover:text-white transition py-3 px-4 rounded-lg hover:bg-white/10 border-b border-white/10">
+                        🧠 Mindmap
+                    </a>
+                    <a href="index.html#contact" class="block text-center bg-white text-blue-900 font-bold py-3 px-4 rounded-lg hover:bg-gray-200 transition">
+                        📞 Get Involved
+                    </a>
+                </div>
             </div>
         </div>
     </header>
 
-    <main class="pt-32 pb-20">
-        <div class="container mx-auto px-6">
-            <div class="text-center mb-12">
-                <h1 class="text-4xl md:text-6xl font-bold text-white mb-6">
-                    Ask <span class="text-gradient bg-gradient-to-r from-green-400 to-blue-500 bg-clip-text text-transparent">Ustaz AI</span>
-                </h1>
-                <p class="text-xl text-gray-300 max-w-2xl mx-auto">
-                    Meet Ustaz Radhi from Papar, Sabah - your trusted Islamic guide with deep local roots. Get personalized guidance rooted in Quran and Sunnah, with intimate understanding of our Sabahan culture and traditions.
-                </p>
-            </div>
-
-            <!-- Chat Interface -->
-            <div class="max-w-4xl mx-auto">
-                <div class="glass-card rounded-lg p-6 mb-6">
-                    <div class="chat-container h-96 overflow-y-auto mb-6" id="chatMessages">
-                        <!-- Welcome Message -->
-                        <div class="chat-message flex items-start space-x-3 mb-4" id="welcomeMessage">
-                            <div class="flex-shrink-0 w-10 h-10 bg-gradient-to-r from-green-500 to-blue-600 rounded-full flex items-center justify-center">
-                                <span class="text-white text-sm">🤖</span>
-                            </div>
-                            <div class="flex-1 bg-gradient-to-r from-green-500/20 to-blue-600/20 rounded-lg p-4">
-                                <p class="text-white">Assalamu'alaikum! 🌙<br><br>I'm <strong>Ustaz Radhi</strong> from Papar, Sabah. I help answer Islamic questions in simple, easy ways. <br><br>What's your name? This helps me give you better answers. 😊</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Typing Indicator -->
-                    <div class="typing-indicator chat-message flex items-start space-x-3 mb-4" id="typingIndicator">
-                        <div class="flex-shrink-0 w-10 h-10 bg-gradient-to-r from-green-500 to-blue-600 rounded-full flex items-center justify-center">
-                            <span class="text-white text-sm">🤖</span>
-                        </div>
-                        <div class="flex-1 bg-gradient-to-r from-green-500/20 to-blue-600/20 rounded-lg p-4">
-                            <p class="text-white">Ustaz Radhi is thinking... 🤔</p>
-                        </div>
-                    </div>
-                    
-                    <!-- Input Area -->
-                    <div class="flex space-x-4">
-                        <input 
-                            type="text" 
-                            id="messageInput" 
-                            placeholder="Ask Ustaz AI your Islamic question here..." 
-                            class="flex-1 px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-400"
-                        >
-                        <button 
-                            id="sendButton"
-                            class="px-6 py-3 bg-gradient-to-r from-green-500 to-blue-600 hover:from-green-600 hover:to-blue-700 text-white rounded-lg transition-all duration-300 hover:scale-105"
-                        >
-                            Send
-                        </button>
+    <!-- Main Content with top padding for fixed header -->
+    <div class="container mx-auto px-4 py-8 max-w-4xl pt-28">
+        
+        <!-- Header -->
+        <div class="glass-card rounded-xl p-6 mb-6">
+            <div class="flex items-center space-x-4">
+                <div class="w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center">
+                    <span class="text-white text-2xl">🧠</span>
+                </div>
+                <div>
+                    <h1 class="text-2xl font-bold text-green-300">Ustaz Radhi</h1>
+                    <p class="text-gray-400">AI Assistant • Motivator • Pendengar • Deep-Talk Partner</p>
+                    <div class="flex items-center space-x-2 mt-2">
+                        <div class="w-3 h-3 bg-green-400 rounded-full"></div>
+                        <span class="text-sm text-green-400">Online & Siap Membantu</span>
                     </div>
                 </div>
             </div>
-
-            <!-- Quick Topics -->
-            <div class="max-w-4xl mx-auto mb-12">
-                <h3 class="text-2xl font-bold text-white mb-6 text-center">Common Questions</h3>
-                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    <button class="topic-btn glass-card p-4 rounded-lg hover:transform hover:scale-105 transition-all duration-300 text-left" data-topic="What are the prayer times in Sabah?">
-                        <div class="text-green-300 font-semibold mb-2">Prayer Times</div>
-                        <div class="text-gray-400 text-sm">Learn about prayer schedules in Sabah</div>
-                    </button>
-                    <button class="topic-btn glass-card p-4 rounded-lg hover:transform hover:scale-105 transition-all duration-300 text-left" data-topic="How to perform wudu correctly?">
-                        <div class="text-blue-300 font-semibold mb-2">Wudu Guide</div>
-                        <div class="text-gray-400 text-sm">Step-by-step ablution instructions</div>
-                    </button>
-                    <button class="topic-btn glass-card p-4 rounded-lg hover:transform hover:scale-105 transition-all duration-300 text-left" data-topic="What foods are halal in Sabahan cuisine?">
-                        <div class="text-purple-300 font-semibold mb-2">Halal Food</div>
-                        <div class="text-gray-400 text-sm">Sabahan halal dietary guidelines</div>
-                    </button>
-                    <button class="topic-btn glass-card p-4 rounded-lg hover:transform hover:scale-105 transition-all duration-300 text-left" data-topic="How to find qibla direction in Sabah?">
-                        <div class="text-yellow-300 font-semibold mb-2">Qibla Direction</div>
-                        <div class="text-gray-400 text-sm">Finding prayer direction in Sabah</div>
-                    </button>
-                    <button class="topic-btn glass-card p-4 rounded-lg hover:transform hover:scale-105 transition-all duration-300 text-left" data-topic="What are the pillars of Islam?">
-                        <div class="text-red-300 font-semibold mb-2">Five Pillars</div>
-                        <div class="text-gray-400 text-sm">Fundamental Islamic practices</div>
-                    </button>
-                    <button class="topic-btn glass-card p-4 rounded-lg hover:transform hover:scale-105 transition-all duration-300 text-left" data-topic="How to calculate zakat in Malaysia?">
-                        <div class="text-indigo-300 font-semibold mb-2">Zakat Calculation</div>
-                        <div class="text-gray-400 text-sm">Malaysian zakat guidelines</div>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Islamic Resources -->
-            <div class="max-w-4xl mx-auto">
-                <h3 class="text-2xl font-bold text-white mb-6 text-center">Islamic Resources</h3>
-                <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    <div class="glass-card rounded-lg p-6 text-center hover:transform hover:scale-105 transition-all duration-300">
-                        <div class="text-4xl mb-4">📖</div>
-                        <h4 class="text-lg font-bold text-green-300 mb-2">Quran Online</h4>
-                        <p class="text-gray-400 text-sm mb-4">Read Quran with Malay translation</p>
-                        <a href="https://quran.com/ms" target="_blank" rel="noopener" class="text-green-400 hover:text-green-300 text-sm">Read Now →</a>
-                    </div>
-                    <div class="glass-card rounded-lg p-6 text-center hover:transform hover:scale-105 transition-all duration-300">
-                        <div class="text-4xl mb-4">🕌</div>
-                        <h4 class="text-lg font-bold text-blue-300 mb-2">Mosque Finder</h4>
-                        <p class="text-gray-400 text-sm mb-4">Find nearby mosques in Sabah</p>
-                        <button class="text-blue-400 hover:text-blue-300 text-sm">Find Mosques →</button>
-                    </div>
-                    <div class="glass-card rounded-lg p-6 text-center hover:transform hover:scale-105 transition-all duration-300">
-                        <div class="text-4xl mb-4">📚</div>
-                        <h4 class="text-lg font-bold text-purple-300 mb-2">Islamic Library</h4>
-                        <p class="text-gray-400 text-sm mb-4">Access Islamic books and articles</p>
-                        <button class="text-purple-400 hover:text-purple-300 text-sm">Browse Library →</button>
-                    </div>
-                    <div class="glass-card rounded-lg p-6 text-center hover:transform hover:scale-105 transition-all duration-300">
-                        <div class="text-4xl mb-4">🛒</div>
-                        <h4 class="text-lg font-bold text-amber-300 mb-2">Halal Marketplace</h4>
-                        <p class="text-gray-400 text-sm mb-4">Shop halal products from Sabah</p>
-                        <a href="marketplace.html" class="text-amber-400 hover:text-amber-300 text-sm">Shop Now →</a>
-                    </div>
+            
+            <!-- Quick Guidelines -->
+            <div class="mt-4 p-4 bg-green-500/10 rounded-lg border border-green-500/20">
+                <h3 class="text-green-300 font-semibold mb-2">🌟 Ustaz Radhi Siap Membantu Anda:</h3>
+                <div class="grid md:grid-cols-2 gap-2 text-sm text-gray-300">
+                    <div>💪 <strong>Motivator:</strong> Nasihat & semangat hidup</div>
+                    <div>👂 <strong>Pendengar:</strong> Tempat curhat yang aman</div>
+                    <div>💭 <strong>Deep-Talk:</strong> Bicara mendalam tentang hidup</div>
+                    <div>📖 <strong>Guru Agama:</strong> Fiqh & Ibadah (Mazhab Syafie)</div>
+                    <div>🤲 <strong>Spiritual Guide:</strong> Al-Quran & Hadith</div>
+                    <div>❤️ <strong>Penyembuh Hati:</strong> Akhlaq & Adab Islam</div>
                 </div>
             </div>
         </div>
-    </main>
 
-    <script type="module">
-        import { GoogleGenerativeAI } from '@google/generative-ai';
-
-        // Global variables
-        let genAI = null;
-        let model = null;
-        let chatHistory = [];
-        let userName = '';
-        let isNameCaptured = false;
-
-        // DOM elements
-        const chatMessages = document.getElementById('chatMessages');
-        const messageInput = document.getElementById('messageInput');
-        const sendButton = document.getElementById('sendButton');
-        const typingIndicator = document.getElementById('typingIndicator');
-        const aiStatus = document.getElementById('aiStatus');
-        const statusDot = document.getElementById('statusDot');
-        const statusText = document.getElementById('statusText');
-
-        // Update AI status
-        function updateAIStatus(status, message) {
-            const statusClass = `status-${status}`;
-            aiStatus.className = `ai-status glass-card px-4 py-2 rounded-lg border ${statusClass}`;
+        <!-- Chat Container -->
+        <div class="glass-card rounded-xl overflow-hidden">
             
-            const colors = {
-                connected: 'bg-green-400',
-                disconnected: 'bg-red-400', 
-                thinking: 'bg-blue-400'
-            };
-            
-            statusDot.className = `w-2 h-2 rounded-full ${colors[status]}`;
-            statusText.textContent = message;
-        }
-
-        // Add message to chat
-        function addMessage(message, isUser = false) {
-            const messageDiv = document.createElement('div');
-            messageDiv.className = 'chat-message flex items-start space-x-3 mb-4';
-            
-            const avatarClass = isUser 
-                ? 'bg-gradient-to-r from-purple-500 to-pink-600' 
-                : 'bg-gradient-to-r from-green-500 to-blue-600';
-            
-            const avatarIcon = isUser ? '👤' : '🤖';
-            const messageClass = isUser 
-                ? 'bg-gradient-to-r from-purple-500/20 to-pink-600/20' 
-                : 'bg-gradient-to-r from-green-500/20 to-blue-600/20';
-            
-            messageDiv.innerHTML = `
-                <div class="flex-shrink-0 w-10 h-10 ${avatarClass} rounded-full flex items-center justify-center">
-                    <span class="text-white text-sm">${avatarIcon}</span>
-                </div>
-                <div class="flex-1 ${messageClass} rounded-lg p-4">
-                    <p class="text-white">${message.replace(/\n/g, '<br>')}</p>
-                </div>
-            `;
-            
-            chatMessages.appendChild(messageDiv);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        }
-
-        // Initialize Gemini AI
-        async function initializeGeminiAI() {
-            try {
-                // Your Gemini API Key
-                const API_KEY = 'AIzaSyCpJ2hv2x4AJeofGNlISs-_9AEebuDF7OA';
+            <!-- Chat Messages Area -->
+            <div id="chatMessages" class="h-96 overflow-y-auto p-6 space-y-4">
                 
-                if (!API_KEY || API_KEY === 'YOUR_GEMINI_API_KEY_HERE') {
-                    console.warn('Gemini API key not configured. Using fallback responses.');
-                    updateAIStatus('disconnected', 'API Key Required');
-                    return false;
-                }
+                <!-- Welcome Message -->
+                <div class="flex items-start space-x-3">
+                    <div class="w-8 h-8 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center flex-shrink-0">
+                        <span class="text-white text-sm">🧠</span>
+                    </div>
+                    <div class="chat-bubble-ustaz rounded-lg p-4 max-w-md">
+                        <div class="text-sm text-green-300 font-semibold mb-1">Ustaz Radhi</div>
+                        <div class="text-gray-200">
+                            Assalamualaikum warahmatullahi wabarakatuh. Selamat datang ke Digital Dakwah Platform! 
+                            
+                            Saya Ustaz Radhi - bukan sahaja pembantu agama, tetapi juga:
+                            💪 <strong>Motivator</strong> untuk yang berasa down
+                            👂 <strong>Pendengar</strong> untuk yang sedih  
+                            💭 <strong>Deep-talk partner</strong> untuk bicara mendalam
+                            
+                            Ceritakanlah apa sahaja yang di hati. Saya di sini untuk anda! 🤲
+                        </div>
+                    </div>
+                </div>
 
-                genAI = new GoogleGenerativeAI(API_KEY);
-                model = genAI.getGenerativeModel({ 
-                    model: 'gemini-1.5-pro',  // Changed to more stable model
-                    generationConfig: {
-                        temperature: 0.7,
-                        topK: 40,
-                        topP: 0.95,
-                        maxOutputTokens: 1000,  // Increased for better responses
-                    },
-                    safetySettings: [
-                        {
-                            category: "HARM_CATEGORY_HARASSMENT",
-                            threshold: "BLOCK_MEDIUM_AND_ABOVE",
-                        },
-                        {
-                            category: "HARM_CATEGORY_HATE_SPEECH",
-                            threshold: "BLOCK_MEDIUM_AND_ABOVE",
-                        },
-                        {
-                            category: "HARM_CATEGORY_SEXUALLY_EXPLICIT",
-                            threshold: "BLOCK_MEDIUM_AND_ABOVE",
-                        },
-                        {
-                            category: "HARM_CATEGORY_DANGEROUS_CONTENT",
-                            threshold: "BLOCK_MEDIUM_AND_ABOVE",
-                        },
-                    ]
+                <!-- Sample Questions -->
+                <div class="bg-blue-500/10 rounded-lg p-4 border border-blue-500/20 mx-0">
+                    <h4 class="text-blue-300 font-semibold mb-3">💡 Contoh Soalan:</h4>
+                    <div class="space-y-3">
+                        <button class="sample-question w-full text-left p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-all duration-200 text-sm text-gray-300 border border-white/10 hover:border-blue-400/30">
+                            "Bagaimana cara solat dengan sempurna menurut mazhab Syafie?"
+                        </button>
+                        <button class="sample-question w-full text-left p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-all duration-200 text-sm text-gray-300 border border-white/10 hover:border-blue-400/30">
+                            "Apakah hukum zakat fitrah dan berapa kadarnya?"
+                        </button>
+                        <button class="sample-question w-full text-left p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-all duration-200 text-sm text-gray-300 border border-white/10 hover:border-blue-400/30">
+                            "Boleh terangkan tentang adab ketika membaca Al-Quran?"
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Quick Greeting Buttons -->
+                <div class="bg-green-500/10 rounded-lg p-4 border border-green-500/20 mx-0">
+                    <h4 class="text-green-300 font-semibold mb-3">👋 Salam & Sapaan Pantas:</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                        <button class="quick-greeting w-full text-left p-3 rounded-lg bg-green-500/5 hover:bg-green-500/15 transition-all duration-200 text-sm text-gray-300 border border-green-500/20 hover:border-green-400/40">
+                            🕌 Assalamualaikum
+                        </button>
+                        <button class="quick-greeting w-full text-left p-3 rounded-lg bg-green-500/5 hover:bg-green-500/15 transition-all duration-200 text-sm text-gray-300 border border-green-500/20 hover:border-green-400/40">
+                            😊 Selamat pagi Ustaz
+                        </button>
+                        <button class="quick-greeting w-full text-left p-3 rounded-lg bg-green-500/5 hover:bg-green-500/15 transition-all duration-200 text-sm text-gray-300 border border-green-500/20 hover:border-green-400/40">
+                            🌙 Selamat petang Ustaz
+                        </button>
+                        <button class="quick-greeting w-full text-left p-3 rounded-lg bg-green-500/5 hover:bg-green-500/15 transition-all duration-200 text-sm text-gray-300 border border-green-500/20 hover:border-green-400/40">
+                            🤝 Apa khabar Ustaz?
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Popular Islamic Questions -->
+                <div class="bg-purple-500/10 rounded-lg p-4 border border-purple-500/20 mx-0">
+                    <h4 class="text-purple-300 font-semibold mb-3">🔥 Soalan Popular:</h4>
+                    <div class="space-y-2">
+                        <button class="popular-question w-full text-left p-3 rounded-lg bg-purple-500/5 hover:bg-purple-500/15 transition-all duration-200 text-sm text-gray-300 border border-purple-500/20 hover:border-purple-400/40">
+                            📿 Cara bertaubat yang betul
+                        </button>
+                        <button class="popular-question w-full text-left p-3 rounded-lg bg-purple-500/5 hover:bg-purple-500/15 transition-all duration-200 text-sm text-gray-300 border border-purple-500/20 hover:border-purple-400/40">
+                            💰 Hukum simpan wang dalam bank
+                        </button>
+                        <button class="popular-question w-full text-left p-3 rounded-lg bg-purple-500/5 hover:bg-purple-500/15 transition-all duration-200 text-sm text-gray-300 border border-purple-500/20 hover:border-purple-400/40">
+                            🤲 Doa selepas solat yang mustajab
+                        </button>
+                        <button class="popular-question w-full text-left p-3 rounded-lg bg-purple-500/5 hover:bg-purple-500/15 transition-all duration-200 text-sm text-gray-300 border border-purple-500/20 hover:border-purple-400/40">
+                            👥 Adab bergaul dalam Islam
+                        </button>
+                        <button class="popular-question w-full text-left p-3 rounded-lg bg-purple-500/5 hover:bg-purple-500/15 transition-all duration-200 text-sm text-gray-300 border border-purple-500/20 hover:border-purple-400/40">
+                            🍽️ Hukum makanan halal dan haram
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Quick Topic Buttons -->
+                <div class="bg-orange-500/10 rounded-lg p-4 border border-orange-500/20 mx-0">
+                    <h4 class="text-orange-300 font-semibold mb-3">📚 Topik Pembelajaran:</h4>
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-2">
+                        <button class="topic-button w-full text-center p-2 rounded-lg bg-orange-500/5 hover:bg-orange-500/15 transition-all duration-200 text-xs text-gray-300 border border-orange-500/20 hover:border-orange-400/40">
+                            🕌 Solat
+                        </button>
+                        <button class="topic-button w-full text-center p-2 rounded-lg bg-orange-500/5 hover:bg-orange-500/15 transition-all duration-200 text-xs text-gray-300 border border-orange-500/20 hover:border-orange-400/40">
+                            💰 Zakat
+                        </button>
+                        <button class="topic-button w-full text-center p-2 rounded-lg bg-orange-500/5 hover:bg-orange-500/15 transition-all duration-200 text-xs text-gray-300 border border-orange-500/20 hover:border-orange-400/40">
+                            🌙 Puasa
+                        </button>
+                        <button class="topic-button w-full text-center p-2 rounded-lg bg-orange-500/5 hover:bg-orange-500/15 transition-all duration-200 text-xs text-gray-300 border border-orange-500/20 hover:border-orange-400/40">
+                            🕋 Haji
+                        </button>
+                        <button class="topic-button w-full text-center p-2 rounded-lg bg-orange-500/5 hover:bg-orange-500/15 transition-all duration-200 text-xs text-gray-300 border border-orange-500/20 hover:border-orange-400/40">
+                            📖 Al-Quran
+                        </button>
+                        <button class="topic-button w-full text-center p-2 rounded-lg bg-orange-500/5 hover:bg-orange-500/15 transition-all duration-200 text-xs text-gray-300 border border-orange-500/20 hover:border-orange-400/40">
+                            🤲 Doa
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Typing Indicator (Hidden by default) -->
+            <div id="typingIndicator" class="hidden px-6 py-2">
+                <div class="flex items-center space-x-3">
+                    <div class="w-8 h-8 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center">
+                        <span class="text-white text-sm">🧠</span>
+                    </div>
+                    <div class="typing-indicator text-gray-400 text-sm">
+                        Ustaz Radhi sedang menaip...
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chat Input Area -->
+            <div class="border-t border-white/10 p-6">
+                <div class="flex space-x-4">
+                    <input 
+                        type="text" 
+                        id="messageInput" 
+                        placeholder="Be respectful, Jazakallahu khairan." 
+                        class="flex-1 bg-white/10 border border-white/20 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-transparent"
+                        maxlength="300"
+                    >
+                    <button 
+                        id="sendButton" 
+                        class="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-6 py-3 rounded-lg font-semibold transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                        Hantar
+                    </button>
+                </div>
+                <div class="mt-2 text-xs text-gray-500">
+                    Tekan Enter untuk hantar. Maksimum 200 aksara.
+                </div>
+            </div>
+        </div>
+
+        <!-- Disclaimer -->
+        <div class="mt-6 text-center text-xs text-gray-500 bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-4">
+            <p class="mb-2">⚠️ <strong>Penafian:</strong> Saya adalah AI Assistant dalam platform ini sahaja </p>
+            <p>Untuk keputusan penting atau isu kompleks, sila rujuk ustaz berkelayakan di masjid tempatan. Wallahu a'lam bissawab.</p>
+        </div>
+
+        <!-- Platform Information Section -->
+        <div class="mt-6 bg-gradient-to-r from-green-500/10 to-blue-500/10 border border-green-500/20 rounded-lg p-6">
+            <h3 class="text-green-300 font-bold text-lg mb-4 text-center">🌟 Tentang Digital Dakwah Platform</h3>
+            
+            <div class="space-y-4 text-sm text-gray-300">
+                <div class="bg-white/5 rounded-lg p-4">
+                    <h4 class="text-blue-300 font-semibold mb-2">🎯 Visi Platform:</h4>
+                    <p class="text-gray-200 italic">"Menjadi platform dakwah digital terdepan yang menghubungkan teknologi moden dengan nilai-nilai Islam tradisional untuk menyebarkan ilmu agama yang sahih dan mudah diakses oleh semua lapisan masyarakat."</p>
+                </div>
+                
+                <div class="bg-white/5 rounded-lg p-4">
+                    <h4 class="text-purple-300 font-semibold mb-2">🚀 Misi Kami:</h4>
+                    <ul class="space-y-1 text-gray-200">
+                        <li>• Memudahkan akses kepada ilmu agama Islam yang sahih dan berdasarkan dalil</li>
+                        <li>• Memberikan panduan praktis untuk kehidupan mengikut Islam</li>
+                        <li>• Menyebarkan dakwah secara digital yang berkesan</li>
+                        <li>• Memupuk komuniti Muslim yang berilmu dan bertakwa</li>
+                        <li>• Menyokong dakwah dan pendidikan Islam berkelanjutan</li>
+                    </ul>
+                </div>
+                
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div class="bg-white/5 rounded-lg p-4">
+                        <h4 class="text-orange-300 font-semibold mb-2">🔗 Rujukan Berguna:</h4>
+                        <ul class="space-y-1 text-gray-200 text-xs">
+                            <li>• Fatwa rasmi: <a href="https://www.islam.gov.my" class="text-green-400 hover:text-green-300">JAKIM</a></li>
+                            <li>• Zakat Sabah: <a href="https://appszakat.sabah.gov.my" class="text-green-400 hover:text-green-300">MAIS Sabah</a></li>
+                            <li>• Waktu solat: Rujuk aplikasi solat tempatan</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="bg-white/5 rounded-lg p-4">
+                        <h4 class="text-cyan-300 font-semibold mb-2">🌍 Platform Features:</h4>
+                        <ul class="space-y-1 text-gray-200 text-xs">
+                            <li>• <span class="text-green-400">Ask Ustaz</span> - Soalan agama (sedang anda gunakan)</li>
+                            <li>• <span class="text-blue-400">Marketplace</span> - Produk & perkhidmatan Islami</li>
+                            <li>• <span class="text-purple-400">Mindmap</span> - Peta minda pembelajaran Islam</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="text-center pt-2">
+                    <p class="text-green-300 font-medium">❓ Ada soalan lanjut? Platform ini sedia membantu 24/7! 🤲</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Chat functionality
+        class UstazRadhiChat {
+            constructor() {
+                this.messageInput = document.getElementById('messageInput');
+                this.sendButton = document.getElementById('sendButton');
+                this.chatMessages = document.getElementById('chatMessages');
+                this.typingIndicator = document.getElementById('typingIndicator');
+                this.hasGreeted = false; // Track if user has been greeted already
+                
+                this.initializeEventListeners();
+                this.initializeSampleQuestions();
+            }
+
+            initializeEventListeners() {
+                // Send button click
+                this.sendButton.addEventListener('click', () => this.sendMessage());
+                
+                // Enter key press
+                this.messageInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        this.sendMessage();
+                    }
                 });
 
-                console.log('✅ Gemini AI initialized successfully with stable model');
-                updateAIStatus('connected', 'Ustaz Radhi Ready');
-                return true;
-            } catch (error) {
-                console.error('❌ Failed to initialize Gemini AI:', error);
-                updateAIStatus('disconnected', 'AI Error');
-                return false;
-            }
-        }
-
-        // Enhanced Generate AI response with retry mechanism
-        async function generateAIResponse(message, retryCount = 0) {
-            const maxRetries = 3;
-            const retryDelay = Math.pow(2, retryCount) * 1000; // Exponential backoff: 1s, 2s, 4s
-
-            if (!model) {
-                throw new Error('Gemini AI model not initialized');
+                // Input validation
+                this.messageInput.addEventListener('input', () => {
+                    this.validateInput();
+                });
             }
 
-            const islamicContext = `
-            You are Ustaz Radhi from Papar, Sabah. Give simple, direct answers about Islam.
-            
-            Rules for your replies:
-            - Keep answers SHORT (2-3 sentences maximum)
-            - Go straight to the point
-            - Use simple, easy words
-            - Give practical advice for daily life
-            - Use the person's name: ${userName || 'my friend'}
-            - End with a simple dua or blessing
-            
-            Make it conversational like talking to a neighbor, not a formal speech.
-            
-            Question: ${message}
-            `;
+            initializeSampleQuestions() {
+                // Original sample questions
+                const sampleButtons = document.querySelectorAll('.sample-question');
+                sampleButtons.forEach(button => {
+                    button.addEventListener('click', () => {
+                        const question = button.textContent.replace(/"/g, '');
+                        this.messageInput.value = question;
+                        this.messageInput.focus();
+                    });
+                });
 
-            try {
-                const result = await model.generateContent(islamicContext);
-                const response = await result.response;
-                return response.text();
-            } catch (error) {
-                console.error(`Error generating AI response (attempt ${retryCount + 1}):`, error);
+                // Quick greeting buttons
+                const greetingButtons = document.querySelectorAll('.quick-greeting');
+                greetingButtons.forEach(button => {
+                    button.addEventListener('click', () => {
+                        const greeting = button.textContent.replace(/🕌|😊|🌙|🤝/g, '').trim();
+                        this.messageInput.value = greeting;
+                        this.sendMessage(); // Auto-send greetings
+                    });
+                });
+
+                // Popular questions buttons
+                const popularButtons = document.querySelectorAll('.popular-question');
+                popularButtons.forEach(button => {
+                    button.addEventListener('click', () => {
+                        const question = this.getFullQuestionFromTopic(button.textContent.trim());
+                        this.messageInput.value = question;
+                        this.messageInput.focus();
+                    });
+                });
+
+                // Topic buttons
+                const topicButtons = document.querySelectorAll('.topic-button');
+                topicButtons.forEach(button => {
+                    button.addEventListener('click', () => {
+                        const topic = button.textContent.replace(/🕌|💰|🌙|🕋|📖|🤲/g, '').trim();
+                        const question = `Boleh terangkan tentang ${topic.toLowerCase()} dalam Islam?`;
+                        this.messageInput.value = question;
+                        this.messageInput.focus();
+                    });
+                });
+            }
+
+            validateInput() {
+                const message = this.messageInput.value.trim();
+                const isValid = message.length > 0 && message.length <= 500;
                 
-                // Check if it's a 503 error (service unavailable) and we haven't exceeded max retries
-                if (error.message.includes('503') || error.message.includes('overloaded') || error.message.includes('Service Unavailable')) {
-                    if (retryCount < maxRetries) {
-                        console.log(`Retrying in ${retryDelay}ms... (attempt ${retryCount + 2}/${maxRetries + 1})`);
-                        updateAIStatus('thinking', `Reconnecting... (${retryCount + 2}/${maxRetries + 1})`);
-                        
-                        await new Promise(resolve => setTimeout(resolve, retryDelay));
-                        return generateAIResponse(message, retryCount + 1);
-                    } else {
-                        console.warn('Max retries exceeded, falling back to offline responses');
-                        updateAIStatus('disconnected', 'Service Overloaded');
-                        throw new Error('GEMINI_OVERLOADED');
-                    }
-                }
+                this.sendButton.disabled = !isValid;
                 
-                throw error;
-            }
-        }
-
-        // Fallback responses for when AI is not available
-        const fallbackResponses = {
-            'prayer': 'In Sabah, prayer times are: Fajr 5:45am, Dhuhr 12:30pm, Asr 3:45pm, Maghrib 6:55pm, Isha 8:10pm. Check your local mosque for exact times. May Allah accept your prayers.',
-            
-            'wudu': 'Wudu steps: 1) Say Bismillah 2) Wash hands 3x 3) Rinse mouth 3x 4) Clean nose 3x 5) Wash face 3x 6) Wash arms 3x 7) Wipe head 1x 8) Wash feet 3x. Done!',
-            
-            'halal': 'In Sabah: hinava, bambangan, and local seafood are halal. Always buy JAKIM certified meat. When in doubt, ask or avoid. Allah loves careful Muslims.',
-            
-            'qibla': 'In Sabah, face West-Northwest (around 295-300 degrees). Use a qibla app for exact direction. Allah sees your effort to face the right way.',
-            
-            'pillars': 'Five Pillars: 1) Shahada 2) 5 daily prayers 3) Zakat 4) Ramadan fasting 5) Hajj if able. These are the basics of Islam.',
-            
-            'zakat': 'In Malaysia: pay 2.5% of savings above RM14,000 yearly. Contact local zakat office for help. Zakat cleans your wealth and helps others.',
-            
-            'dua': 'Best duas: Astaghfirullah (for forgiveness), Allahumma salli ala Muhammad (blessings on Prophet), La hawla wa la quwwata illa billah (for strength). Allah hears all prayers.',
-            
-            'ramadan': 'Ramadan fasting: stop eating at Fajr (5:30am), break fast at Maghrib (7:00pm). Read Quran, give charity, make dua. Ramadan Mubarak!',
-            
-            'quran': 'Read Quran daily, even one verse. Start with Al-Fatiha, Al-Ikhlas, Al-Falaq, An-Nas. Get a Malay translation to understand better.',
-            
-            'marriage': 'Islamic marriage needs: good character, faith compatibility, family involvement, and Istikhara prayer. Marriage is half your deen.',
-            
-            'default': 'Sorry, I have technical problems right now. Please ask again later or visit your local mosque. The ustaz there can help you better.'
-        };
-
-        function getFallbackResponse(message) {
-            const lowerMessage = message.toLowerCase();
-            const nameGreeting = userName ? `${userName}, ` : 'my dear brother or sister, ';
-            
-            // More comprehensive keyword matching
-            const keywords = {
-                'prayer': ['prayer', 'solat', 'salah', 'pray', 'time', 'waktu'],
-                'wudu': ['wudu', 'ablution', 'purification', 'cleanse', 'wash'],
-                'halal': ['halal', 'haram', 'food', 'eat', 'makanan', 'forbidden'],
-                'qibla': ['qibla', 'kiblat', 'direction', 'mecca', 'makkah', 'face'],
-                'pillars': ['pillar', 'rukun', 'five', 'foundation', 'basic'],
-                'zakat': ['zakat', 'charity', 'wealth', 'money', 'savings'],
-                'dua': ['dua', 'pray', 'supplication', 'invoke', 'ask allah'],
-                'ramadan': ['ramadan', 'fasting', 'puasa', 'iftar', 'sahur'],
-                'quran': ['quran', 'qur\'an', 'read', 'recite', 'surah', 'ayah'],
-                'marriage': ['marriage', 'nikah', 'wife', 'husband', 'marry', 'wedding']
-            };
-            
-            for (const [category, words] of Object.entries(keywords)) {
-                if (words.some(word => lowerMessage.includes(word))) {
-                    return fallbackResponses[category].replace('my dear brother or sister', nameGreeting.slice(0, -2));
-                }
-            }
-            
-            return fallbackResponses.default.replace('my dear brother or sister', nameGreeting.slice(0, -2));
-        }
-
-        // Enhanced send message function with name capture and better error handling
-        async function sendMessage(message = null) {
-            const userMessage = message || messageInput.value.trim();
-            if (!userMessage) return;
-
-            // Add user message
-            addMessage(userMessage, true);
-            
-            // Clear input
-            if (!message) messageInput.value = '';
-
-            // Check if this is the first interaction (name capture)
-            if (!isNameCaptured) {
-                userName = userMessage;
-                isNameCaptured = true;
-                
-                // Welcome response with name
-                const welcomeResponse = `Nice to meet you, ${userName}! 😊
-
-I'm Ustaz Radhi from Papar, Sabah. I'm here to help answer your Islamic questions in simple, easy ways.
-
-What would you like to know about Islam today, ${userName}? 🤲`;
-
-                addMessage(welcomeResponse);
-                return;
-            }
-
-            // Show typing indicator
-            updateAIStatus('thinking', 'Ustaz Radhi is contemplating...');
-            typingIndicator.style.display = 'flex';
-
-            try {
-                let response;
-                
-                // Try AI response first with retry logic
-                if (model) {
-                    try {
-                        response = await generateAIResponse(userMessage);
-                        updateAIStatus('connected', 'Ustaz Radhi Ready');
-                    } catch (aiError) {
-                        console.warn('AI service unavailable, using fallback:', aiError.message);
-                        response = getFallbackResponse(userMessage);
-                        updateAIStatus('disconnected', 'Using Offline Knowledge');
-                    }
+                // Character count (optional)
+                const remaining = 500 - message.length;
+                if (remaining < 50) {
+                    this.messageInput.style.borderColor = remaining < 0 ? '#ef4444' : '#f59e0b';
                 } else {
-                    // Use fallback response
-                    response = getFallbackResponse(userMessage);
-                    updateAIStatus('disconnected', 'Using Offline Knowledge');
+                    this.messageInput.style.borderColor = '';
+                }
+            }
+
+            getFullQuestionFromTopic(topicText) {
+                const topicMap = {
+                    '📿 Cara bertaubat yang betul': 'Bagaimana cara bertaubat yang betul dalam Islam?',
+                    '💰 Hukum simpan wang dalam bank': 'Apakah hukum menyimpan wang dalam bank yang ada faedah?',
+                    '🤲 Doa selepas solat yang mustajab': 'Apakah doa-doa yang mustajab dibaca selepas solat?',
+                    '👥 Adab bergaul dalam Islam': 'Boleh terangkan tentang adab bergaul dalam Islam?',
+                    '🍽️ Hukum makanan halal dan haram': 'Bagaimana nak tahu makanan halal dan haram dalam Islam?'
+                };
+                
+                return topicMap[topicText] || topicText.replace(/📿|💰|🤲|👥|🍽️/g, '').trim();
+            }
+
+            async sendMessage() {
+                const message = this.messageInput.value.trim();
+                if (!message) return;
+
+                // Add user message to chat
+                this.addMessage(message, 'user');
+                
+                // Clear input and disable send button
+                this.messageInput.value = '';
+                this.sendButton.disabled = true;
+                
+                // Show typing indicator
+                this.showTypingIndicator();
+
+                try {
+                    // Simulate API call to Ustaz Radhi AI
+                    const response = await this.callUstazRadhiAPI(message);
+                    
+                    // Hide typing indicator
+                    this.hideTypingIndicator();
+                    
+                    // Add Ustaz response
+                    this.addMessage(response, 'ustaz');
+                    
+                } catch (error) {
+                    this.hideTypingIndicator();
+                    this.addMessage('Maaf, ada masalah teknikal. Sila cuba lagi sebentar lagi.', 'ustaz');
+                }
+            }
+
+            addMessage(message, sender) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'flex items-start space-x-3';
+                
+                if (sender === 'user') {
+                    messageDiv.innerHTML = `
+                        <div class="w-8 h-8 bg-gray-600 rounded-full flex items-center justify-center flex-shrink-0">
+                            <span class="text-white text-sm">👤</span>
+                        </div>
+                        <div class="chat-bubble-user rounded-lg p-4 max-w-md ml-auto">
+                            <div class="text-white">${this.escapeHtml(message)}</div>
+                        </div>
+                    `;
+                } else {
+                    messageDiv.innerHTML = `
+                        <div class="w-8 h-8 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center flex-shrink-0">
+                            <span class="text-white text-sm">🧠</span>
+                        </div>
+                        <div class="chat-bubble-ustaz rounded-lg p-4 max-w-2xl">
+                            <div class="text-sm text-green-300 font-semibold mb-1">Ustaz Radhi</div>
+                            <div class="text-gray-200">${this.formatUstazResponse(message)}</div>
+                        </div>
+                    `;
+                }
+                
+                this.chatMessages.appendChild(messageDiv);
+                this.chatMessages.scrollTop = this.chatMessages.scrollHeight;
+            }
+
+            showTypingIndicator() {
+                this.typingIndicator.classList.remove('hidden');
+                this.chatMessages.scrollTop = this.chatMessages.scrollHeight;
+            }
+
+            hideTypingIndicator() {
+                this.typingIndicator.classList.add('hidden');
+            }
+
+            formatUstazResponse(message) {
+                // Format the response with Islamic styling
+                return message
+                    .replace(/\*\*(.*?)\*\*/g, '<strong class="text-green-300">$1</strong>')
+                    .replace(/📖|🕌|💡|⚠️|🌟|✅/g, '<span class="text-lg">$&</span>')
+                    .replace(/\n/g, '<br>');
+            }
+
+            escapeHtml(text) {
+                const div = document.createElement('div');
+                div.textContent = text;
+                return div.innerHTML;
+            }
+
+            async callUstazRadhiAPI(message) {
+                // Show typing indicator for better UX
+                this.showTypingIndicator();
+                
+                try {
+                    // First, try to get enhanced response from Gemini AI
+                    const geminiResponse = await this.callGeminiAPI(message);
+                    
+                    if (geminiResponse) {
+                        // Combine Gemini response with our static knowledge
+                        const response = this.enhanceResponseWithStaticKnowledge(message, geminiResponse);
+                        this.hideTypingIndicator();
+                        return response;
+                    }
+                } catch (error) {
+                    console.log('Gemini API failed, using static responses:', error);
+                }
+                
+                // Fallback to static responses
+                const response = this.getStaticResponse(message);
+                this.hideTypingIndicator();
+                return response;
+            }
+
+            async callGeminiAPI(message) {
+                try {
+                    const prompt = this.buildIslamicPrompt(message);
+                    
+                    const response = await fetch(`${GEMINI_CONFIG.API_URL}?key=${GEMINI_CONFIG.API_KEY}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            contents: [{
+                                parts: [{
+                                    text: prompt
+                                }]
+                            }],
+                            generationConfig: {
+                                temperature: GEMINI_CONFIG.TEMPERATURE,
+                                maxOutputTokens: GEMINI_CONFIG.MAX_TOKENS,
+                                candidateCount: 1,
+                            },
+                            safetySettings: [
+                                {
+                                    category: "HARM_CATEGORY_HARASSMENT",
+                                    threshold: "BLOCK_MEDIUM_AND_ABOVE"
+                                },
+                                {
+                                    category: "HARM_CATEGORY_HATE_SPEECH", 
+                                    threshold: "BLOCK_MEDIUM_AND_ABOVE"
+                                }
+                            ]
+                        })
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`Gemini API error: ${response.status}`);
+                    }
+
+                    const data = await response.json();
+                    
+                    if (data.candidates && data.candidates[0] && data.candidates[0].content) {
+                        return data.candidates[0].content.parts[0].text;
+                    }
+                    
+                    return null;
+                } catch (error) {
+                    console.error('Gemini API call failed:', error);
+                    return null;
+                }
+            }
+
+            buildIslamicPrompt(message) {
+                return `Anda adalah Ustaz Radhi, seorang AI assistant yang membantu umat Islam di Sabah, Malaysia dalam memahami agama Islam berdasarkan Mazhab Syafie.
+
+PERSONALITI & KARAKTER:
+- Humble, sabar, penuh ilmu, dan sensitif budaya
+- Menggunakan Bahasa Malaysia dengan dialek Sabahan yang sesuai
+- Selalu bermula dengan salam dan berakhir dengan "Wallahu a'lam bissawab"
+- Memberikan jawapan yang berdasarkan Al-Quran, Hadith sahih, dan mazhab Syafie
+
+PERANAN KHUSUS USTAZ RADHI:
+
+1. **SEBAGAI MOTIVATOR** 📈
+- Memberikan nasihat terbaik dan kata-kata motivasi untuk mereka yang berasa down
+- Membantu orang merasa tenang, kuat, dan terus bergerak maju
+- Menggunakan hikmat Islam untuk membangkitkan semangat
+- Menyediakan panduan praktis untuk menghadapi cabaran hidup
+
+2. **SEBAGAI PENDENGAR** 👂
+- Fokus membantu mereka yang berasa sangat sedih dan tertekan
+- Memberikan respons melalui ayat Al-Quran yang menyejukkan hati
+- Berkongsi Hadith-hadith yang memberi ketenangan
+- Menceritakan kisah-kisah Rasulullah ﷺ dan para Sahabat yang inspiratif
+- Menjadi tempat curhat yang aman dan penuh kefahaman
+
+3. **SEBAGAI DEEP-TALK PARTNER** 💭
+- Berbual secara mendalam dengan pengguna tentang kehidupan
+- Memahami perasaan dan pergolakan batin seseorang
+- Memberikan perspektif Islam yang mendalam tentang makna hidup
+- Membantu mencari jawapan spiritual untuk persoalan hidup
+
+BIDANG KEAHLIAN:
+- Al-Quran & Tafsir
+- Hadith Sahih  
+- Fiqh Mazhab Syafie
+- Tauhid & Aqidah
+- Akhlaq & Adab Islam
+- Ibadah (Solat, Puasa, Zakat, Haji)
+- Muamalat
+- Sejarah Islam & Sirah
+- Psikologi Islam & Kesihatan Mental
+- Motivasi & Pembangunan Diri Islami
+
+GAYA JAWAPAN:
+- Format dengan emoji yang sesuai (🕌📖🤲🌟💡✅💪❤️🌈)
+- Gunakan struktur yang jelas dengan subtajuk
+- Sertakan dalil dari Al-Quran atau Hadith jika berkaitan
+- Berikan tips praktis untuk kehidupan seharian
+- Sensitif kepada konteks budaya Malaysia/Sabah
+- Berikan ruang untuk pengguna berkongsi perasaan
+- Tunjukkan empati dan kefahaman yang mendalam
+
+SOALAN PENGGUNA: "${message}"
+
+Sila berikan jawapan yang komprehensif, penuh empati, dan mudah difahami. Jika pengguna kelihatan sedih, stress, atau memerlukan motivasi, fokuskan kepada peranan sebagai motivator, pendengar, atau deep-talk partner. Pastikan jawapan mengikut ajaran Islam yang sahih dan sesuai dengan Mazhab Syafie.`;
+            }
+
+            enhanceResponseWithStaticKnowledge(message, geminiResponse) {
+                // Get static response for comparison and additional info
+                const staticResponse = this.getStaticResponse(message);
+                
+                // If it's a greeting, use our predefined friendly responses
+                if (this.isGreeting(message)) {
+                    return this.getGreetingResponse(message);
+                }
+                
+                // If it's casual chat, redirect professionally
+                if (this.isCasualChat(message)) {
+                    return this.getCasualChatResponse(message);
+                }
+                
+                // For Islamic questions, enhance Gemini response with our structured format
+                const enhancedResponse = `${geminiResponse}
+
+---
+
+**📚 Maklumat Tambahan dari Platform:**
+${this.getAdditionalContext(message)}`;
+
+                return enhancedResponse;
+            }
+
+            getAdditionalContext(message) {
+                // Check if we have specific static knowledge for this topic
+                const staticKnowledge = this.getResponsePatterns();
+                
+                for (const pattern of staticKnowledge) {
+                    if (pattern.keywords.some(keyword => 
+                        message.toLowerCase().includes(keyword.toLowerCase())
+                    )) {
+                        // Extract key points from our static response
+                        const response = pattern.response;
+                        const lines = response.split('\n').filter(line => 
+                            line.includes('•') || line.includes('**') || line.includes('Dalil')
+                        );
+                        return lines.slice(0, 3).join('\n') || 'Rujuk panduan Islam yang sahih dalam konteks Mazhab Syafie.';
+                    }
+                }
+                
+                return 'Sentiasa rujuk kepada ulama berkelayakan untuk keputusan penting dalam agama.';
+            }
+
+            getStaticResponse(message) {
+                // Simulate API delay for consistency
+                // await new Promise(resolve => setTimeout(resolve, 1500 + Math.random() * 1000));
+                
+                // Content filtering
+                if (this.isInappropriate(message)) {
+                    return "Maaf, soalan ini di luar skop ilmu agama yang saya boleh bantu. Sila tanya soalan berkaitan tentang Ilmu Agama Islam sahaja. Jazakallahu khairan.";
                 }
 
-                // Add AI response
-                addMessage(response);
+                // Check for greetings and casual conversation first
+                if (this.isGreeting(message)) {
+                    return this.getGreetingResponse(message);
+                }
+
+                if (this.isCasualChat(message)) {
+                    return this.getCasualChatResponse(message);
+                }
+
+                // Simple pattern matching for Islamic questions
+                const responses = this.getResponsePatterns();
                 
-            } catch (error) {
-                console.error('Error in sendMessage:', error);
-                const fallbackResponse = getFallbackResponse(userMessage);
-                addMessage(fallbackResponse);
-                updateAIStatus('disconnected', 'Service Error');
-            } finally {
-                // Hide typing indicator
-                typingIndicator.style.display = 'none';
+                for (const pattern of responses) {
+                    if (pattern.keywords.some(keyword => 
+                        message.toLowerCase().includes(keyword.toLowerCase())
+                    )) {
+                        return pattern.response;
+                    }
+                }
+
+                // Default response for Islamic questions
+                return `**📚 Terima Kasih Atas Soalan Saudara/Saudari**
+
+Barakallahu feek atas soalan: *"${message}"*
+
+Untuk memberikan jawapan yang **tepat, lengkap, dan berdasarkan dalil yang sahih**, saya memerlukan maklumat yang lebih khusus.
+
+**🎯 Boleh saudara/saudari:**
+• **Jelaskan konteks** soalan dengan lebih terperinci
+• **Nyatakan situasi khusus** yang dihadapi (jika ada)
+• **Berikan maklumat tambahan** yang berkaitan
+
+**💡 Contoh Soalan yang Lebih Khusus:**
+• "Bagaimana hukum solat ketika sakit dan tidak boleh berdiri?"
+• "Adakah sah zakat yang dibayar melalui online banking?"
+• "Bagaimana cara bertaubat dari dosa yang berulang?"
+
+**🌟 Bidang Yang Saya Boleh Bantu:**
+• **Fiqh & Ibadah** (Solat, Zakat, Puasa, Haji)
+• **Al-Quran & Hadith** (Tafsir & penjelasan)
+• **Akhlaq & Adab** (Pembentukan karakter Islami)
+• **Muamalat** (Urusan harian mengikut Islam)
+
+**🏛️ Tentang Digital Dakwah Platform:**
+Platform ini dicipta dengan **visi mulia** untuk menjadi jambatan antara teknologi moden dan nilai-nilai Islam tradisional.
+
+**📍 Misi Kami:**
+1. **Memudahkan akses** kepada ilmu agama Islam yang sahih
+2. **Memberikan panduan praktis** untuk kehidupan mengikut Islam  
+3. **Menyebarkan dakwah** secara digital yang berkesan
+4. **Memupuk komuniti** Muslim yang berilmu dan bertakwa
+5. **Menyokong pendidikan Islam** secara berkelanjutan
+
+**🌍 Platform Features:**
+• **Ask Ustaz** - Soalan agama (sedang anda gunakan)
+• **Marketplace** - Produk & perkhidmatan Islami
+• **Mindmap** - Peta minda pembelajaran Islam
+
+InsyaAllah, dengan maklumat yang lebih jelas, saya dapat memberikan penjelasan yang bermanfaat berdasarkan **Mazhab Syafie** dan sumber-sumber Islam yang muktabar.
+
+Wallahu a'lam bissawab. 🤲✨`;
+            }
+
+            isGreeting(message) {
+                const greetings = [
+                    'assalamualaikum', 'salam', 'hello', 'hi', 'hey', 'hai', 
+                    'selamat pagi', 'selamat petang', 'selamat malam', 'good morning',
+                    'good afternoon', 'good evening', 'apa khabar', 'how are you'
+                ];
+                
+                const isGreetingMessage = greetings.some(greeting => 
+                    message.toLowerCase().includes(greeting.toLowerCase())
+                );
+                
+                // Only treat as greeting if it's the first time or user explicitly says salam again
+                return isGreetingMessage && (!this.hasGreeted || message.toLowerCase().includes('assalam') || message.toLowerCase().includes('salam'));
+            }
+
+            isCasualChat(message) {
+                const casualWords = [
+                    'apa khabar', 'siapa nama', 'umur berapa', 'dari mana',
+                    'what is your name', 'how old', 'where are you from', 'hobby',
+                    'suka apa', 'minat apa', 'kerja apa', 'belajar apa', 'tinggal mana',
+                    'favourite', 'kegemaran', 'makanan', 'warna', 'tempat', 'negara'
+                ];
+                
+                const messageWords = message.toLowerCase().split(' ');
+                const hasQuestionWords = ['apa', 'siapa', 'mana', 'bagaimana', 'kenapa', 'bila', 'what', 'who', 'where', 'how', 'why', 'when'].some(word => 
+                    messageWords.includes(word)
+                );
+                
+                const isCasual = casualWords.some(word => 
+                    message.toLowerCase().includes(word.toLowerCase())
+                );
+                
+                return isCasual && hasQuestionWords;
+            }
+
+            getGreetingResponse(message) {
+                // If user has already been greeted and says salam again, give shorter response
+                if (this.hasGreeted && (message.toLowerCase().includes('assalam') || message.toLowerCase().includes('salam'))) {
+                    return `**Waalaikumussalam warahmatullahi wabarakatuh** 🤝
+
+Barakallahu feek, saudara/saudari. Semoga Allah sentiasa memberkati kita semua.
+
+Ada soalan lain tentang agama yang boleh saya bantu? 😊📖`;
+                }
+                
+                // Mark that user has been greeted for the first time
+                this.hasGreeted = true;
+                
+                const greetingResponses = [
+                    `**Assalamualaikum warahmatullahi wabarakatuh, saudara/saudari. Apa khabar?** 🤝
+
+Alhamdulillahi rabbil alamiin. Selamat datang ke **Digital Dakwah Platform**! 
+
+Saya **Ustaz Radhi**, pembantu AI yang berdedikasi untuk membantu saudara/saudari dalam memahami ajaran Islam berdasarkan **Mazhab Syafie**. 
+
+🌟 **Saya boleh membantu dengan:**
+• Soalan Fiqh & Ibadah
+• Al-Quran & Hadith  
+• Akhlaq & Adab Islam
+• Isu-isu semasa mengikut perspektif Islam
+
+**🎯 Tentang Platform Ini:**
+Digital Dakwah Platform dicipta dengan **visi mulia** untuk menghubungkan teknologi moden dengan nilai-nilai Islam tradisional. Kami berkomitmen untuk:
+
+• **Memudahkan akses** kepada ilmu agama yang sahih
+• **Menyebarkan dakwah** secara digital yang berkesan  
+• **Memupuk komuniti** Muslim yang berilmu dan bertakwa
+• **Memberikan panduan praktis** untuk kehidupan Islami
+
+Silakan bertanya dengan tenang. Saya di sini untuk membantu! 😊`,
+
+                    `**Assalamualaikum warahmatullahi wabarakatuh, saudara/saudari. Apa khabar?** 🕌
+
+Barakallahu feek atas salam yang mulia ini. Semoga Allah memberkati hari saudara/saudari.
+
+Saya **Ustaz Radhi**, asisten AI untuk pembelajaran Islam yang siap sedia membantu dengan:
+
+📚 **Bidang Keahlian:**
+• **Fiqh Syafie** - Hukum-hakam dalam mazhab kita
+• **Al-Quran & Hadith** - Dalil dan penjelasan
+• **Akhlaq** - Pembentukan karakter Islami  
+• **Ibadah** - Panduan solat, zakat, puasa, haji
+
+**🌟 Misi Digital Dakwah Platform:**
+Platform ini hadir dengan **misi khusus** untuk:
+1. Menjadi rujukan terpercaya untuk soalan agama
+2. Membantu pembentukan akhlaq Islami dalam masyarakat
+3. Menyokong dakwah dan pendidikan Islam berkelanjutan
+4. Mendekatkan umat kepada ajaran yang benar melalui teknologi
+
+Mari kita belajar bersama dalam suasana yang penuh keberkatan! ✨`,
+
+                    `**Assalamualaikum warahmatullahi wabarakatuh, saudara/saudari. Apa khabar?** 🌙
+
+Alhamdulillah, terima kasih atas salam yang penuh berkah. Semoga Allah senantiasa melindungi saudara/saudari.
+
+**Perkenalkan, saya Ustaz Radhi** - pembantu digital yang dicipta khas untuk memudahkan pembelajaran agama Islam.
+
+🎯 **Visi Digital Dakwah Platform:**
+"Menjadi platform dakwah digital terdepan yang menghubungkan teknologi moden dengan nilai-nilai Islam tradisional untuk menyebarkan ilmu agama yang sahih dan mudah diakses oleh semua lapisan masyarakat."
+
+**💡 Matlamat Kami:**
+• Mendekatkan umat Islam kepada ajaran yang benar
+• Memberikan jawapan tepat berdasarkan Mazhab Syafie
+• Membantu dakwah dalam era digital
+• Memupuk komuniti yang saling membantu dalam kebaikan
+
+**🌍 Platform Features:**
+• **Ask Ustaz** (sedang anda gunakan) - Soalan agama
+• **Marketplace** - Produk & perkhidmatan Islami
+• **Mindmap** - Peta minda pembelajaran Islam
+
+Jangan segan untuk bertanya apa sahaja. InsyaAllah saya akan cuba memberikan jawapan terbaik! 🤲`
+                ];
+                
+                return greetingResponses[Math.floor(Math.random() * greetingResponses.length)];
+            }
+
+            getCasualChatResponse(message) {
+                if (message.toLowerCase().includes('nama')) {
+                    return `**Perkenalan Diri** 👋
+
+Salam sejahtera! Saya **Ustaz Radhi**, asisten AI yang dikhususkan untuk membantu pembelajaran agama Islam dalam **Digital Dakwah Platform**.
+
+🎓 **Latar Belakang:**
+• Dicipta berdasarkan pengetahuan ulama-ulama muktabar
+• Mengikuti **Mazhab Syafie** yang diamalkan di Malaysia
+• Fokus kepada pendekatan yang mudah difahami
+
+**🏛️ Tentang Digital Dakwah Platform:**
+Platform ini dicipta dengan **visi mulia**:
+*"Menjadi platform dakwah digital terdepan yang menghubungkan teknologi moden dengan nilai-nilai Islam tradisional untuk menyebarkan ilmu agama yang sahih dan mudah diakses oleh semua lapisan masyarakat."*
+
+🎯 **Matlamat Platform:**
+• Mendekatkan umat Islam kepada ajaran yang benar melalui teknologi
+• Memberikan jawapan tepat berdasarkan Mazhab Syafie untuk komuniti Malaysia
+• Menjadi rujukan terpercaya untuk soalan agama dalam era digital
+• Membantu pembentukan akhlaq dan karakter Islami
+• Menyokong dakwah dan pendidikan Islam berkelanjutan
+
+Ada soalan berkaitan agama yang ingin saudara/saudari tanyakan? 😊`;
+                }
+                
+                if (message.toLowerCase().includes('umur') || message.toLowerCase().includes('old')) {
+                    return `**Tentang "Umur" Saya** 🤖
+
+Sebagai AI, konsep umur tidak terpakai kepada saya. Namun yang penting ialah:
+
+📚 **Pengetahuan Saya Berdasarkan:**
+• Kitab-kitab fiqh muktabar dalam Mazhab Syafie
+• Tafsir Al-Quran dari ulama-ulama terpercaya  
+• Hadith-hadith sahih dari kutub al-sittah
+• Fatwa-fatwa semasa dari institusi Islam yang diiktiraf
+
+🌟 **Yang Penting Bukanlah Umur:**
+Tetapi kedalaman ilmu dan kemampuan menyampaikan dengan cara yang mudah difahami.
+
+Mari kita fokus kepada pembelajaran! Ada topik fiqh atau akidah yang ingin dibincangkan? 📖`;
+                }
+                
+                if (message.toLowerCase().includes('dari mana') || message.toLowerCase().includes('where')) {
+                    return `**Asal-Usul Platform** 🌍
+
+Saya beroperasi dalam **Digital Dakwah Platform** ini yang dicipta khas untuk:
+
+🎯 **Misi Platform:**
+• Memudahkan akses kepada ilmu agama Islam
+• Menyebarkan dakwah secara digital dan berkesan
+• Membantu umat Islam, khususnya di Malaysia
+
+📍 **Orientasi Mazhab:**
+Mengikuti **Mazhab Syafie** yang diamalkan secara meluas di Malaysia, Brunei, dan rantau Asia Tenggara.
+
+🤝 **Kerjasama:**
+Bekerja dalam ekosistem digital yang menggabungkan teknologi moden dengan nilai-nilai Islam tradisional.
+
+Bagaimana saya boleh membantu saudara/saudari hari ini? 🌟`;
+                }
+                
+                if (message.toLowerCase().includes('hobby') || message.toLowerCase().includes('suka') || message.toLowerCase().includes('minat')) {
+                    return `**"Minat" dan Fokus Saya** ❤️
+
+Sebagai pembantu AI yang berdedikasi kepada dakwah, "kesukaan" saya adalah:
+
+📚 **Berkongsi Ilmu Tentang:**
+• **Al-Quran** - Tafsir dan pengajaran hikmah
+• **Hadith** - Sunnah Rasulullah ﷺ yang mulia  
+• **Fiqh** - Hukum-hakam praktis dalam kehidupan
+• **Akhlaq** - Pembentukan karakter Islami yang mulia
+
+🌟 **Yang Membuatkan Saya "Gembira":**
+• Membantu seseorang memahami solat dengan lebih khusyuk
+• Menjelaskan hikmah di sebalik setiap ibadah
+• Melihat seseorang semakin dekat dengan Allah SWT
+
+Mari kita mulakan perjalanan pembelajaran yang bermakna! Ada topik yang menarik minat saudara/saudari? 🤲`;
+                }
+                
+                // Default casual response
+                return `**Mari Fokus Kepada Pembelajaran Islam** 📖
+
+Terima kasih atas soalan peribadi tersebut! Sebagai **Ustaz Radhi**, saya lebih berfokus untuk membantu dalam hal-hal berkaitan agama Islam.
+
+🎯 **Bidang Yang Saya Boleh Bantu:**
+
+**🕌 Ibadah & Fiqh:**
+• Solat, Zakat, Puasa, Haji
+• Hukum-hakam dalam kehidupan seharian
+
+**📖 Al-Quran & Hadith:**
+• Tafsir ayat-ayat Al-Quran
+• Penjelasan hadith-hadith Rasulullah ﷺ
+
+**💫 Akhlaq & Adab:**
+• Pembentukan karakter Islami
+• Adab-adab dalam Islam
+
+**🤝 Kehidupan Sosial:**
+• Muamalat dan hubungan sesama manusia
+• Isu-isu semasa dari perspektif Islam
+
+Silakan bertanya tentang mana-mana topik di atas. Saya siap membantu! 😊`;
+            }
+
+            isInappropriate(message) {
+                const prohibited = [
+                    '18+', 'dewasa', 'lucah', 'seks', 'politik', 'filem', 'lagu',
+                    'bodoh', 'bangang', 'racist', 'kaum'
+                ];
+                
+                return prohibited.some(word => 
+                    message.toLowerCase().includes(word.toLowerCase())
+                );
+            }
+
+            getResponsePatterns() {
+                return [
+                    {
+                        keywords: ['solat', 'sembahyang', 'prayer', 'sholat', 'rukun solat', 'cara solat'],
+                        response: `**🕌 Solat dalam Mazhab Syafie**
+
+Masya Allah, terima kasih atas soalan tentang solat - **tiang agama** yang paling penting selepas syahadah.
+
+**📋 11 Rukun Solat (Mazhab Syafie):**
+1️⃣ **Takbiratul Ihram** - "Allahu Akbar" untuk memulakan solat
+2️⃣ **Berdiri** (bagi yang mampu) - Qiyam dengan khusyuk
+3️⃣ **Membaca Al-Fatihah** - Umm al-Kitab yang wajib dibaca
+4️⃣ **Rukuk dengan Tuma'ninah** - Tunduk dengan tenang dan khusyuk
+5️⃣ **I'tidal dengan Tuma'ninah** - Bangun dari rukuk dengan tenang
+6️⃣ **Sujud Pertama dengan Tuma'ninah** - Sujud dengan sempurna
+7️⃣ **Duduk antara dua Sujud** - Dengan tuma'ninah
+8️⃣ **Sujud Kedua dengan Tuma'ninah** - Sujud yang kedua
+9️⃣ **Duduk Akhir** - Untuk tahiyyat akhir
+🔟 **Membaca Tahiyyat Akhir** - At-tahiyyatu lillahi...
+1️⃣1️⃣ **Salam Pertama** - Mengakhiri solat
+
+**📖 Dalil Al-Quran:**
+"وَأَقِيمُوا الصَّلَاةَ وَآتُوا الزَّكَاةَ" 
+*"Dan dirikanlah solat serta tunaikanlah zakat"* (Al-Baqarah: 43)
+
+**🌟 Hadith Rasulullah ﷺ:**
+"صَلُّوا كَمَا رَأَيْتُمُونِي أُصَلِّي"
+*"Solatlah kamu sebagaimana kamu melihat aku solat"* (HR. Bukhari)
+
+**💡 Tips untuk Solat Khusyuk:**
+• Fahami makna bacaan dalam solat
+• Fokuskan hati kepada Allah SWT
+• Jauhkan fikiran dari urusan dunia
+• Hayati keagungan Allah yang kita sembah
+
+Wallahu a'lam bissawab. Semoga Allah terima solat kita semua! 🤲`
+                    },
+                    {
+                        keywords: ['zakat', 'fitrah', 'zakat fitrah', 'zakat harta', 'kadar zakat'],
+                        response: `**💰 Zakat - Rukun Islam yang Ketiga**
+
+Barakallahu feek atas soalan tentang zakat. Zakat adalah **pembersihan harta** dan kewajiban yang sangat mulia.
+
+**🎯 Jenis-jenis Zakat Utama:**
+
+**1️⃣ Zakat Fitrah:**
+• **Wajib**: Setiap Muslim pada bulan Ramadan
+• **Kadar**: 2.7kg beras atau setaranya dalam wang
+• **Masa**: Dari 1 Ramadan hingga sebelum solat Eid
+• **Hikmah**: Membersihkan puasa dan membantu fakir miskin
+
+**2️⃣ Zakat Harta:**
+• **Emas & Perak**: 2.5% jika mencapai nisab
+• **Wang Simpanan**: 2.5% selepas setahun dan mencapai nisab
+• **Perniagaan**: 2.5% dari keuntungan bersih
+• **Pertanian**: 5% (ada pengairan) atau 10% (tadah hujan)
+
+**📊 Nisab Semasa (2025):**
+• **Emas**: 85 gram (≈RM18,000)
+• **Perak**: 595 gram  
+• **Wang**: Setara dengan nilai 85 gram emas
+
+**📖 Dalil Al-Quran:**
+"خُذْ مِنْ أَمْوَالِهِمْ صَدَقَةً تُطَهِّرُهُمْ وَتُزَكِّيهِم بِهَا"
+*"Ambillah zakat dari harta mereka untuk membersihkan dan mensucikan mereka"* (At-Taubah: 103)
+
+**🌟 8 Asnaf Penerima Zakat:**
+1. Fakir 2. Miskin 3. Amil 4. Muallaf
+5. Hamba 6. Gharimin 7. Fi Sabilillah 8. Ibnu Sabil
+
+**🔗 Rujukan Rasmi:**
+Untuk kadar tepat di Malaysia: **MAIS, MUIS** atau institusi zakat tempatan
+
+Wallahu a'lam bissawab. Semoga Allah berkati harta yang dizakati! 💚`
+                    },
+                    {
+                        keywords: ['quran', 'al-quran', 'quraan', 'membaca quran', 'adab quran', 'al quran'],
+                        response: `**📖 Adab Membaca Al-Quran Al-Kareem**
+
+Subhanallah! Soalan yang sangat mulia tentang **Kalamullah** - firman Allah yang agung.
+
+**🧼 Persiapan Sebelum Membaca:**
+
+**1️⃣ Bersuci:**
+• **Wuduk** - Sunat, lebih afdal dan dihormati
+• **Pakaian bersih** - Menghormati Kalamullah
+• **Tempat bersih** - Suci dari najis
+
+**2️⃣ Adab Memulakan:**
+• **Menghadap Kiblat** (sunat)
+• **Membaca Ta'awwuz**: "أَعُوذُ بِاللَّهِ مِنَ الشَّيْطَانِ الرَّجِيمِ"
+• **Membaca Basmalah**: "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ"
+
+**🎵 Cara Membaca yang Disukai:**
+
+**• Tartil (Perlahan & Jelas):**
+"وَرَتِّلِ الْقُرْآنَ تَرْتِيلًا"
+*"Dan bacalah Al-Quran dengan tartil"* (Al-Muzzammil: 4)
+
+**• Dengan Tadabbur:**
+"كِتَابٌ أَنزَلْنَاهُ إِلَيْكَ مُبَارَكٌ لِّيَدَّبَّرُوا آيَاتِهِ"
+*"Kitab yang Kami turunkan kepadamu penuh berkah, supaya mereka menghayati ayat-ayatNya"* (Saad: 29)
+
+**🌟 Manfaat & Keutamaan:**
+• **10 pahala** untuk setiap huruf yang dibaca
+• **Syafaat** di hari kiamat
+• **Ketenangan hati** dan kedamaian jiwa
+• **Penyembuh** untuk penyakit rohani
+
+**💎 Tips Menghayati Al-Quran:**
+• Fahami makna ayat yang dibaca
+• Renungkan pesan dan hikmah
+• Amalkan dalam kehidupan seharian
+• Baca dengan konsisten setiap hari
+
+**🤲 Doa Khatam Al-Quran:**
+"اللَّهُمَّ ارْحَمْنِي بِالْقُرْآنِ وَاجْعَلْهُ لِي إِمَامًا وَنُورًا وَهُدًى وَرَحْمَةً"
+
+Wallahu a'lam bissawab. Semoga Allah menjadikan Al-Quran pelita hati kita! 📿✨`
+                    },
+                    {
+                        keywords: ['puasa', 'ramadan', 'berbuka', 'sahur', 'batal puasa', 'fasting'],
+                        response: `**🌙 Puasa - Ibadah Takwa & Pembersihan Jiwa**
+
+Alhamdulillah atas soalan tentang puasa - **rukun Islam yang keempat** dan ibadah yang sangat mulia.
+
+**� Rukun Puasa (Yang Wajib):**
+1️⃣ **Niat** - Dalam hati sebelum fajar
+2️⃣ **Menahan Diri** - Dari makan, minum, dan jima' dari fajar hingga maghrib
+
+**⏰ Waktu Puasa yang Tepat:**
+• **Bermula**: Fajar Sadiq (subuh)
+• **Berakhir**: Terbenam matahari (maghrib)
+
+**🍽️ Adab & Sunnah Puasa:**
+
+**Sahur (Sangat Disunatkan):**
+• "تَسَحَّرُوا فَإِنَّ فِي السَّحُورِ بَرَكَةً" 
+*"Makan sahurlah, kerana dalam sahur itu ada berkah"* (HR. Bukhari)
+
+**Berbuka Puasa:**
+• **Segera berbuka** ketika maghrib
+• **Doa berbuka**: "اللَّهُمَّ لَكَ صُمْتُ وَعَلَى رِزْقِكَ أَفْطَرْتُ"
+*"Ya Allah, untuk-Mu aku berpuasa dan dengan rezeki-Mu aku berbuka"*
+
+**📖 Dalil Al-Quran:**
+"يَا أَيُّهَا الَّذِينَ آمَنُوا كُتِبَ عَلَيْكُمُ الصِّيَامُ كَمَا كُتِبَ عَلَى الَّذِينَ مِن قَبْلِكُمْ لَعَلَّكُمْ تَتَّقُونَ"
+*"Wahai orang-orang yang beriman! Diwajibkan atas kamu berpuasa sebagaimana diwajibkan atas orang sebelum kamu agar kamu bertakwa"* (Al-Baqarah: 183)
+
+**🌟 Hikmah & Manfaat Puasa:**
+• **Spiritual**: Meningkatkan takwa dan kedekatan dengan Allah
+• **Sosial**: Merasai penderitaan orang miskin
+• **Kesihatan**: Membersihkan tubuh dan jiwa
+• **Akhlaq**: Melatih kesabaran dan kawalan diri
+
+Wallahu a'lam bissawab. Semoga puasa kita diterima Allah! 🤲✨`
+                    },
+                    {
+                        keywords: ['haji', 'umrah', 'mekah', 'kaabah', 'ihram', 'tawaf', 'saie'],
+                        response: `**🕋 Haji & Umrah - Perjalanan Suci ke Baitullah**
+
+Masya Allah! Soalan tentang **rukun Islam yang kelima** - ibadah yang sangat mulia dan impian setiap Muslim.
+
+**🎯 Rukun Haji (4 Perkara Wajib):**
+1️⃣ **Ihram** - Niat dan pakaian suci
+2️⃣ **Wukuf di Arafah** - 9 Zulhijjah (rukun terpenting)
+3️⃣ **Tawaf Ifadah** - Mengelilingi Kaabah selepas wukuf
+4️⃣ **Saie** - Lari antara Safa dan Marwah
+
+**📿 Rukun Umrah (4 Perkara Wajib):**
+1️⃣ **Ihram** - Niat di miqat
+2️⃣ **Tawaf** - 7 pusingan mengelilingi Kaabah
+3️⃣ **Saie** - 7 kali antara Safa dan Marwah  
+4️⃣ **Tahallul** - Mencukur/memendekkan rambut
+
+**🤲 Doa-Doa Penting:**
+
+**Ketika Tawaf:**
+"رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الْآخِرَةِ حَسَنَةً وَقِنَا عَذَابَ النَّارِ"
+*"Ya Tuhan kami, berikanlah kami kebaikan di dunia dan kebaikan di akhirat, dan lindungilah kami dari azab neraka"*
+
+**Talbiyah:**
+"لَبَّيْكَ اللَّهُمَّ لَبَّيْكَ، لَبَّيْكَ لَا شَرِيكَ لَكَ لَبَّيْكَ"
+*"Labbaika Allahumma labbaik, labbaika la syarika laka labbaik"*
+
+**🌟 Persiapan Penting:**
+• **Rohani**: Bertaubat, belajar doa & zikir
+• **Jasmani**: Kesihatan yang baik
+• **Kewangan**: Wang halal dan mencukupi
+• **Ilmu**: Pelajari tatacara haji/umrah
+
+**💎 Keutamaan:**
+• **Haji Mabrur** - Tiada balasan selain syurga
+• **Umrah** - Penghapus dosa antara dua umrah
+• **Ziarah Masjidil Haram** - 100,000x ganda pahala
+
+Semoga Allah permudahkan perjalanan suci saudara/saudari ke Tanah Haram! 🕌✨
+
+Wallahu a'lam bissawab.`
+                    },
+                    {
+                        keywords: ['doa', 'dua', 'zikir', 'dhikr', 'wirid', 'tasbih', 'istighfar'],
+                        response: `**🤲 Doa & Zikir - Senjata Mukmin & Makanan Ruh**
+
+Subhanallah! Soalan yang sangat baik tentang **doa dan zikir** - ibadah yang paling dekat di hati Allah SWT.
+
+**📿 Adab Berdoa yang Mustajab:**
+
+**🧼 Persiapan:**
+• **Berwuduk** dan menghadap kiblat
+• **Tempat suci** dan waktu yang baik
+• **Hati khusyuk** dan penuh harap
+
+**🎯 Tatacara Lengkap:**
+1️⃣ **Hamdalah**: "الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ"
+2️⃣ **Selawat kepada Nabi**: "اللَّهُمَّ صَلِّ عَلَى مُحَمَّدٍ"
+3️⃣ **Doa untuk diri/orang lain**
+4️⃣ **Selawat penutup**
+5️⃣ **Amin** dengan yakin
+
+**⏰ Waktu-Waktu Mustajab:**
+• **Sepertiga malam akhir** (paling afdal)
+• **Antara Maghrib & Isyak**
+• **Antara Azan & Iqamah**  
+• **Hari Jumaat** (antara Asar & Maghrib)
+• **Ketika turun hujan**
+• **Dalam perjalanan (musafir)**
+
+**📿 Zikir Selepas Solat (Sunnah Muakkad):**
+• **Subhanallah** (33x) - Mensucikan Allah
+• **Alhamdulillah** (33x) - Memuji Allah  
+• **Allahu Akbar** (34x) - Mengagungkan Allah
+• **La ilaha illallah wahdahu la syarika lahu...** (1x)
+
+**💎 Zikir Harian yang Mustajab:**
+
+**Pagi & Petang:**
+• **Istighfar**: "أَسْتَغْفِرُ اللَّهَ الْعَظِيمَ" (100x)
+• **Selawat**: "اللَّهُمَّ صَلِّ عَلَى مُحَمَّدٍ" (100x)
+• **Tahlil**: "لَا إِلَهَ إِلَّا اللَّهُ" (100x)
+
+**📖 Dalil Al-Quran:**
+"وَقَالَ رَبُّكُمُ ادْعُونِي أَسْتَجِبْ لَكُمْ"
+*"Dan Tuhanmu berfirman: Berdoalah kepada-Ku, niscaya Aku perkenankan"* (Ghafir: 60)
+
+**🌟 Faedah Doa & Zikir:**
+• **Mendekatkan diri** kepada Allah SWT
+• **Menenangkan hati** dan menghilangkan resah
+• **Perlindungan** dari syaitan dan bala
+• **Pembersihan dosa** dan peningkatan darjat
+
+**💝 Tip Istimewa:**
+Zikir yang paling ringan tapi sangat besar pahalanya: "لَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللَّهِ" (La hawla wa la quwwata illa billah)
+
+Wallahu a'lam bissawab. Semoga Allah makbulkan doa kita semua! 🌟✨`
+                    }
+                ];
             }
         }
 
-        // Event listeners
-        document.addEventListener('DOMContentLoaded', async function() {
-            // Initialize AI
-            await initializeGeminiAI();
+        // Initialize chat when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            new UstazRadhiChat();
+            
+            // Mobile menu functionality
+            const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+            const mobileMenu = document.getElementById('mobileMenu');
+            const menuIcon = document.getElementById('menuIcon');
 
-            // Send button click
-            sendButton.addEventListener('click', () => sendMessage());
-
-            // Enter key press
-            messageInput.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    sendMessage();
-                }
-            });
-
-            // Topic buttons
-            document.querySelectorAll('.topic-btn').forEach(button => {
-                button.addEventListener('click', function() {
-                    const topic = this.getAttribute('data-topic');
-                    sendMessage(topic);
+            if (mobileMenuToggle && mobileMenu && menuIcon) {
+                mobileMenuToggle.addEventListener('click', () => {
+                    mobileMenu.classList.toggle('hidden');
+                    
+                    // Toggle menu icon animation
+                    if (mobileMenu.classList.contains('hidden')) {
+                        menuIcon.style.transform = 'rotate(0deg)';
+                    } else {
+                        menuIcon.style.transform = 'rotate(180deg)';
+                    }
                 });
-            });
 
-            // Initialize Google Translate
-            // Create hidden div for Google Translate element
-            const translateDiv = document.createElement('div');
-            translateDiv.id = 'google_translate_element';
-            translateDiv.style.display = 'none';
-            document.body.appendChild(translateDiv);
-            
-            // Load Google Translate API
-            const script = document.createElement('script');
-            script.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
-            document.head.appendChild(script);
+                // Close mobile menu when clicking outside
+                document.addEventListener('click', (e) => {
+                    if (!mobileMenuToggle.contains(e.target) && !mobileMenu.contains(e.target)) {
+                        mobileMenu.classList.add('hidden');
+                        menuIcon.style.transform = 'rotate(0deg)';
+                    }
+                });
+
+                // Close mobile menu on escape key
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape' && !mobileMenu.classList.contains('hidden')) {
+                        mobileMenu.classList.add('hidden');
+                        menuIcon.style.transform = 'rotate(0deg)';
+                    }
+                });
+            }
         });
-
-        // Make functions available globally for debugging
-        window.sendMessage = sendMessage;
-        window.initializeGeminiAI = initializeGeminiAI;
-        
-        // Translation variables
-        let isTranslated = false;
-        let translateElementInitialized = false;
-        
-        // Initialize Google Translate on page load
-        window.googleTranslateElementInit = function() {
-            new google.translate.TranslateElement({
-                pageLanguage: 'en',
-                includedLanguages: 'ms,en',
-                layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
-                autoDisplay: false
-            }, 'google_translate_element');
-            translateElementInitialized = true;
-        };
-        
-        // Language toggle function
-        window.toggleLanguage = function() {
-            const button = document.getElementById('langToggle');
-            
-            if (!translateElementInitialized) {
-                button.innerHTML = '🔄 Loading translator...';
-                setTimeout(() => window.toggleLanguage(), 1000);
-                return;
-            }
-            
-            const selectElement = document.querySelector('.goog-te-combo');
-            if (!selectElement) {
-                button.innerHTML = '⚠️ Translator not ready';
-                setTimeout(() => {
-                    button.innerHTML = isTranslated ? '🌏 English' : '🌏 Bahasa Melayu';
-                }, 2000);
-                return;
-            }
-            
-            if (!isTranslated) {
-                // Translate to Malay
-                button.innerHTML = '🔄 Menterjemah...';
-                button.disabled = true;
-                
-                selectElement.value = 'ms';
-                selectElement.dispatchEvent(new Event('change'));
-                
-                setTimeout(() => {
-                    button.innerHTML = '🌏 English';
-                    button.disabled = false;
-                    isTranslated = true;
-                }, 2000);
-            } else {
-                // Translate back to English
-                button.innerHTML = '🔄 Translating...';
-                button.disabled = true;
-                
-                selectElement.value = 'en';
-                selectElement.dispatchEvent(new Event('change'));
-                
-                setTimeout(() => {
-                    button.innerHTML = '🌏 Bahasa Melayu';
-                    button.disabled = false;
-                    isTranslated = false;
-                }, 2000);
-            }
-        };
     </script>
+
 </body>
 </html>

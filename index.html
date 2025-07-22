@@ -76,6 +76,23 @@
             transform: rotate(0deg);
             opacity: 1;
         }
+        
+        /* Mobile menu animations */
+        #mobileMenu {
+            transition: all 0.3s ease-in-out;
+            max-height: 0;
+            overflow: hidden;
+        }
+        #mobileMenu:not(.hidden) {
+            max-height: 400px;
+        }
+        
+        /* Ensure mobile menu is hidden on desktop */
+        @media (min-width: 768px) {
+            #mobileMenu {
+                display: none !important;
+            }
+        }
     </style>
 </head>
 <body class="text-gray-200">
@@ -88,15 +105,48 @@
             <div class="container mx-auto px-6 py-4">
                 <div class="glass-card rounded-full px-6 py-2 flex justify-between items-center">
                     <h1 class="text-lg font-bold text-white">Digital Dakwah Platform</h1>
+                    
+                    <!-- Desktop Navigation -->
                     <nav class="hidden md:flex space-x-6">
-    <a href="marketplace.html" class="text-gray-300 hover:text-white transition">Marketplace</a>
-    <a href="ustaz.html" class="text-gray-300 hover:text-white transition">Ask Ustaz</a>
-    <a href="#features" class="text-gray-300 hover:text-white transition">The Pillars</a>
-    <a href="#community-hub" class="text-gray-300 hover:text-white transition">Community Hub</a>
-    <a href="#community" class="text-gray-300 hover:text-white transition">Testimonials</a>
-    <a href="#partners" class="text-gray-300 hover:text-white transition">Partners</a>
-</nav>
-                    <a href="#contact" class="bg-white text-blue-900 font-bold py-2 px-5 rounded-full hover:bg-gray-200 transition duration-300 transform hover:scale-105 shadow-lg">Get Involved</a>
+                        <a href="marketplace.html" class="text-gray-300 hover:text-white transition">Marketplace</a>
+                        <a href="ustaz.html" class="text-gray-300 hover:text-white transition">Ask Ustaz</a>
+                        <a href="mindmap.html" class="text-gray-300 hover:text-white transition">Mindmap</a>
+                        <a href="#features" class="text-gray-300 hover:text-white transition">The Pillars</a>
+                        <a href="#community-hub" class="text-gray-300 hover:text-white transition">Community Hub</a>
+                        <a href="#community" class="text-gray-300 hover:text-white transition">Testimonials</a>
+                        <a href="#partners" class="text-gray-300 hover:text-white transition">Partners</a>
+                    </nav>
+
+                    <!-- Mobile Menu Button -->
+                    <button id="mobileMenuToggle" class="md:hidden text-white p-2 rounded-lg hover:bg-white/10 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-400" aria-label="Toggle mobile menu">
+                        <svg class="w-6 h-6 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path id="menuIcon" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+
+                    <!-- Desktop Get Involved Button -->
+                    <a href="#contact" class="hidden md:block bg-white text-blue-900 font-bold py-2 px-5 rounded-full hover:bg-gray-200 transition duration-300 transform hover:scale-105 shadow-lg">Get Involved</a>
+                </div>
+
+                <!-- Mobile Navigation Menu -->
+                <div id="mobileMenu" class="md:hidden mt-4 hidden">
+                    <div class="glass-card rounded-lg px-4 py-4 space-y-2">
+                        <a href="index.html" class="block text-white bg-blue-500/20 py-3 px-4 rounded-lg border border-blue-400/30">
+                            🏠 Home (Current)
+                        </a>
+                        <a href="marketplace.html" class="block text-gray-300 hover:text-white transition py-3 px-4 rounded-lg hover:bg-white/10 border-b border-white/10">
+                            🛒 Marketplace
+                        </a>
+                        <a href="ustaz.html" class="block text-gray-300 hover:text-white transition py-3 px-4 rounded-lg hover:bg-white/10 border-b border-white/10">
+                            🤖 Ask Ustaz
+                        </a>
+                        <a href="mindmap.html" class="block text-gray-300 hover:text-white transition py-3 px-4 rounded-lg hover:bg-white/10 border-b border-white/10">
+                            🧠 Mindmap
+                        </a>
+                        <a href="#contact" class="block text-center bg-white text-blue-900 font-bold py-3 px-4 rounded-lg hover:bg-gray-200 transition">
+                            📞 Get Involved
+                        </a>
+                    </div>
                 </div>
             </div>
         </header>
@@ -153,17 +203,53 @@
                             </div>
                         </div>
                     </div>
-
+                    
                     <!-- Accordion Item 2: Connect with Community -->
                     <div class="accordion-item glass-card rounded-lg reveal" style="transition-delay: 200ms;">
                         <button class="accordion-button w-full flex justify-between items-center text-left p-6">
                             <span class="text-xl font-semibold text-purple-300">Pillar 2: Strengthen the Community (Jama'ah)</span>
-                             <span class="accordion-icon relative w-6 h-6 text-purple-300">
+                            <span class="accordion-icon relative w-6 h-6 text-purple-300">
                                 <span class="icon-plus absolute inset-0 bg-purple-300 w-full h-0.5 m-auto"></span>
                                 <span class="icon-plus absolute inset-0 bg-purple-300 w-0.5 h-full m-auto"></span>
                                 <span class="icon-minus absolute inset-0 bg-purple-300 w-full h-0.5 m-auto"></span>
                             </span>
                         </button>
+                        <div class="accordion-content">
+                            <div class="p-6 pt-0 text-gray-300">
+                                <p class="mb-4">Our platform serves as a digital bridge, connecting Muslims across Sabah and providing vital community services.</p>
+                                <ul class="list-disc list-inside space-y-2 text-gray-400">
+                                    <li><strong>Ustaz Radhi AI:</strong> Chat with our culturally-aware Islamic AI assistant who speaks Bahasa Malaysia and provides authentic guidance based on Mazhab Syafie teachings, specifically designed for Sabahan Muslims.</li>
+                                    <li><strong>Community Voice (Suara Komuniti):</strong> Report social issues or request aid, ensuring support reaches those who need it most.</li>
+                                    <li><strong>Mosque & Event Directory:</strong> Find your nearest mosque and stay updated on local Islamic events.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Accordion Item 3: Empower the Economy -->
+                    <div class="accordion-item glass-card rounded-lg reveal" style="transition-delay: 400ms;">
+                        <button class="accordion-button w-full flex justify-between items-center text-left p-6">
+                            <span class="text-xl font-semibold text-amber-300">Pillar 3: Empower the Economy (Tijarah)</span>
+                            <span class="accordion-icon relative w-6 h-6 text-amber-300">
+                                <span class="icon-plus absolute inset-0 bg-amber-300 w-full h-0.5 m-auto"></span>
+                                <span class="icon-plus absolute inset-0 bg-amber-300 w-0.5 h-full m-auto"></span>
+                                <span class="icon-minus absolute inset-0 bg-amber-300 w-full h-0.5 m-auto"></span>
+                            </span>
+                        </button>
+                        <div class="accordion-content">
+                            <div class="p-6 pt-0 text-gray-300">
+                                <p class="mb-4">A strong ummah is an economically empowered one. Our platform creates tangible opportunities for local Muslims.</p>
+                                <ul class="list-disc list-inside space-y-2 text-gray-400">
+                                    <li><strong>Halal Marketplace:</strong> Discover and purchase products from local Muslim entrepreneurs.</li>
+                                    <li><strong>Teacher Marketplace:</strong> Certified local Asatizah can offer paid, personalized lessons.</li>
+                                    <li><strong>Digital Zakat & Waqf:</strong> Fulfill your religious obligations transparently to support local causes.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>    
+                        
+                        
                         <div class="accordion-content">
                              <div class="p-6 pt-0 text-gray-300">
                                 <p class="mb-4">Our platform serves as a digital bridge, connecting Muslims across Sabah and providing vital community services.</p>
@@ -278,16 +364,7 @@
 
         <!-- Final CTA Section -->
 
-                    <!-- Accordion Item 3: Empower the Economy -->
-                    <div class="accordion-item glass-card rounded-lg reveal" style="transition-delay: 400ms;">
-                        <button class="accordion-button w-full flex justify-between items-center text-left p-6">
-                            <span class="text-xl font-semibold text-amber-300">Pillar 3: Empower the Economy (Tijarah)</span>
-                            <span class="accordion-icon relative w-6 h-6 text-amber-300">
-                                <span class="icon-plus absolute inset-0 bg-amber-300 w-full h-0.5 m-auto"></span>
-                                <span class="icon-plus absolute inset-0 bg-amber-300 w-0.5 h-full m-auto"></span>
-                                <span class="icon-minus absolute inset-0 bg-amber-300 w-full h-0.5 m-auto"></span>
-                            </span>
-                        </button>
+                    
                         <div class="accordion-content">
                              <div class="p-6 pt-0 text-gray-300">
                                 <p class="mb-4">A strong ummah is an economically empowered one. Our platform creates tangible opportunities for local Muslims.</p>
@@ -570,6 +647,66 @@
                     content.style.maxHeight = content.scrollHeight + "px";
                 }
             });
+        });
+
+        // Mobile menu toggle functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+            const mobileMenu = document.getElementById('mobileMenu');
+            
+            if (mobileMenuToggle && mobileMenu) {
+                mobileMenuToggle.addEventListener('click', function() {
+                    mobileMenu.classList.toggle('hidden');
+                    
+                    // Toggle hamburger icon to X with smooth animation
+                    const menuIcon = document.getElementById('menuIcon');
+                    const svg = mobileMenuToggle.querySelector('svg');
+                    
+                    if (mobileMenu.classList.contains('hidden')) {
+                        // Show hamburger icon
+                        menuIcon.setAttribute('d', 'M4 6h16M4 12h16M4 18h16');
+                        svg.style.transform = 'rotate(0deg)';
+                    } else {
+                        // Show X icon
+                        menuIcon.setAttribute('d', 'M6 18L18 6M6 6l12 12');
+                        svg.style.transform = 'rotate(90deg)';
+                    }
+                });
+
+                // Close mobile menu when clicking on a link
+                const mobileLinks = mobileMenu.querySelectorAll('a');
+                mobileLinks.forEach(link => {
+                    link.addEventListener('click', function() {
+                        mobileMenu.classList.add('hidden');
+                        const menuIcon = document.getElementById('menuIcon');
+                        const svg = mobileMenuToggle.querySelector('svg');
+                        menuIcon.setAttribute('d', 'M4 6h16M4 12h16M4 18h16');
+                        svg.style.transform = 'rotate(0deg)';
+                    });
+                });
+
+                // Close mobile menu when clicking outside
+                document.addEventListener('click', function(event) {
+                    if (!mobileMenuToggle.contains(event.target) && !mobileMenu.contains(event.target)) {
+                        mobileMenu.classList.add('hidden');
+                        const menuIcon = document.getElementById('menuIcon');
+                        const svg = mobileMenuToggle.querySelector('svg');
+                        menuIcon.setAttribute('d', 'M4 6h16M4 12h16M4 18h16');
+                        svg.style.transform = 'rotate(0deg)';
+                    }
+                });
+
+                // Close mobile menu when window is resized to desktop
+                window.addEventListener('resize', function() {
+                    if (window.innerWidth >= 768) {
+                        mobileMenu.classList.add('hidden');
+                        const menuIcon = document.getElementById('menuIcon');
+                        const svg = mobileMenuToggle.querySelector('svg');
+                        menuIcon.setAttribute('d', 'M4 6h16M4 12h16M4 18h16');
+                        svg.style.transform = 'rotate(0deg)';
+                    }
+                });
+            }
         });
     </script>
 

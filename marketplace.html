@@ -40,6 +40,23 @@
             height: 1px;
             margin: 3rem 0;
         }
+        
+        /* Mobile menu animations */
+        #mobileMenu {
+            transition: all 0.3s ease-in-out;
+            max-height: 0;
+            overflow: hidden;
+        }
+        #mobileMenu:not(.hidden) {
+            max-height: 300px;
+        }
+        
+        /* Ensure mobile menu is hidden on desktop */
+        @media (min-width: 768px) {
+            #mobileMenu {
+                display: none !important;
+            }
+        }
     </style>
 </head>
 <body class="text-gray-200 bg-[#000711]">
@@ -47,12 +64,39 @@
         <div class="container mx-auto px-6 py-4">
             <div class="glass-card rounded-full px-6 py-2 flex justify-between items-center">
                 <h1 class="text-lg font-bold text-white">Digital Dakwah Platform</h1>
+                
+                <!-- Desktop Navigation -->
                 <nav class="hidden md:flex space-x-6">
                     <a href="index.html" class="text-gray-300 hover:text-white transition">Home</a>
                     <a href="marketplace.html" class="text-white">Marketplace</a>
                     <a href="ustaz.html" class="text-gray-300 hover:text-white transition">Ask Ustaz</a>
                     <a href="mindmap.html" class="text-gray-300 hover:text-white transition">Mindmap</a>
                 </nav>
+
+                <!-- Mobile Menu Button -->
+                <button id="mobileMenuToggle" class="md:hidden text-white p-2 rounded-lg hover:bg-white/10 transition-colors focus:outline-none focus:ring-2 focus:ring-green-400" aria-label="Toggle mobile menu">
+                    <svg class="w-6 h-6 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path id="menuIcon" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Mobile Navigation Menu -->
+            <div id="mobileMenu" class="md:hidden mt-4 hidden">
+                <div class="glass-card rounded-lg px-4 py-4 space-y-2">
+                    <a href="index.html" class="block text-gray-300 hover:text-white transition py-3 px-4 rounded-lg hover:bg-white/10 border-b border-white/10">
+                        🏠 Home
+                    </a>
+                    <a href="marketplace.html" class="block text-white bg-green-500/20 py-3 px-4 rounded-lg border border-green-400/30">
+                        🛒 Marketplace (Current)
+                    </a>
+                    <a href="ustaz.html" class="block text-gray-300 hover:text-white transition py-3 px-4 rounded-lg hover:bg-white/10 border-b border-white/10">
+                        🤖 Ask Ustaz
+                    </a>
+                    <a href="mindmap.html" class="block text-gray-300 hover:text-white transition py-3 px-4 rounded-lg hover:bg-white/10">
+                        🧠 Mindmap
+                    </a>
+                </div>
             </div>
         </div>
     </header>
@@ -1070,6 +1114,70 @@
                     item.style.transform = 'translateY(0)';
                 }, index * 100);
             });
+
+            // Mobile Navigation Functionality
+            const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+            const mobileMenu = document.getElementById('mobileMenu');
+            const menuIcon = document.getElementById('menuIcon');
+
+            if (mobileMenuToggle && mobileMenu && menuIcon) {
+                let isMenuOpen = false;
+
+                mobileMenuToggle.addEventListener('click', () => {
+                    isMenuOpen = !isMenuOpen;
+                    
+                    if (isMenuOpen) {
+                        // Open menu
+                        mobileMenu.classList.remove('hidden');
+                        mobileMenu.style.maxHeight = '0px';
+                        mobileMenu.style.opacity = '0';
+                        
+                        // Force reflow
+                        mobileMenu.offsetHeight;
+                        
+                        mobileMenu.style.transition = 'max-height 0.3s ease-out, opacity 0.3s ease-out';
+                        mobileMenu.style.maxHeight = '300px';
+                        mobileMenu.style.opacity = '1';
+                        
+                        // Change hamburger to X
+                        menuIcon.style.transform = 'rotate(45deg)';
+                        menuIcon.setAttribute('d', 'M6 18L18 6M6 6l12 12');
+                        
+                        // Add aria-expanded
+                        mobileMenuToggle.setAttribute('aria-expanded', 'true');
+                    } else {
+                        // Close menu
+                        mobileMenu.style.transition = 'max-height 0.3s ease-in, opacity 0.3s ease-in';
+                        mobileMenu.style.maxHeight = '0px';
+                        mobileMenu.style.opacity = '0';
+                        
+                        setTimeout(() => {
+                            mobileMenu.classList.add('hidden');
+                        }, 300);
+                        
+                        // Change X back to hamburger
+                        menuIcon.style.transform = 'rotate(0deg)';
+                        menuIcon.setAttribute('d', 'M4 6h16M4 12h16M4 18h16');
+                        
+                        // Remove aria-expanded
+                        mobileMenuToggle.setAttribute('aria-expanded', 'false');
+                    }
+                });
+
+                // Close menu when clicking outside
+                document.addEventListener('click', (e) => {
+                    if (isMenuOpen && !mobileMenuToggle.contains(e.target) && !mobileMenu.contains(e.target)) {
+                        mobileMenuToggle.click();
+                    }
+                });
+
+                // Close menu on window resize to desktop size
+                window.addEventListener('resize', () => {
+                    if (window.innerWidth >= 768 && isMenuOpen) {
+                        mobileMenuToggle.click();
+                    }
+                });
+            }
         });
     </script>
 </body>
