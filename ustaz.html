@@ -356,6 +356,30 @@
         // Chat functionality
         class UstazRadhiChat {
             constructor() {
+                // Cloudflare KV Integration
+                this.userId = this.generateUserId();
+                this.workerEndpoint = 'https://ustaz-radhi-memory.rodhirahman30.workers.dev';
+                
+                // Conversation memory structure
+                this.conversationMemory = {
+                    currentTopic: null,
+                    messageHistory: [],
+                    userProfile: {
+                        interests: [],
+                        previousTopics: [],
+                        emotionalState: 'neutral',
+                        preferredResponseStyle: 'detailed'
+                    },
+                    sessionStart: Date.now(),
+                    totalInteractions: 0
+                };
+                
+                // Main properties
+                this.currentTopic = null;
+                this.messageHistory = [];
+                this.userProfile = this.conversationMemory.userProfile;
+                
+                // DOM elements
                 this.messageInput = document.getElementById('messageInput');
                 this.sendButton = document.getElementById('sendButton');
                 this.chatMessages = document.getElementById('chatMessages');
@@ -364,6 +388,185 @@
                 
                 this.initializeEventListeners();
                 this.initializeSampleQuestions();
+                
+                // Initialize conversation system with KV
+                this.initializeConversationSystem();
+            }
+
+            generateUserId() {
+                let userId = localStorage.getItem('ustazRadhiUserId');
+                if (!userId) {
+                    userId = 'ustaz_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                    localStorage.setItem('ustazRadhiUserId', userId);
+                    console.log('🆔 Generated new user ID:', userId);
+                }
+                return userId;
+            }
+
+            async initializeConversationSystem() {
+                try {
+                    console.log('🔄 Initializing conversation system...');
+                    
+                    // Load existing conversation from Cloudflare KV
+                    const loaded = await this.loadConversationFromKV();
+                    
+                    if (loaded) {
+                        console.log('✅ Conversation loaded from Cloudflare KV');
+                        // Show welcome back message if returning user
+                        if (this.messageHistory.length > 0) {
+                            setTimeout(() => {
+                                this.showWelcomeBackMessage();
+                            }, 2000);
+                        }
+                    } else {
+                        console.log('🆕 New user - starting fresh conversation');
+                    }
+                    
+                    // Auto-save conversation every 30 seconds
+                    setInterval(() => {
+                        this.saveConversationToKV();
+                    }, 30000);
+
+                    // Save on page unload
+                    window.addEventListener('beforeunload', () => {
+                        this.saveConversationToKV();
+                    });
+
+                } catch (error) {
+                    console.error('❌ Failed to initialize conversation system:', error);
+                    // Fallback to existing local storage method
+                    this.loadConversationMemory();
+                }
+            }
+
+            async loadConversationFromKV() {
+                try {
+                    console.log('📥 Loading conversation from KV for user:', this.userId);
+                    
+                    const response = await fetch(`${this.workerEndpoint}/api/conversation/load?userId=${this.userId}`, {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    });
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        console.log('📋 KV Response:', data);
+                        
+                        if (data.success && data.found && data.conversation) {
+                            // Load conversation data
+                            this.currentTopic = data.conversation.currentTopic;
+                            this.messageHistory = data.conversation.messageHistory || [];
+                            this.userProfile = data.conversation.userProfile || this.userProfile;
+                            this.conversationMemory = data.conversation;
+                            
+                            console.log('✅ Conversation loaded - Messages:', this.messageHistory.length);
+                            return true;
+                        } else {
+                            console.log('🆕 No existing conversation found');
+                            return false;
+                        }
+                    } else {
+                        console.error('❌ KV load failed:', response.status, response.statusText);
+                        return false;
+                    }
+                } catch (error) {
+                    console.error('❌ KV load error:', error);
+                    return false;
+                }
+            }
+
+            async saveConversationToKV() {
+                try {
+                    const memory = {
+                        currentTopic: this.currentTopic,
+                        messageHistory: this.messageHistory.slice(-20), // Keep last 20 messages
+                        userProfile: this.userProfile,
+                        sessionStart: this.conversationMemory.sessionStart || Date.now(),
+                        totalInteractions: this.messageHistory.length,
+                        lastActivity: Date.now()
+                    };
+
+                    console.log('💾 Saving conversation to KV...', memory);
+
+                    const response = await fetch(`${this.workerEndpoint}/api/conversation/save`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            userId: this.userId,
+                            conversation: memory
+                        })
+                    });
+                    
+                    if (response.ok) {
+                        const result = await response.json();
+                        console.log('✅ Saved to Cloudflare KV:', result.message);
+                    } else {
+                        const errorData = await response.json();
+                        console.error('❌ KV save failed:', errorData);
+                        throw new Error('KV save failed');
+                    }
+                } catch (error) {
+                    console.error('❌ KV save error:', error);
+                }
+                
+                // Always save to localStorage as backup
+                const backupMemory = {
+                    currentTopic: this.currentTopic,
+                    messageHistory: this.messageHistory.slice(-20),
+                    userProfile: this.userProfile,
+                    sessionStart: this.conversationMemory.sessionStart || Date.now(),
+                    totalInteractions: this.messageHistory.length,
+                    lastActivity: Date.now()
+                };
+                localStorage.setItem('ustazRadhiMemory', JSON.stringify(backupMemory));
+                console.log('💾 Backup saved to localStorage');
+            }
+
+            showWelcomeBackMessage() {
+                const totalMessages = this.messageHistory.filter(m => m.sender === 'user').length;
+                const lastTopic = this.currentTopic || 'Perbincangan umum';
+                const interests = this.userProfile.interests.slice(0, 3).join(', ') || 'Belum dikenal pasti';
+                
+                const welcomeMessage = `**🌟 Assalamualaikum dan selamat kembali!** 
+
+Alhamdulillah, saya ingat perbualan kita sebelum ini! 
+
+📊 **Ringkasan Perbualan Lepas:**
+• **Topik terakhir**: ${lastTopic}
+• **Jumlah soalan**: ${totalMessages} soalan
+• **Minat utama**: ${interests}
+
+${this.currentTopic ? `Adakah saudara/saudari ingin meneruskan perbualan tentang **${this.currentTopic}** atau ada topik lain yang ingin dibincangkan?` : 'Apa yang boleh saya bantu hari ini? 🤲'}
+
+**💡 Cadangan Berdasarkan Perbualan Lepas:**
+• **Mendalami topik** yang pernah kita bincang
+• **Mengaitkan dengan kehidupan** seharian
+• **Belajar aspek praktikal** dari ilmu yang telah dipelajari
+
+Sila berasa selesa untuk bertanya apa sahaja! Mari kita teruskan pembelajaran yang bermakna. ✨`;
+
+                // Add welcome back message to chat
+                this.addMessage(welcomeMessage, 'ustaz');
+            }
+
+            loadConversationMemory() {
+                try {
+                    const saved = localStorage.getItem('ustazRadhiMemory');
+                    if (saved) {
+                        const memory = JSON.parse(saved);
+                        this.currentTopic = memory.currentTopic || null;
+                        this.messageHistory = memory.messageHistory || [];
+                        this.userProfile = memory.userProfile || this.userProfile;
+                        this.conversationMemory = memory;
+                        console.log('Loaded conversation from localStorage');
+                    }
+                } catch (error) {
+                    console.error('Failed to load conversation memory:', error);
+                }
             }
 
             initializeEventListeners() {
@@ -460,6 +663,9 @@
                 // Add user message to chat
                 this.addMessage(message, 'user');
                 
+                // Update conversation memory
+                this.updateConversationMemory(message, 'user');
+                
                 // Clear input and disable send button
                 this.messageInput.value = '';
                 this.sendButton.disabled = true;
@@ -476,6 +682,9 @@
                     
                     // Add Ustaz response
                     this.addMessage(response, 'ustaz');
+                    
+                    // Update conversation memory with AI response
+                    this.updateConversationMemory(response, 'ustaz');
                     
                 } catch (error) {
                     this.hideTypingIndicator();
@@ -533,6 +742,103 @@
                 const div = document.createElement('div');
                 div.textContent = text;
                 return div.innerHTML;
+            }
+
+            updateConversationMemory(message, sender) {
+                // Add to message history
+                this.messageHistory.push({
+                    content: message,
+                    sender: sender,
+                    timestamp: Date.now()
+                });
+
+                // Detect and update topic
+                if (sender === 'user') {
+                    const detectedTopic = this.detectTopic(message);
+                    if (detectedTopic) {
+                        this.currentTopic = detectedTopic;
+                        if (!this.userProfile.previousTopics.includes(detectedTopic)) {
+                            this.userProfile.previousTopics.push(detectedTopic);
+                        }
+                    }
+
+                    // Update emotional state
+                    this.userProfile.emotionalState = this.detectEmotionalState(message);
+
+                    // Extract interests
+                    const interests = this.extractInterests(message);
+                    interests.forEach(interest => {
+                        if (!this.userProfile.interests.includes(interest)) {
+                            this.userProfile.interests.push(interest);
+                        }
+                    });
+                }
+
+                // Update conversation memory object
+                this.conversationMemory.currentTopic = this.currentTopic;
+                this.conversationMemory.messageHistory = this.messageHistory;
+                this.conversationMemory.userProfile = this.userProfile;
+                this.conversationMemory.totalInteractions = this.messageHistory.length;
+
+                // Auto-save to KV (will be called by interval, but also save immediately for important updates)
+                if (sender === 'user') {
+                    setTimeout(() => this.saveConversationToKV(), 1000);
+                }
+            }
+
+            detectTopic(message) {
+                const topicPatterns = {
+                    'solat': /\b(solat|prayer|shalat|rukun|sujud|ruku|imam|makmum|wudhu|ablution)\b/i,
+                    'puasa': /\b(puasa|fast|sahur|iftar|ramadan|berbuka|siam)\b/i,
+                    'zakat': /\b(zakat|fitrah|nisab|asnaf|muzakki|mal)\b/i,
+                    'haji': /\b(haji|umrah|mekah|kaabah|ihram|tawaf|saie)\b/i,
+                    'doa': /\b(doa|zikir|prayer|istighfar|tasbih|wirid)\b/i,
+                    'akhlaq': /\b(akhlaq|adab|perangai|tingkah|moral|etika)\b/i,
+                    'motivasi': /\b(sedih|stress|down|motivasi|semangat|kecewa|depress)\b/i
+                };
+
+                for (const [topic, pattern] of Object.entries(topicPatterns)) {
+                    if (pattern.test(message)) {
+                        return topic;
+                    }
+                }
+                return null;
+            }
+
+            detectEmotionalState(message) {
+                const emotionalPatterns = {
+                    'sad': /\b(sedih|kecewa|depress|down|lemah|putus asa)\b/i,
+                    'stressed': /\b(stress|tekanan|beban|susah|sukar)\b/i,
+                    'happy': /\b(gembira|senang|bahagia|syukur|alhamdulillah)\b/i,
+                    'confused': /\b(keliru|pening|tak faham|confused|bingung)\b/i,
+                    'seeking': /\b(nak tahu|boleh terang|ajar|panduan|cara)\b/i
+                };
+
+                for (const [emotion, pattern] of Object.entries(emotionalPatterns)) {
+                    if (pattern.test(message)) {
+                        return emotion;
+                    }
+                }
+                return 'neutral';
+            }
+
+            extractInterests(message) {
+                const interestPatterns = {
+                    'teknologi': /\b(teknologi|digital|online|internet|media sosial)\b/i,
+                    'keluarga': /\b(keluarga|anak|isteri|suami|ibu bapa|adik beradik)\b/i,
+                    'kerja': /\b(kerja|pekerjaan|kerjaya|bisnes|perniagaan)\b/i,
+                    'pendidikan': /\b(belajar|sekolah|universiti|ilmu|pendidikan)\b/i,
+                    'kesihatan': /\b(sihat|sakit|ubat|doktor|kesihatan)\b/i,
+                    'kewangan': /\b(duit|wang|gaji|hutang|simpanan|pelaburan)\b/i
+                };
+
+                const interests = [];
+                for (const [interest, pattern] of Object.entries(interestPatterns)) {
+                    if (pattern.test(message)) {
+                        interests.push(interest);
+                    }
+                }
+                return interests;
             }
 
             async callUstazRadhiAPI(message) {
@@ -610,13 +916,15 @@
             }
 
             buildIslamicPrompt(message) {
-                return `Anda adalah Ustaz Radhi, seorang AI assistant yang membantu umat Islam di Sabah, Malaysia dalam memahami agama Islam berdasarkan Mazhab Syafie.
+                let contextPrompt = `Anda adalah Ustaz Radhi, seorang AI assistant yang membantu umat Islam di Sabah, Malaysia dalam memahami agama Islam berdasarkan Mazhab Syafie.
 
 PERSONALITI & KARAKTER:
 - Humble, sabar, penuh ilmu, dan sensitif budaya
 - Menggunakan Bahasa Malaysia dengan dialek Sabahan yang sesuai
 - Selalu bermula dengan salam dan berakhir dengan "Wallahu a'lam bissawab"
 - Memberikan jawapan yang berdasarkan Al-Quran, Hadith sahih, dan mazhab Syafie
+- SANGAT KONVERSASIONAL - sentiasa melanjutkan perbualan dan tidak berhenti di satu topik sahaja
+- PROAKTIF - sentiasa bertanya dan menggali lebih dalam tentang keperluan pengguna
 
 PERANAN KHUSUS USTAZ RADHI:
 
@@ -659,10 +967,32 @@ GAYA JAWAPAN:
 - Sensitif kepada konteks budaya Malaysia/Sabah
 - Berikan ruang untuk pengguna berkongsi perasaan
 - Tunjukkan empati dan kefahaman yang mendalam
+- SANGAT INTERAKTIF - jangan biarkan perbualan berakhir begitu sahaja!`;
 
-SOALAN PENGGUNA: "${message}"
+                // Add conversation context from KV memory
+                if (this.currentTopic || this.messageHistory.length > 0) {
+                    contextPrompt += `\n\n🔄 KONTEKS PERBUALAN BERTERUSAN (DARI CLOUDFLARE KV):
+**Topik Semasa**: ${this.currentTopic || 'Tiada topik khusus'}
+**Mesej Terkini**: ${this.messageHistory.slice(-5).map(m => `${m.sender}: ${m.content.substring(0, 100)}`).join(' | ')}
+**Minat Pengguna**: ${this.userProfile.interests.join(', ') || 'Belum dikenal pasti'}
+**Topik Sebelum**: ${this.userProfile.previousTopics.join(', ') || 'Tiada'}
+**Jumlah Interaksi**: ${this.messageHistory.length}
+**ID Pengguna**: ${this.userId}
+
+⚡ WAJIB: Sambung perbualan berdasarkan konteks dan ingatan di atas. Tunjukkan bahawa anda ingat perbualan sebelum ini dan hubungkan dengan topik semasa.`;
+                }
+
+                // Add emotional intelligence
+                if (this.userProfile.emotionalState !== 'neutral') {
+                    contextPrompt += `\n\n💭 KEADAAN EMOSI PENGGUNA: ${this.userProfile.emotionalState}
+Berikan respons yang empati dan sesuai dengan perasaan pengguna semasa.`;
+                }
+
+                contextPrompt += `\n\nSOALAN PENGGUNA: "${message}"
 
 Sila berikan jawapan yang komprehensif, penuh empati, dan mudah difahami. Jika pengguna kelihatan sedih, stress, atau memerlukan motivasi, fokuskan kepada peranan sebagai motivator, pendengar, atau deep-talk partner. Pastikan jawapan mengikut ajaran Islam yang sahih dan sesuai dengan Mazhab Syafie.`;
+
+                return contextPrompt;
             }
 
             enhanceResponseWithStaticKnowledge(message, geminiResponse) {
