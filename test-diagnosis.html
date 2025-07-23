@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbox Diagnosis - Ustaz Radhi</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f7fa;
+        }
+        .diagnosis-container {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .test-button {
+            background: #059669;
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px;
+            transition: all 0.3s ease;
+        }
+        .test-button:hover {
+            background: #10b981;
+            transform: translateY(-2px);
+        }
+        .test-button:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .status-box {
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-weight: 600;
+        }
+        .status-success {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #10b981;
+        }
+        .status-error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #ef4444;
+        }
+        .status-warning {
+            background: #fef3c7;
+            color: #92400e;
+            border: 1px solid #f59e0b;
+        }
+        .log-container {
+            background: #1a1a1a;
+            color: #00ff00;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            max-height: 400px;
+            overflow-y: auto;
+            margin-top: 20px;
+        }
+        .info-section {
+            background: #f0f9ff;
+            border: 1px solid #0ea5e9;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .step {
+            margin: 10px 0;
+            padding: 10px;
+            background: #f8fafc;
+            border-radius: 6px;
+            border-left: 4px solid #059669;
+        }
+    </style>
+</head>
+<body>
+    <div class="diagnosis-container">
+        <h1>🔧 Chatbox Diagnosis & Testing</h1>
+        <p>This page will help diagnose why your chatbox isn't working and provide step-by-step guidance.</p>
+        
+        <div class="info-section">
+            <h3>📊 Current Configuration</h3>
+            <div id="configInfo">
+                <p><strong>Current URL:</strong> <span id="currentUrl"></span></p>
+                <p><strong>API Endpoint:</strong> <span id="apiEndpoint"></span></p>
+                <p><strong>Expected to work:</strong> <span id="expectedStatus"></span></p>
+            </div>
+        </div>
+
+        <h3>🧪 Diagnostic Tests</h3>
+        <button class="test-button" onclick="runFullDiagnosis()">🚀 Run Full Diagnosis</button>
+        <button class="test-button" onclick="testApiEndpoint()">🔗 Test API Endpoint</button>
+        <button class="test-button" onclick="testSimpleMessage()">💬 Test Simple Message</button>
+        <button class="test-button" onclick="checkEnvironment()">🌍 Check Environment</button>
+
+        <div id="testResults"></div>
+        <div id="logs" class="log-container"></div>
+    </div>
+
+    <div class="diagnosis-container">
+        <h2>📋 Manual Troubleshooting Steps</h2>
+        
+        <div class="step">
+            <h4>Step 1: Verify Cloudflare Pages Environment Variable</h4>
+            <p>1. Go to your Cloudflare Pages dashboard</p>
+            <p>2. Select your site: <strong>digital.zikirnurani.com</strong></p>
+            <p>3. Go to Settings → Environment variables</p>
+            <p>4. Verify <code>GEMINI_API_KEY</code> is set with your new API key</p>
+            <p>5. Click "Save and deploy"</p>
+        </div>
+
+        <div class="step">
+            <h4>Step 2: Check API Key Validity</h4>
+            <p>1. Go to <a href="https://aistudio.google.com/apikey" target="_blank">Google AI Studio</a></p>
+            <p>2. Verify your API key is active and not revoked</p>
+            <p>3. Test it manually if needed</p>
+        </div>
+
+        <div class="step">
+            <h4>Step 3: Force Deployment Refresh</h4>
+            <p>1. Make a small change to any file in your repo</p>
+            <p>2. Push to GitHub</p>
+            <p>3. Wait for Cloudflare Pages to rebuild (usually 1-2 minutes)</p>
+        </div>
+
+        <div class="step">
+            <h4>Step 4: Test Again</h4>
+            <p>1. Clear your browser cache (Ctrl+F5)</p>
+            <p>2. Try the chatbox again</p>
+            <p>3. Check browser console for errors (F12)</p>
+        </div>
+    </div>
+
+    <script>
+        // Configuration
+        const API_ENDPOINT = 'https://digital.zikirnurani.com/api/gemini-proxy';
+        
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('currentUrl').textContent = window.location.href;
+            document.getElementById('apiEndpoint').textContent = API_ENDPOINT;
+            
+            // Determine if we expect this to work
+            const hostname = window.location.hostname;
+            const expected = hostname.includes('digital.zikirnurani.com') ? 
+                'YES - You are on Cloudflare Pages' : 
+                'Should work via proxy to Cloudflare Pages';
+            document.getElementById('expectedStatus').textContent = expected;
+        });
+
+        function log(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const logContainer = document.getElementById('logs');
+            const logEntry = document.createElement('div');
+            logEntry.style.color = type === 'error' ? '#ff6b6b' : 
+                                 type === 'success' ? '#51cf66' : 
+                                 type === 'warning' ? '#ffd43b' : '#00ff00';
+            logEntry.textContent = `[${timestamp}] ${message}`;
+            logContainer.appendChild(logEntry);
+            logContainer.scrollTop = logContainer.scrollHeight;
+        }
+
+        function showStatus(message, type) {
+            const resultsDiv = document.getElementById('testResults');
+            const statusDiv = document.createElement('div');
+            statusDiv.className = `status-box status-${type}`;
+            statusDiv.textContent = message;
+            resultsDiv.appendChild(statusDiv);
+        }
+
+        async function testApiEndpoint() {
+            log('Testing API endpoint connectivity...', 'info');
+            
+            try {
+                const response = await fetch(API_ENDPOINT, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        prompt: 'Hello, this is a test'
+                    })
+                });
+
+                log(`Response status: ${response.status}`, response.ok ? 'success' : 'error');
+                
+                if (response.ok) {
+                    showStatus('✅ API endpoint is accessible!', 'success');
+                    const data = await response.json();
+                    log(`Response data: ${JSON.stringify(data)}`, 'success');
+                    
+                    if (data.success) {
+                        showStatus('✅ API is working correctly!', 'success');
+                    } else {
+                        showStatus(`⚠️ API responded but with error: ${data.error}`, 'warning');
+                    }
+                } else {
+                    const errorText = await response.text();
+                    showStatus(`❌ API endpoint error: ${response.status}`, 'error');
+                    log(`Error details: ${errorText}`, 'error');
+                    
+                    if (response.status === 404) {
+                        showStatus('💡 Suggestion: The function might not be deployed to Cloudflare Pages yet', 'warning');
+                    } else if (response.status === 500) {
+                        showStatus('💡 Suggestion: Check if GEMINI_API_KEY is set in Cloudflare Pages environment variables', 'warning');
+                    }
+                }
+            } catch (error) {
+                log(`Network error: ${error.message}`, 'error');
+                showStatus(`❌ Network error: ${error.message}`, 'error');
+                showStatus('💡 Suggestion: Check your internet connection and try again', 'warning');
+            }
+        }
+
+        async function testSimpleMessage() {
+            log('Testing with a simple Islamic message...', 'info');
+            
+            try {
+                const response = await fetch(API_ENDPOINT, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        prompt: 'Assalamualaikum. Boleh saya bertanya tentang solat?',
+                        temperature: 0.7,
+                        maxTokens: 500
+                    })
+                });
+
+                log(`Simple message test status: ${response.status}`, response.ok ? 'success' : 'error');
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.success && data.response) {
+                        showStatus('✅ AI is responding correctly to Islamic questions!', 'success');
+                        log(`AI Response preview: ${data.response.substring(0, 100)}...`, 'success');
+                    } else {
+                        showStatus(`⚠️ AI responded but format might be wrong: ${data.error}`, 'warning');
+                    }
+                } else {
+                    showStatus(`❌ Simple message test failed: ${response.status}`, 'error');
+                }
+            } catch (error) {
+                log(`Simple message test error: ${error.message}`, 'error');
+                showStatus(`❌ Simple message test failed: ${error.message}`, 'error');
+            }
+        }
+
+        async function checkEnvironment() {
+            log('Checking environment configuration...', 'info');
+            
+            const checks = [
+                { name: 'Current Domain', value: window.location.hostname },
+                { name: 'Protocol', value: window.location.protocol },
+                { name: 'API Endpoint', value: API_ENDPOINT },
+                { name: 'Expected to work', value: window.location.hostname.includes('digital.zikirnurani.com') ? 'YES' : 'Via Proxy' }
+            ];
+
+            checks.forEach(check => {
+                log(`${check.name}: ${check.value}`, 'info');
+            });
+
+            showStatus('Environment check completed - see logs for details', 'success');
+        }
+
+        async function runFullDiagnosis() {
+            document.getElementById('testResults').innerHTML = '';
+            document.getElementById('logs').innerHTML = '';
+            
+            log('🚀 Starting full diagnosis...', 'info');
+            showStatus('🔍 Running full diagnosis...', 'warning');
+            
+            // Run all tests in sequence
+            await checkEnvironment();
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            
+            await testApiEndpoint();
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            
+            await testSimpleMessage();
+            
+            log('✅ Full diagnosis completed!', 'success');
+            showStatus('📋 Full diagnosis completed! Check results above.', 'success');
+        }
+    </script>
+</body>
+</html>
