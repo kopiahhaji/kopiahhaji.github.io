@@ -914,30 +914,44 @@ class UstazRadhiIqraChatbox {
     async callGeminiAPI(message) {
         const prompt = this.buildContextualPrompt(message);
         
-        // Use secure proxy endpoint instead of direct API call
-        const response = await fetch(this.GEMINI_CONFIG.PROXY_URL, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                prompt: prompt,
-                temperature: this.GEMINI_CONFIG.TEMPERATURE,
-                maxTokens: this.GEMINI_CONFIG.MAX_TOKENS
-            })
-        });
+        try {
+            // Use secure proxy endpoint instead of direct API call
+            const response = await fetch(this.GEMINI_CONFIG.PROXY_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    prompt: prompt,
+                    temperature: this.GEMINI_CONFIG.TEMPERATURE,
+                    maxTokens: this.GEMINI_CONFIG.MAX_TOKENS
+                })
+            });
 
-        if (!response.ok) {
-            throw new Error('Proxy API failed');
-        }
+            if (!response.ok) {
+                console.error('Proxy response not OK:', response.status, response.statusText);
+                throw new Error(`Proxy API failed: ${response.status}`);
+            }
 
-        const data = await response.json();
-        
-        if (data.success && data.response) {
-            return data.response;
+            let data;
+            try {
+                data = await response.json();
+            } catch (jsonError) {
+                console.error('Failed to parse JSON response:', jsonError);
+                throw new Error('Invalid JSON response from proxy');
+            }
+            
+            if (data.success && data.response) {
+                return data.response;
+            }
+            
+            console.error('API returned error:', data);
+            throw new Error(data.error || 'No valid response from API');
+            
+        } catch (fetchError) {
+            console.error('Fetch error:', fetchError);
+            throw fetchError;
         }
-        
-        throw new Error('No valid response from API');
     }
 
     buildContextualPrompt(message) {
