@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Test - Ustaz Radhi</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        .test-button {
+            background: #059669;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px;
+            transition: all 0.3s ease;
+        }
+        .test-button:hover {
+            background: #10b981;
+            transform: translateY(-2px);
+        }
+        .log-container {
+            background: #1a1a1a;
+            color: #00ff00;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            max-height: 400px;
+            overflow-y: auto;
+            margin-top: 20px;
+        }
+        .status {
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .warning { background: #fff3cd; color: #856404; }
+        .info { background: #d1ecf1; color: #0c5460; }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🧪 Ustaz Radhi API Connectivity Test</h1>
+        <p>This page will test the API proxy connection and help diagnose issues.</p>
+        
+        <div id="status" class="status info">
+            Ready to test...
+        </div>
+        
+        <button class="test-button" onclick="testProxyEndpoint()">
+            🔗 Test Proxy Endpoint
+        </button>
+        
+        <button class="test-button" onclick="testSimpleMessage()">
+            💬 Test Simple Message
+        </button>
+        
+        <button class="test-button" onclick="testEnvironmentCheck()">
+            🔍 Environment Check
+        </button>
+        
+        <button class="test-button" onclick="clearLogs()">
+            🗑️ Clear Logs
+        </button>
+        
+        <div id="logs" class="log-container"></div>
+    </div>
+    
+    <script>
+        // Dynamic proxy URL function
+        function getProxyURL() {
+            const protocol = window.location.protocol;
+            const hostname = window.location.hostname;
+            const port = window.location.port ? `:${window.location.port}` : '';
+            
+            if (hostname === 'localhost' || hostname === '127.0.0.1') {
+                return `${protocol}//${hostname}${port}/api/gemini-proxy`;
+            }
+            
+            return `${protocol}//${hostname}/api/gemini-proxy`;
+        }
+        
+        const PROXY_URL = getProxyURL();
+        
+        function log(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const logContainer = document.getElementById('logs');
+            const logEntry = document.createElement('div');
+            
+            let prefix = '';
+            switch(type) {
+                case 'success': prefix = '✅'; break;
+                case 'error': prefix = '❌'; break;
+                case 'warning': prefix = '⚠️'; break;
+                case 'info': prefix = '🔍'; break;
+                default: prefix = '📝'; break;
+            }
+            
+            logEntry.innerHTML = `[${timestamp}] ${prefix} ${message}`;
+            logContainer.appendChild(logEntry);
+            logContainer.scrollTop = logContainer.scrollHeight;
+            
+            // Update status
+            const statusDiv = document.getElementById('status');
+            statusDiv.textContent = message;
+            statusDiv.className = `status ${type}`;
+        }
+        
+        function clearLogs() {
+            document.getElementById('logs').innerHTML = '';
+            log('Logs cleared', 'info');
+        }
+        
+        async function testProxyEndpoint() {
+            log('Testing proxy endpoint connectivity...', 'info');
+            log(`Proxy URL: ${PROXY_URL}`, 'info');
+            log(`Current location: ${window.location.href}`, 'info');
+            
+            try {
+                // Test with OPTIONS request first (CORS preflight)
+                log('Testing CORS preflight (OPTIONS)...', 'info');
+                const optionsResponse = await fetch(PROXY_URL, {
+                    method: 'OPTIONS'
+                });
+                
+                log(`OPTIONS response: ${optionsResponse.status} ${optionsResponse.statusText}`, 
+                    optionsResponse.ok ? 'success' : 'error');
+                log(`CORS headers: ${JSON.stringify(Object.fromEntries(optionsResponse.headers.entries()))}`, 'info');
+                
+                // Test with simple POST
+                log('Testing POST request...', 'info');
+                const response = await fetch(PROXY_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        prompt: 'Test connection',
+                        temperature: 0.7,
+                        maxTokens: 100
+                    })
+                });
+                
+                log(`POST response: ${response.status} ${response.statusText}`, 
+                    response.ok ? 'success' : 'error');
+                log(`Response headers: ${JSON.stringify(Object.fromEntries(response.headers.entries()))}`, 'info');
+                
+                const responseText = await response.text();
+                log(`Response body: ${responseText}`, response.ok ? 'success' : 'error');
+                
+                if (response.ok) {
+                    try {
+                        const data = JSON.parse(responseText);
+                        if (data.success) {
+                            log('✅ Proxy endpoint working correctly!', 'success');
+                        } else {
+                            log(`⚠️ Proxy responded but with error: ${data.error}`, 'warning');
+                        }
+                    } catch (parseError) {
+                        log(`❌ Invalid JSON response: ${parseError.message}`, 'error');
+                    }
+                }
+                
+            } catch (error) {
+                log(`❌ Network error: ${error.message}`, 'error');
+                
+                if (error.message.includes('Failed to fetch')) {
+                    log('💡 This usually means:', 'warning');
+                    log('   - Proxy function not deployed', 'warning');
+                    log('   - CORS issues', 'warning');
+                    log('   - Network connectivity problems', 'warning');
+                }
+            }
+        }
+        
+        async function testSimpleMessage() {
+            log('Testing with simple message...', 'info');
+            
+            try {
+                const response = await fetch(PROXY_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        prompt: 'Hello, please respond with a simple greeting.',
+                        temperature: 0.7,
+                        maxTokens: 50
+                    })
+                });
+                
+                log(`Response status: ${response.status}`, response.ok ? 'success' : 'error');
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.success && data.response) {
+                        log(`✅ AI Response received: ${data.response.substring(0, 100)}...`, 'success');
+                    } else {
+                        log(`❌ API Error: ${data.error || 'Unknown error'}`, 'error');
+                    }
+                } else {
+                    const errorText = await response.text();
+                    log(`❌ HTTP Error: ${errorText}`, 'error');
+                }
+                
+            } catch (error) {
+                log(`❌ Request failed: ${error.message}`, 'error');
+            }
+        }
+        
+        function testEnvironmentCheck() {
+            log('Environment check started...', 'info');
+            log(`User Agent: ${navigator.userAgent}`, 'info');
+            log(`Location: ${window.location.href}`, 'info');
+            log(`Protocol: ${window.location.protocol}`, 'info');
+            log(`Hostname: ${window.location.hostname}`, 'info');
+            log(`Port: ${window.location.port || 'default'}`, 'info');
+            log(`Proxy URL: ${PROXY_URL}`, 'info');
+            
+            // Check if we're on HTTPS
+            if (window.location.protocol === 'https:') {
+                log('✅ Using HTTPS (good for production)', 'success');
+            } else {
+                log('⚠️ Using HTTP (should be HTTPS in production)', 'warning');
+            }
+            
+            // Check if we're on localhost
+            if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+                log('⚠️ Running on localhost (proxy may not work)', 'warning');
+            } else {
+                log('✅ Running on live domain', 'success');
+            }
+            
+            log('Environment check completed', 'info');
+        }
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            log('API Test page loaded', 'success');
+            log(`Configured proxy URL: ${PROXY_URL}`, 'info');
+        });
+    </script>
+</body>
+</html>
