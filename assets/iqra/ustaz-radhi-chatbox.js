@@ -18,7 +18,7 @@ class UstazRadhiIqraChatbox {
         // Secure Gemini AI Configuration - API key moved to server-side proxy
         this.GEMINI_CONFIG = {
             // API_KEY removed for security - now handled by server proxy
-            PROXY_URL: '/api/gemini-proxy', // Cloudflare Pages function endpoint
+            PROXY_URL: '/api/gemini-proxy', // Cloudflare Pages function endpoint (auto-mapped)
             MAX_TOKENS: 1000,
             TEMPERATURE: 0.7,
             RETRY_ATTEMPTS: 2,
@@ -915,6 +915,9 @@ class UstazRadhiIqraChatbox {
         const prompt = this.buildContextualPrompt(message);
         
         try {
+            console.log('Calling API proxy at:', this.GEMINI_CONFIG.PROXY_URL);
+            console.log('Request payload:', { prompt, temperature: this.GEMINI_CONFIG.TEMPERATURE, maxTokens: this.GEMINI_CONFIG.MAX_TOKENS });
+            
             // Use secure proxy endpoint instead of direct API call
             const response = await fetch(this.GEMINI_CONFIG.PROXY_URL, {
                 method: 'POST',
@@ -928,18 +931,26 @@ class UstazRadhiIqraChatbox {
                 })
             });
 
+            console.log('Response status:', response.status, response.statusText);
+            console.log('Response headers:', response.headers);
+
             if (!response.ok) {
-                console.error('Proxy response not OK:', response.status, response.statusText);
-                throw new Error(`Proxy API failed: ${response.status}`);
+                const errorText = await response.text();
+                console.error('Proxy response not OK:', response.status, response.statusText, errorText);
+                throw new Error(`Proxy API failed: ${response.status} - ${errorText}`);
             }
 
             let data;
             try {
-                data = await response.json();
+                const responseText = await response.text();
+                console.log('Raw response:', responseText);
+                data = JSON.parse(responseText);
             } catch (jsonError) {
                 console.error('Failed to parse JSON response:', jsonError);
                 throw new Error('Invalid JSON response from proxy');
             }
+            
+            console.log('Parsed response data:', data);
             
             if (data.success && data.response) {
                 return data.response;
@@ -986,11 +997,11 @@ Sila berikan jawapan yang berguna untuk pembelajaran mereka di halaman ${this.co
 
     getFallbackResponse(message) {
         const responses = [
-            `**Terima kasih atas soalan tentang halaman ${this.config.pageNumber}!** 📖\n\nUntuk mendapat jawapan yang lebih tepat, boleh saya sarankan:\n• Gunakan butang "Soalan Pantas" di bawah\n• Tanya soalan yang lebih khusus\n• Fokus kepada pembelajaran halaman ini\n\nSaya di sini untuk membantu pembelajaran Iqra ${this.config.iqraModule} anda! 🌟`,
+            `**🔄 Sedang cuba sambung ke AI...** \n\n**Sementara itu, untuk halaman ${this.config.pageNumber}:**\n\n• Gunakan butang "Soalan Pantas" di bawah untuk panduan\n• Baca perlahan-lahan dan ulang 3-5 kali\n• Fokus pada pembelajaran halaman ini\n\nSaya akan cuba jawab dengan AI sebaik mungkin! 🌟\n\n**Debug Info:** Calling ${this.GEMINI_CONFIG.PROXY_URL}`,
             
-            `**Barakallahu feek!** 🤲\n\nSoalan anda tentang halaman ${this.config.pageNumber} sangat baik. Untuk pembelajaran yang berkesan:\n\n**💡 Tips Halaman Ini:**\n• Baca perlahan-lahan dan jelas\n• Gunakan audio untuk mendengar sebutan\n• Ulang 3-5 kali sebelum ke halaman seterusnya\n\nAda soalan khusus tentang huruf atau bacaan di halaman ini? 📚`,
+            `**⚡ Masalah sambungan AI** 🤲\n\n**Tips untuk halaman ${this.config.pageNumber} Iqra ${this.config.iqraModule}:**\n\n• Baca dengan tartil (perlahan dan jelas)\n• Gunakan audio untuk dengar sebutan betul\n• Ulang hingga lancar sebelum sambung\n\nCuba tanya lagi - mungkin AI sudah boleh sambung! 📚`,
             
-            `**Alhamdulillah, semangat belajar anda tinggi!** 🌟\n\nUntuk halaman ${this.config.pageNumber} Iqra ${this.config.iqraModule}, saya sarankan:\n\n**🎯 Fokus Pembelajaran:**\n• Pastikan anda faham halaman sebelum ini\n• Praktis bacaan dengan betul\n• Jangan segan bertanya jika keliru\n\nTeruskan usaha! Setiap huruf yang dipelajari adalah pahala! 💚`
+            `**🛠️ AI dalam penyelenggaraan** 🌟\n\n**Untuk pembelajaran berkesan:**\n• Pastikan faham halaman sebelum ini\n• Praktis bacaan ikut contoh\n• Jangan tergesa-gesa ke halaman seterusnya\n\nTeruskan usaha! Setiap huruf yang dipelajari adalah pahala! 💚`
         ];
         
         return responses[Math.floor(Math.random() * responses.length)];
