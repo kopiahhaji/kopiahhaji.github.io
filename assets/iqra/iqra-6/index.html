@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="ms" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iqra 6 - Tajwid Asas</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .module-title {
+            font-size: 32px;
+            color: #2d3748;
+            margin: 0;
+        }
+        
+        .pages-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 30px 0;
+        }
+        
+        .page-card {
+            background: #f7fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .page-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            border-color: #4299e1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="module-title">Iqra 6 - Tajwid Asas</h1>
+            <p>Total Halaman: 33</p>
+        </div>
+        
+        <div class="pages-grid">
+            
+            <div class="page-card" onclick="openPage(1)">
+                <div style="font-size: 24px; color: #4299e1;">📄</div>
+                <div style="font-weight: bold; margin: 5px 0;">Halaman 1</div>
+                <div style="font-size: 12px; color: #666;">Klik untuk buka</div>
+            </div>
+            
+            <div class="page-card" onclick="openPage(2)">
+                <div style="font-size: 24px; color: #4299e1;">📄</div>
+                <div style="font-weight: bold; margin: 5px 0;">Halaman 2</div>
+                <div style="font-size: 12px; color: #666;">Klik untuk buka</div>
+            </div>
+            
+            <div class="page-card" onclick="openPage(3)">
+                <div style="font-size: 24px; color: #4299e1;">📄</div>
+                <div style="font-weight: bold; margin: 5px 0;">Halaman 3</div>
+                <div style="font-size: 12px; color: #666;">Klik untuk buka</div>
+            </div>
+            
+            <div class="page-card" onclick="openPage(4)">
+                <div style="font-size: 24px; color: #4299e1;">📄</div>
+                <div style="font-weight: bold; margin: 5px 0;">Halaman 4</div>
+                <div style="font-size: 12px; color: #666;">Klik untuk buka</div>
+            </div>
+            
+            <div class="page-card" onclick="openPage(5)">
+                <div style="font-size: 24px; color: #4299e1;">📄</div>
+                <div style="font-weight: bold; margin: 5px 0;">Halaman 5</div>
+                <div style="font-size: 12px; color: #666;">Klik untuk buka</div>
+            </div>
+            
+            <div class="page-card" onclick="openPage(6)">
+                <div style="font-size: 24px; color: #4299e1;">📄</div>
+                <div style="font-weight: bold; margin: 5px 0;">Halaman 6</div>
+                <div style="font-size: 12px; color: #666;">Klik untuk buka</div>
+            </div>
+            
+            <div class="page-card" onclick="openPage(7)">
+                <div style="font-size: 24px; color: #4299e1;">📄</div>
+                <div style="font-weight: bold; margin: 5px 0;">Halaman 7</div>
+                <div style="font-size: 12px; color: #666;">Klik untuk buka</div>
+            </div>
+            
+            <div class="page-card" onclick="openPage(8)">
+                <div style="font-size: 24px; color: #4299e1;">📄</div>
+                <div style="font-weight: bold; margin: 5px 0;">Halaman 8</div>
+                <div style="font-size: 12px; color: #666;">Klik untuk buka</div>
+            </div>
+            
+            <div class="page-card" onclick="openPage(9)">
+                <div style="font-size: 24px; color: #4299e1;">📄</div>
+                <div style="font-weight: bold; margin: 5px 0;">Halaman 9</div>
+                <div style="font-size: 12px; color: #666;">Klik untuk buka</div>
+            </div>
+            
+            <div class="page-card" onclick="openPage(10)">
+                <div style="font-size: 24px; color: #4299e1;">📄</div>
+                <div style="font-weight: bold; margin: 5px 0;">Halaman 10</div>
+                <div style="font-size: 12px; color: #666;">Klik untuk buka</div>
+            </div>
+            
+            <div class="page-card" onclick="openPage(11)">
+                <div style="font-size: 24px; color: #4299e1;">📄</div>
+                <div style="font-weight: bold; margin: 5px 0;">Halaman 11</div>
+                <div style="font-size: 12px; color: #666;">Klik untuk buka</div>
+            </div>
+            
+            <div class="page-card" onclick="openPage(12)">
+                <div style="font-size: 24px; color: #4299e1;">📄</div>
+                <div style="font-weight: bold; margin: 5px 0;">Halaman 12</div>
+                <div style="font-size: 12px; color: #666;">Klik untuk buka</div>
+            </div>
+            
+            <div class="page-card" onclick="openPage(13)">
+                <div style="font-size: 24px; color: #4299e1;">📄</div>
+                <div style="font-weight: bold; margin: 5px 0;">Halaman 13</div>
+                <div style="font-size: 12px; color: #666;">Klik untuk buka</div>
+            </div>
+            
+            <div class="page-card" onclick="openPage(14)">
+                <div style="font-size: 24px; color: #4299e1;">📄</div>
+                <div style="font-weight: bold; margin: 5px 0;">Halaman 14</div>
+                <div style="font-size: 12px; color: #666;">Klik untuk buka</div>
+            </div>
+            
+            <div class="page-card" onclick="openPage(15)">
+                <div style="font-size: 24px; color: #4299e1;">📄</div>
+                <div style="font-weight: bold; margin: 5px 0;">Halaman 15</div>
+                <div style="font-size: 12px; color: #666;">Klik untuk buka</div>
+            </div>
+            
+            <div class="page-card" onclick="openPage(16)">
+                <div style="font-size: 24px; color: #4299e1;">📄</div>
+                <div style="font-weight: bold; margin: 5px 0;">Halaman 16</div>
+                <div style="font-size: 12px; color: #666;">Klik untuk buka</div>
+            </div>
+            
+            <div class="page-card" onclick="openPage(17)">
+                <div style="font-size: 24px; color: #4299e1;">📄</div>
+                <div style="font-weight: bold; margin: 5px 0;">Halaman 17</div>
+                <div style="font-size: 12px; color: #666;">Klik untuk buka</div>
+            </div>
+            
+            <div class="page-card" onclick="openPage(18)">
+                <div style="font-size: 24px; color: #4299e1;">📄</div>
+                <div style="font-weight: bold; margin: 5px 0;">Halaman 18</div>
+                <div style="font-size: 12px; color: #666;">Klik untuk buka</div>
+            </div>
+            
+            <div class="page-card" onclick="openPage(19)">
+                <div style="font-size: 24px; color: #4299e1;">📄</div>
+                <div style="font-weight: bold; margin: 5px 0;">Halaman 19</div>
+                <div style="font-size: 12px; color: #666;">Klik untuk buka</div>
+            </div>
+            
+            <div class="page-card" onclick="openPage(20)">
+                <div style="font-size: 24px; color: #4299e1;">📄</div>
+                <div style="font-weight: bold; margin: 5px 0;">Halaman 20</div>
+                <div style="font-size: 12px; color: #666;">Klik untuk buka</div>
+            </div>
+            
+            <div class="page-card" onclick="openPage(21)">
+                <div style="font-size: 24px; color: #4299e1;">📄</div>
+                <div style="font-weight: bold; margin: 5px 0;">Halaman 21</div>
+                <div style="font-size: 12px; color: #666;">Klik untuk buka</div>
+            </div>
+            
+            <div class="page-card" onclick="openPage(22)">
+                <div style="font-size: 24px; color: #4299e1;">📄</div>
+                <div style="font-weight: bold; margin: 5px 0;">Halaman 22</div>
+                <div style="font-size: 12px; color: #666;">Klik untuk buka</div>
+            </div>
+            
+            <div class="page-card" onclick="openPage(23)">
+                <div style="font-size: 24px; color: #4299e1;">📄</div>
+                <div style="font-weight: bold; margin: 5px 0;">Halaman 23</div>
+                <div style="font-size: 12px; color: #666;">Klik untuk buka</div>
+            </div>
+            
+            <div class="page-card" onclick="openPage(24)">
+                <div style="font-size: 24px; color: #4299e1;">📄</div>
+                <div style="font-weight: bold; margin: 5px 0;">Halaman 24</div>
+                <div style="font-size: 12px; color: #666;">Klik untuk buka</div>
+            </div>
+            
+            <div class="page-card" onclick="openPage(25)">
+                <div style="font-size: 24px; color: #4299e1;">📄</div>
+                <div style="font-weight: bold; margin: 5px 0;">Halaman 25</div>
+                <div style="font-size: 12px; color: #666;">Klik untuk buka</div>
+            </div>
+            
+            <div class="page-card" onclick="openPage(26)">
+                <div style="font-size: 24px; color: #4299e1;">📄</div>
+                <div style="font-weight: bold; margin: 5px 0;">Halaman 26</div>
+                <div style="font-size: 12px; color: #666;">Klik untuk buka</div>
+            </div>
+            
+            <div class="page-card" onclick="openPage(27)">
+                <div style="font-size: 24px; color: #4299e1;">📄</div>
+                <div style="font-weight: bold; margin: 5px 0;">Halaman 27</div>
+                <div style="font-size: 12px; color: #666;">Klik untuk buka</div>
+            </div>
+            
+            <div class="page-card" onclick="openPage(28)">
+                <div style="font-size: 24px; color: #4299e1;">📄</div>
+                <div style="font-weight: bold; margin: 5px 0;">Halaman 28</div>
+                <div style="font-size: 12px; color: #666;">Klik untuk buka</div>
+            </div>
+            
+            <div class="page-card" onclick="openPage(29)">
+                <div style="font-size: 24px; color: #4299e1;">📄</div>
+                <div style="font-weight: bold; margin: 5px 0;">Halaman 29</div>
+                <div style="font-size: 12px; color: #666;">Klik untuk buka</div>
+            </div>
+            
+            <div class="page-card" onclick="openPage(30)">
+                <div style="font-size: 24px; color: #4299e1;">📄</div>
+                <div style="font-weight: bold; margin: 5px 0;">Halaman 30</div>
+                <div style="font-size: 12px; color: #666;">Klik untuk buka</div>
+            </div>
+            
+            <div class="page-card" onclick="openPage(31)">
+                <div style="font-size: 24px; color: #4299e1;">📄</div>
+                <div style="font-weight: bold; margin: 5px 0;">Halaman 31</div>
+                <div style="font-size: 12px; color: #666;">Klik untuk buka</div>
+            </div>
+            
+            <div class="page-card" onclick="openPage(32)">
+                <div style="font-size: 24px; color: #4299e1;">📄</div>
+                <div style="font-weight: bold; margin: 5px 0;">Halaman 32</div>
+                <div style="font-size: 12px; color: #666;">Klik untuk buka</div>
+            </div>
+            
+            <div class="page-card" onclick="openPage(33)">
+                <div style="font-size: 24px; color: #4299e1;">📄</div>
+                <div style="font-weight: bold; margin: 5px 0;">Halaman 33</div>
+                <div style="font-size: 12px; color: #666;">Klik untuk buka</div>
+            </div>
+            
+        </div>
+    </div>
+    
+    <script>
+        function openPage(pageNum) {
+            window.open(`page-${pageNum}.html`, '_blank');
+        }
+    </script>
+</body>
+</html>

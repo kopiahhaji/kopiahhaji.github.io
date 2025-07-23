@@ -1,0 +1,184 @@
+{
+  "module": 1,
+  "title": "Huruf Hijaiyyah",
+  "theme": "emerald",
+  "focus": "Basic Arabic Letters",
+  "total_pages": 35,
+  "pages": [
+    {
+      "page_num": 1,
+      "image_path": "./images/page-01.jpg",
+      "file_size": 400431
+    },
+    {
+      "page_num": 2,
+      "image_path": "./images/page-02.jpg",
+      "file_size": 435445
+    },
+    {
+      "page_num": 3,
+      "image_path": "./images/page-03.jpg",
+      "file_size": 383103
+    },
+    {
+      "page_num": 4,
+      "image_path": "./images/page-04.jpg",
+      "file_size": 417652
+    },
+    {
+      "page_num": 5,
+      "image_path": "./images/page-05.jpg",
+      "file_size": 422925
+    },
+    {
+      "page_num": 6,
+      "image_path": "./images/page-06.jpg",
+      "file_size": 419188
+    },
+    {
+      "page_num": 7,
+      "image_path": "./images/page-07.jpg",
+      "file_size": 411069
+    },
+    {
+      "page_num": 8,
+      "image_path": "./images/page-08.jpg",
+      "file_size": 414962
+    },
+    {
+      "page_num": 9,
+      "image_path": "./images/page-09.jpg",
+      "file_size": 418932
+    },
+    {
+      "page_num": 10,
+      "image_path": "./images/page-10.jpg",
+      "file_size": 412124
+    },
+    {
+      "page_num": 11,
+      "image_path": "./images/page-11.jpg",
+      "file_size": 408084
+    },
+    {
+      "page_num": 12,
+      "image_path": "./images/page-12.jpg",
+      "file_size": 405012
+    },
+    {
+      "page_num": 13,
+      "image_path": "./images/page-13.jpg",
+      "file_size": 408298
+    },
+    {
+      "page_num": 14,
+      "image_path": "./images/page-14.jpg",
+      "file_size": 410736
+    },
+    {
+      "page_num": 15,
+      "image_path": "./images/page-15.jpg",
+      "file_size": 429599
+    },
+    {
+      "page_num": 16,
+      "image_path": "./images/page-16.jpg",
+      "file_size": 430590
+    },
+    {
+      "page_num": 17,
+      "image_path": "./images/page-17.jpg",
+      "file_size": 434059
+    },
+    {
+      "page_num": 18,
+      "image_path": "./images/page-18.jpg",
+      "file_size": 426966
+    },
+    {
+      "page_num": 19,
+      "image_path": "./images/page-19.jpg",
+      "file_size": 431667
+    },
+    {
+      "page_num": 20,
+      "image_path": "./images/page-20.jpg",
+      "file_size": 433307
+    },
+    {
+      "page_num": 21,
+      "image_path": "./images/page-21.jpg",
+      "file_size": 437353
+    },
+    {
+      "page_num": 22,
+      "image_path": "./images/page-22.jpg",
+      "file_size": 438376
+    },
+    {
+      "page_num": 23,
+      "image_path": "./images/page-23.jpg",
+      "file_size": 428688
+    },
+    {
+      "page_num": 24,
+      "image_path": "./images/page-24.jpg",
+      "file_size": 422938
+    },
+    {
+      "page_num": 25,
+      "image_path": "./images/page-25.jpg",
+      "file_size": 426935
+    },
+    {
+      "page_num": 26,
+      "image_path": "./images/page-26.jpg",
+      "file_size": 425085
+    },
+    {
+      "page_num": 27,
+      "image_path": "./images/page-27.jpg",
+      "file_size": 425491
+    },
+    {
+      "page_num": 28,
+      "image_path": "./images/page-28.jpg",
+      "file_size": 423982
+    },
+    {
+      "page_num": 29,
+      "image_path": "./images/page-29.jpg",
+      "file_size": 429716
+    },
+    {
+      "page_num": 30,
+      "image_path": "./images/page-30.jpg",
+      "file_size": 430615
+    },
+    {
+      "page_num": 31,
+      "image_path": "./images/page-31.jpg",
+      "file_size": 415828
+    },
+    {
+      "page_num": 32,
+      "image_path": "./images/page-32.jpg",
+      "file_size": 434061
+    },
+    {
+      "page_num": 33,
+      "image_path": "./images/page-33.jpg",
+      "file_size": 404662
+    },
+    {
+      "page_num": 34,
+      "image_path": "./images/page-34.jpg",
+      "file_size": 452369
+    },
+    {
+      "page_num": 35,
+      "image_path": "./images/page-35.jpg",
+      "file_size": 444876
+    }
+  ]
+}

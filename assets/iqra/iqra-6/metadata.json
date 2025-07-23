@@ -1,0 +1,174 @@
+{
+  "module": 6,
+  "title": "Tajwid Asas",
+  "theme": "amber",
+  "focus": "Basic Tajwid Rules",
+  "total_pages": 33,
+  "pages": [
+    {
+      "page_num": 1,
+      "image_path": "./images/page-01.jpg",
+      "file_size": 390405
+    },
+    {
+      "page_num": 2,
+      "image_path": "./images/page-02.jpg",
+      "file_size": 409360
+    },
+    {
+      "page_num": 3,
+      "image_path": "./images/page-03.jpg",
+      "file_size": 464288
+    },
+    {
+      "page_num": 4,
+      "image_path": "./images/page-04.jpg",
+      "file_size": 476327
+    },
+    {
+      "page_num": 5,
+      "image_path": "./images/page-05.jpg",
+      "file_size": 490183
+    },
+    {
+      "page_num": 6,
+      "image_path": "./images/page-06.jpg",
+      "file_size": 476802
+    },
+    {
+      "page_num": 7,
+      "image_path": "./images/page-07.jpg",
+      "file_size": 489255
+    },
+    {
+      "page_num": 8,
+      "image_path": "./images/page-08.jpg",
+      "file_size": 487641
+    },
+    {
+      "page_num": 9,
+      "image_path": "./images/page-09.jpg",
+      "file_size": 469034
+    },
+    {
+      "page_num": 10,
+      "image_path": "./images/page-10.jpg",
+      "file_size": 479241
+    },
+    {
+      "page_num": 11,
+      "image_path": "./images/page-11.jpg",
+      "file_size": 480936
+    },
+    {
+      "page_num": 12,
+      "image_path": "./images/page-12.jpg",
+      "file_size": 454759
+    },
+    {
+      "page_num": 13,
+      "image_path": "./images/page-13.jpg",
+      "file_size": 488968
+    },
+    {
+      "page_num": 14,
+      "image_path": "./images/page-14.jpg",
+      "file_size": 486347
+    },
+    {
+      "page_num": 15,
+      "image_path": "./images/page-15.jpg",
+      "file_size": 467439
+    },
+    {
+      "page_num": 16,
+      "image_path": "./images/page-16.jpg",
+      "file_size": 478109
+    },
+    {
+      "page_num": 17,
+      "image_path": "./images/page-17.jpg",
+      "file_size": 487689
+    },
+    {
+      "page_num": 18,
+      "image_path": "./images/page-18.jpg",
+      "file_size": 481607
+    },
+    {
+      "page_num": 19,
+      "image_path": "./images/page-19.jpg",
+      "file_size": 481241
+    },
+    {
+      "page_num": 20,
+      "image_path": "./images/page-20.jpg",
+      "file_size": 487115
+    },
+    {
+      "page_num": 21,
+      "image_path": "./images/page-21.jpg",
+      "file_size": 471271
+    },
+    {
+      "page_num": 22,
+      "image_path": "./images/page-22.jpg",
+      "file_size": 491699
+    },
+    {
+      "page_num": 23,
+      "image_path": "./images/page-23.jpg",
+      "file_size": 477454
+    },
+    {
+      "page_num": 24,
+      "image_path": "./images/page-24.jpg",
+      "file_size": 482176
+    },
+    {
+      "page_num": 25,
+      "image_path": "./images/page-25.jpg",
+      "file_size": 504337
+    },
+    {
+      "page_num": 26,
+      "image_path": "./images/page-26.jpg",
+      "file_size": 490783
+    },
+    {
+      "page_num": 27,
+      "image_path": "./images/page-27.jpg",
+      "file_size": 487160
+    },
+    {
+      "page_num": 28,
+      "image_path": "./images/page-28.jpg",
+      "file_size": 476145
+    },
+    {
+      "page_num": 29,
+      "image_path": "./images/page-29.jpg",
+      "file_size": 456575
+    },
+    {
+      "page_num": 30,
+      "image_path": "./images/page-30.jpg",
+      "file_size": 492504
+    },
+    {
+      "page_num": 31,
+      "image_path": "./images/page-31.jpg",
+      "file_size": 484759
+    },
+    {
+      "page_num": 32,
+      "image_path": "./images/page-32.jpg",
+      "file_size": 485171
+    },
+    {
+      "page_num": 33,
+      "image_path": "./images/page-33.jpg",
+      "file_size": 445919
+    }
+  ]
+}

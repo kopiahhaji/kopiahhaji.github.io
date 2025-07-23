@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learn Iqro - Digital Islamic Learning Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Sora', sans-serif; }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Mobile menu animations */
+        #mobileMenu {
+            transition: all 0.3s ease-in-out;
+            max-height: 0;
+            overflow: hidden;
+        }
+        #mobileMenu:not(.hidden) {
+            max-height: 400px;
+        }
+        
+        /* Ensure mobile menu is hidden on desktop */
+        @media (min-width: 768px) {
+            #mobileMenu {
+                display: none !important;
+            }
+        }
+        
+        /* Ensure header is always visible */
+        header {
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+        }
+        
+        /* Backup backdrop blur for better browser support */
+        .backdrop-blur {
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+        
+        /* Al-Quran Learning Section Styles */
+        .quran-level-tab.active {
+            background: #059669 !important;
+            color: white !important;
+        }
+        
+        .iqra-module-btn.active div {
+            background: rgba(5, 150, 105, 0.3) !important;
+            border-color: rgba(5, 150, 105, 0.5) !important;
+            transform: scale(1.02);
+        }
+        
+        .iqra-module-btn:hover div {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(5, 150, 105, 0.2);
+        }
+        
+        .quran-level-content {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Book reader frame styling */
+        #iqraBookFrame {
+            border-radius: 8px;
+        }
+        
+        /* Hero section styles */
+        .hero-gradient {
+            background: linear-gradient(135deg, #000711 0%, #0c4a6e 50%, #059669 100%);
+        }
+        
+        .floating-card {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        /* Module card hover effects */
+        .module-card {
+            transition: all 0.3s ease;
+        }
+        
+        .module-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(5, 150, 105, 0.2);
+        }
+    </style>
+</head>
+
+<body class="bg-[#000711] text-gray-200 min-h-screen">
+
+    <!-- Header Navigation -->
+    <header id="header" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-[#000711]/90 backdrop-blur border-b border-white/10">
+        <div class="container mx-auto px-6 py-4">
+            <div class="glass-card rounded-full px-6 py-2 flex justify-between items-center">
+                <h1 class="text-lg font-bold text-white">Digital Dakwah Platform</h1>
+                
+                <!-- Desktop Navigation -->
+                <nav class="hidden md:flex space-x-6">
+                    <a href="index.html" class="text-gray-300 hover:text-white transition">Home</a>
+                    <a href="marketplace.html" class="text-gray-300 hover:text-white transition">Marketplace</a>
+                    <a href="ustaz.html" class="text-gray-300 hover:text-white transition">Ask Ustaz</a>
+                    <a href="LearnIqro.html" class="text-white bg-green-500/20 px-3 py-1 rounded-lg border border-green-400/30">Learn Iqro</a>
+                    <a href="mindmap.html" class="text-gray-300 hover:text-white transition">Mindmap</a>
+                </nav>
+
+                <!-- Mobile Menu Button -->
+                <button id="mobileMenuToggle" class="md:hidden text-white p-2 rounded-lg hover:bg-white/10 transition-colors focus:outline-none focus:ring-2 focus:ring-green-400" aria-label="Toggle mobile menu">
+                    <svg class="w-6 h-6 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path id="menuIcon" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+
+                <!-- Desktop Get Involved Button -->
+                <a href="index.html#contact" class="hidden md:block bg-white text-blue-900 font-bold py-2 px-5 rounded-full hover:bg-gray-200 transition duration-300 transform hover:scale-105 shadow-lg">Get Involved</a>
+            </div>
+
+            <!-- Mobile Navigation Menu -->
+            <div id="mobileMenu" class="md:hidden mt-4 hidden">
+                <div class="glass-card rounded-lg px-4 py-4 space-y-2">
+                    <a href="index.html" class="block text-gray-300 hover:text-white transition py-3 px-4 rounded-lg hover:bg-white/10 border-b border-white/10">
+                        🏠 Home
+                    </a>
+                    <a href="marketplace.html" class="block text-gray-300 hover:text-white transition py-3 px-4 rounded-lg hover:bg-white/10 border-b border-white/10">
+                        🛒 Marketplace
+                    </a>
+                    <a href="ustaz.html" class="block text-gray-300 hover:text-white transition py-3 px-4 rounded-lg hover:bg-white/10 border-b border-white/10">
+                        🤖 Ask Ustaz
+                    </a>
+                    <a href="LearnIqro.html" class="block text-white bg-green-500/20 py-3 px-4 rounded-lg border border-green-400/30">
+                        📖 Learn Iqro (Current)
+                    </a>
+                    <a href="mindmap.html" class="block text-gray-300 hover:text-white transition py-3 px-4 rounded-lg hover:bg-white/10 border-b border-white/10">
+                        🧠 Mindmap
+                    </a>
+                    <a href="index.html#contact" class="block text-center bg-white text-blue-900 font-bold py-3 px-4 rounded-lg hover:bg-gray-200 transition">
+                        📞 Get Involved
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content with top padding for fixed header -->
+    <div class="pt-28">
+        
+        <!-- Hero Section -->
+        <section class="hero-gradient py-20">
+            <div class="container mx-auto px-4 max-w-6xl">
+                <div class="text-center mb-16">
+                    <div class="floating-card inline-block mb-6">
+                        <div class="glass-card rounded-xl p-6">
+                            <div class="text-6xl mb-4">📖</div>
+                            <h1 class="text-4xl md:text-6xl font-bold text-white mb-4">
+                                Learn <span class="text-emerald-400">Iqro</span>
+                            </h1>
+                            <p class="text-xl text-gray-300 max-w-2xl mx-auto">
+                                Comprehensive Islamic Learning Platform - Master Al-Quran Reading with Interactive Iqra Modules
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="grid md:grid-cols-3 gap-6 mt-12">
+                        <div class="glass-card rounded-xl p-6 text-center">
+                            <div class="text-3xl mb-3">🌱</div>
+                            <h3 class="text-lg font-semibold text-emerald-300 mb-2">Beginner Friendly</h3>
+                            <p class="text-gray-400 text-sm">Start from basic Arabic letters with step-by-step guidance</p>
+                        </div>
+                        <div class="glass-card rounded-xl p-6 text-center">
+                            <div class="text-3xl mb-3">🎯</div>
+                            <h3 class="text-lg font-semibold text-emerald-300 mb-2">Interactive Learning</h3>
+                            <p class="text-gray-400 text-sm">Hands-on practice with audio pronunciation and visual aids</p>
+                        </div>
+                        <div class="glass-card rounded-xl p-6 text-center">
+                            <div class="text-3xl mb-3">📱</div>
+                            <h3 class="text-lg font-semibold text-emerald-300 mb-2">Mobile Optimized</h3>
+                            <p class="text-gray-400 text-sm">Learn anywhere, anytime on any device</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main Learning Section -->
+        <section class="py-16">
+            <div class="container mx-auto px-4 max-w-6xl">
+                
+                <!-- Al-Quran Learning Section -->
+                <div class="bg-emerald-500/10 rounded-xl p-8 border border-emerald-500/20">
+                    <h2 class="text-emerald-300 font-bold text-2xl mb-6 text-center">📖 Al-Quran Learning Center</h2>
+                    
+                    <!-- Level Tabs -->
+                    <div class="flex justify-center mb-8">
+                        <div class="bg-white/5 rounded-lg p-1 inline-flex space-x-1">
+                            <button id="beginnerTab" class="quran-level-tab active px-6 py-3 rounded-md text-sm font-medium transition-all duration-200 bg-emerald-500 text-white" data-level="beginner">
+                                🌱 Beginner
+                            </button>
+                            <button id="amateurTab" class="quran-level-tab px-6 py-3 rounded-md text-sm font-medium transition-all duration-200 text-gray-300 hover:text-white hover:bg-white/10" data-level="amateur">
+                                📚 Amateur
+                            </button>
+                            <button id="professionalTab" class="quran-level-tab px-6 py-3 rounded-md text-sm font-medium transition-all duration-200 text-gray-300 hover:text-white hover:bg-white/10" data-level="professional">
+                                🎓 Professional
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Beginner Level Content -->
+                    <div id="beginnerContent" class="quran-level-content">
+                        <div class="bg-white/5 rounded-xl p-6 mb-6">
+                            <h3 class="text-emerald-300 font-semibold text-xl mb-4 text-center">📚 Iqra Learning Modules</h3>
+                            <p class="text-gray-300 text-center mb-6">Belajar membaca Al-Quran dengan kaedah Iqra yang berperingkat-peringkat</p>
+                            
+                            <!-- Iqra Module Selector -->
+                            <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
+                                <button class="iqra-module-btn active module-card" data-module="1">
+                                    <div class="bg-emerald-600/20 hover:bg-emerald-600/30 border border-emerald-500/30 rounded-xl p-4 text-center transition-all duration-200">
+                                        <div class="text-2xl mb-2">📖</div>
+                                        <div class="text-lg font-medium text-emerald-300">Iqra 1</div>
+                                        <div class="text-sm text-gray-400">Huruf Hijaiyyah</div>
+                                        <div class="text-xs text-emerald-400 mt-2">35 pages</div>
+                                    </div>
+                                </button>
+                                <button class="iqra-module-btn module-card" data-module="2">
+                                    <div class="bg-emerald-600/10 hover:bg-emerald-600/20 border border-emerald-500/20 rounded-xl p-4 text-center transition-all duration-200">
+                                        <div class="text-2xl mb-2">📘</div>
+                                        <div class="text-lg font-medium text-emerald-300">Iqra 2</div>
+                                        <div class="text-sm text-gray-400">Baris & Fathah</div>
+                                        <div class="text-xs text-emerald-400 mt-2">32 pages</div>
+                                    </div>
+                                </button>
+                                <button class="iqra-module-btn module-card" data-module="3">
+                                    <div class="bg-emerald-600/10 hover:bg-emerald-600/20 border border-emerald-500/20 rounded-xl p-4 text-center transition-all duration-200">
+                                        <div class="text-2xl mb-2">📗</div>
+                                        <div class="text-lg font-medium text-emerald-300">Iqra 3</div>
+                                        <div class="text-sm text-gray-400">Kasrah & Dhammah</div>
+                                        <div class="text-xs text-emerald-400 mt-2">32 pages</div>
+                                    </div>
+                                </button>
+                                <button class="iqra-module-btn module-card" data-module="4">
+                                    <div class="bg-emerald-600/10 hover:bg-emerald-600/20 border border-emerald-500/20 rounded-xl p-4 text-center transition-all duration-200">
+                                        <div class="text-2xl mb-2">📙</div>
+                                        <div class="text-lg font-medium text-emerald-300">Iqra 4</div>
+                                        <div class="text-sm text-gray-400">Tanwin & Sukun</div>
+                                        <div class="text-xs text-emerald-400 mt-2">15 pages</div>
+                                    </div>
+                                </button>
+                                <button class="iqra-module-btn module-card" data-module="5">
+                                    <div class="bg-emerald-600/10 hover:bg-emerald-600/20 border border-emerald-500/20 rounded-xl p-4 text-center transition-all duration-200">
+                                        <div class="text-2xl mb-2">📒</div>
+                                        <div class="text-lg font-medium text-emerald-300">Iqra 5</div>
+                                        <div class="text-sm text-gray-400">Mad & Waqaf</div>
+                                        <div class="text-xs text-emerald-400 mt-2">28 pages</div>
+                                    </div>
+                                </button>
+                                <button class="iqra-module-btn module-card" data-module="6">
+                                    <div class="bg-emerald-600/10 hover:bg-emerald-600/20 border border-emerald-500/20 rounded-xl p-4 text-center transition-all duration-200">
+                                        <div class="text-2xl mb-2">📓</div>
+                                        <div class="text-lg font-medium text-emerald-300">Iqra 6</div>
+                                        <div class="text-sm text-gray-400">Tajwid Asas</div>
+                                        <div class="text-xs text-emerald-400 mt-2">30 pages</div>
+                                    </div>
+                                </button>
+                            </div>
+
+                            <!-- Embedded Book Reader -->
+                            <div class="bg-white/5 rounded-xl p-6 border border-emerald-500/20">
+                                <div class="flex justify-between items-center mb-4">
+                                    <h4 class="text-emerald-300 font-medium text-lg" id="currentIqraTitle">📖 Iqra 1 - Huruf Hijaiyyah</h4>
+                                    <div class="flex space-x-3">
+                                        <button id="prevPageBtn" class="bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-300 px-4 py-2 rounded-lg text-sm transition-all duration-200" disabled>
+                                            ← Prev
+                                        </button>
+                                        <span id="pageInfo" class="text-sm text-gray-400 self-center bg-white/10 px-3 py-2 rounded-lg">Page 1 of 35</span>
+                                        <button id="nextPageBtn" class="bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-300 px-4 py-2 rounded-lg text-sm transition-all duration-200">
+                                            Next →
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <!-- Book Reader Frame -->
+                                <div class="bg-white rounded-xl overflow-hidden shadow-2xl" style="height: 500px;">
+                                    <iframe 
+                                        id="iqraBookFrame" 
+                                        src="./assets/iqra/iqra-1/page-1.html" 
+                                        class="w-full h-full border-0"
+                                        title="Iqra Book Reader">
+                                    </iframe>
+                                </div>
+                                
+                                <!-- Reading Controls -->
+                                <div class="mt-4 flex justify-center space-x-4">
+                                    <button class="bg-blue-600/20 hover:bg-blue-600/30 text-blue-300 px-6 py-3 rounded-lg text-sm transition-all duration-200 font-medium">
+                                        🔊 Listen Audio
+                                    </button>
+                                    <button class="bg-purple-600/20 hover:bg-purple-600/30 text-purple-300 px-6 py-3 rounded-lg text-sm transition-all duration-200 font-medium">
+                                        📝 Practice Mode
+                                    </button>
+                                    <button class="bg-yellow-600/20 hover:bg-yellow-600/30 text-yellow-300 px-6 py-3 rounded-lg text-sm transition-all duration-200 font-medium">
+                                        ⭐ Bookmark
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Amateur Level Content -->
+                    <div id="amateurContent" class="quran-level-content hidden">
+                        <div class="bg-white/5 rounded-xl p-6">
+                            <h3 class="text-emerald-300 font-semibold text-xl mb-6 text-center">📖 Tajwid & Advanced Reading</h3>
+                            <div class="grid md:grid-cols-2 gap-6">
+                                <div class="bg-white/5 rounded-xl p-6">
+                                    <h4 class="text-blue-300 font-medium text-lg mb-4">🎯 Ilmu Tajwid</h4>
+                                    <ul class="text-gray-300 space-y-2">
+                                        <li class="flex items-center"><span class="text-emerald-400 mr-2">•</span> Ahkam Mad</li>
+                                        <li class="flex items-center"><span class="text-emerald-400 mr-2">•</span> Ahkam Nun Sakinah & Tanwin</li>
+                                        <li class="flex items-center"><span class="text-emerald-400 mr-2">•</span> Ahkam Mim Sakinah</li>
+                                        <li class="flex items-center"><span class="text-emerald-400 mr-2">•</span> Qalqalah & Ghunnah</li>
+                                    </ul>
+                                </div>
+                                <div class="bg-white/5 rounded-xl p-6">
+                                    <h4 class="text-purple-300 font-medium text-lg mb-4">📚 Surah Pilihan</h4>
+                                    <ul class="text-gray-300 space-y-2">
+                                        <li class="flex items-center"><span class="text-emerald-400 mr-2">•</span> Juz Amma (Surah 78-114)</li>
+                                        <li class="flex items-center"><span class="text-emerald-400 mr-2">•</span> Al-Mulk & Al-Kahf</li>
+                                        <li class="flex items-center"><span class="text-emerald-400 mr-2">•</span> Yasin & Ar-Rahman</li>
+                                        <li class="flex items-center"><span class="text-emerald-400 mr-2">•</span> Al-Waqiah & As-Sajdah</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Professional Level Content -->
+                    <div id="professionalContent" class="quran-level-content hidden">
+                        <div class="bg-white/5 rounded-xl p-6">
+                            <h3 class="text-emerald-300 font-semibold text-xl mb-6 text-center">🎓 Tafsir & Qiraat</h3>
+                            <div class="grid md:grid-cols-2 gap-6">
+                                <div class="bg-white/5 rounded-xl p-6">
+                                    <h4 class="text-orange-300 font-medium text-lg mb-4">📖 Tafsir Al-Quran</h4>
+                                    <ul class="text-gray-300 space-y-2">
+                                        <li class="flex items-center"><span class="text-emerald-400 mr-2">•</span> Tafsir Ibn Kathir</li>
+                                        <li class="flex items-center"><span class="text-emerald-400 mr-2">•</span> Tafsir Al-Jalalayn</li>
+                                        <li class="flex items-center"><span class="text-emerald-400 mr-2">•</span> Tafsir Al-Tabari</li>
+                                        <li class="flex items-center"><span class="text-emerald-400 mr-2">•</span> Asbab An-Nuzul</li>
+                                    </ul>
+                                </div>
+                                <div class="bg-white/5 rounded-xl p-6">
+                                    <h4 class="text-cyan-300 font-medium text-lg mb-4">🎵 Qiraat & Irama</h4>
+                                    <ul class="text-gray-300 space-y-2">
+                                        <li class="flex items-center"><span class="text-emerald-400 mr-2">•</span> Qiraat Sab'ah</li>
+                                        <li class="flex items-center"><span class="text-emerald-400 mr-2">•</span> Maqamat Al-Quran</li>
+                                        <li class="flex items-center"><span class="text-emerald-400 mr-2">•</span> Tartil & Tahqiq</li>
+                                        <li class="flex items-center"><span class="text-emerald-400 mr-2">•</span> Hadr & Tadwir</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Access Section -->
+                <section class="mt-16">
+                    <h2 class="text-2xl font-bold text-center text-white mb-8">🚀 Quick Access</h2>
+                    <div class="grid md:grid-cols-4 gap-6">
+                        <a href="./assets/iqra/index.html" target="_blank" class="glass-card rounded-xl p-6 text-center hover:bg-white/10 transition-all duration-300 group">
+                            <div class="text-3xl mb-3 group-hover:scale-110 transition-transform">📚</div>
+                            <h3 class="text-lg font-semibold text-emerald-300 mb-2">Full Library</h3>
+                            <p class="text-gray-400 text-sm">Access complete Iqra collection</p>
+                        </a>
+                        <a href="./assets/iqra/iqra-1/index.html" target="_blank" class="glass-card rounded-xl p-6 text-center hover:bg-white/10 transition-all duration-300 group">
+                            <div class="text-3xl mb-3 group-hover:scale-110 transition-transform">📖</div>
+                            <h3 class="text-lg font-semibold text-emerald-300 mb-2">Iqra 1</h3>
+                            <p class="text-gray-400 text-sm">Start with basic letters</p>
+                        </a>
+                        <a href="./assets/iqra/iqra-2/index.html" target="_blank" class="glass-card rounded-xl p-6 text-center hover:bg-white/10 transition-all duration-300 group">
+                            <div class="text-3xl mb-3 group-hover:scale-110 transition-transform">📘</div>
+                            <h3 class="text-lg font-semibold text-emerald-300 mb-2">Iqra 2</h3>
+                            <p class="text-gray-400 text-sm">Learn Fathah & Baris</p>
+                        </a>
+                        <a href="./assets/iqra/iqra-3/index.html" target="_blank" class="glass-card rounded-xl p-6 text-center hover:bg-white/10 transition-all duration-300 group">
+                            <div class="text-3xl mb-3 group-hover:scale-110 transition-transform">📗</div>
+                            <h3 class="text-lg font-semibold text-emerald-300 mb-2">Iqra 3</h3>
+                            <p class="text-gray-400 text-sm">Master vowel marks</p>
+                        </a>
+                    </div>
+                </section>
+
+            </div>
+        </section>
+
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-white/5 border-t border-white/10 py-8 mt-16">
+        <div class="container mx-auto px-4 text-center">
+            <div class="glass-card rounded-xl p-6 max-w-2xl mx-auto">
+                <h3 class="text-xl font-bold text-emerald-300 mb-4">Start Your Learning Journey</h3>
+                <p class="text-gray-300 mb-6">Join thousands of learners mastering Al-Quran reading through our comprehensive Iqra system</p>
+                <div class="flex justify-center space-x-4">
+                    <a href="ustaz.html" class="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-lg font-medium transition-all duration-300">
+                        Ask Ustaz for Help
+                    </a>
+                    <a href="index.html" class="bg-white/10 hover:bg-white/20 text-white px-6 py-3 rounded-lg font-medium transition-all duration-300">
+                        Back to Home
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Al-Quran Learning Section Functions
+        function initializeAlQuranSection() {
+            // Level Tab Switching
+            const levelTabs = document.querySelectorAll('.quran-level-tab');
+            const levelContents = document.querySelectorAll('.quran-level-content');
+            
+            levelTabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const targetLevel = tab.getAttribute('data-level');
+                    
+                    // Remove active class from all tabs
+                    levelTabs.forEach(t => {
+                        t.classList.remove('active', 'bg-emerald-500', 'text-white');
+                        t.classList.add('text-gray-300', 'hover:text-white', 'hover:bg-white/10');
+                    });
+                    
+                    // Add active class to clicked tab
+                    tab.classList.add('active', 'bg-emerald-500', 'text-white');
+                    tab.classList.remove('text-gray-300', 'hover:text-white', 'hover:bg-white/10');
+                    
+                    // Hide all content sections
+                    levelContents.forEach(content => {
+                        content.classList.add('hidden');
+                    });
+                    
+                    // Show target content
+                    const targetContent = document.getElementById(targetLevel + 'Content');
+                    if (targetContent) {
+                        targetContent.classList.remove('hidden');
+                    }
+                });
+            });
+            
+            // Iqra Module Functionality
+            initializeIqraModules();
+        }
+
+        function initializeIqraModules() {
+            const iqraModuleBtns = document.querySelectorAll('.iqra-module-btn');
+            const iqraFrame = document.getElementById('iqraBookFrame');
+            const currentIqraTitle = document.getElementById('currentIqraTitle');
+            const pageInfo = document.getElementById('pageInfo');
+            const prevPageBtn = document.getElementById('prevPageBtn');
+            const nextPageBtn = document.getElementById('nextPageBtn');
+            
+            let currentModule = 1;
+            let currentPage = 1;
+            let maxPages = 35; // Default pages per module
+            
+            // Iqra module data with actual page counts from conversion
+            const iqraModules = {
+                1: { title: 'Iqra 1 - Huruf Hijaiyyah', pages: 35, description: 'Huruf Hijaiyyah' },
+                2: { title: 'Iqra 2 - Baris & Fathah', pages: 32, description: 'Baris & Fathah' },
+                3: { title: 'Iqra 3 - Kasrah & Dhammah', pages: 32, description: 'Kasrah & Dhammah' },
+                4: { title: 'Iqra 4 - Tanwin & Sukun', pages: 15, description: 'Tanwin & Sukun' },
+                5: { title: 'Iqra 5 - Mad & Waqaf', pages: 28, description: 'Mad & Waqaf' },
+                6: { title: 'Iqra 6 - Tajwid Asas', pages: 30, description: 'Tajwid Asas' }
+            };
+            
+            // Module selection
+            iqraModuleBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const moduleNum = parseInt(btn.getAttribute('data-module'));
+                    
+                    // Remove active class from all module buttons
+                    iqraModuleBtns.forEach(b => {
+                        b.classList.remove('active');
+                        const moduleDiv = b.querySelector('div');
+                        moduleDiv.classList.remove('bg-emerald-600/30', 'border-emerald-500/50');
+                        moduleDiv.classList.add('bg-emerald-600/10', 'border-emerald-500/20');
+                    });
+                    
+                    // Add active class to selected module
+                    btn.classList.add('active');
+                    const selectedDiv = btn.querySelector('div');
+                    selectedDiv.classList.add('bg-emerald-600/30', 'border-emerald-500/50');
+                    selectedDiv.classList.remove('bg-emerald-600/10', 'border-emerald-500/20');
+                    
+                    // Update current module
+                    currentModule = moduleNum;
+                    currentPage = 1;
+                    maxPages = iqraModules[moduleNum].pages;
+                    
+                    // Update UI
+                    updateIqraDisplay();
+                });
+            });
+            
+            // Page navigation
+            if (prevPageBtn) {
+                prevPageBtn.addEventListener('click', () => {
+                    if (currentPage > 1) {
+                        currentPage--;
+                        updateIqraDisplay();
+                    }
+                });
+            }
+            
+            if (nextPageBtn) {
+                nextPageBtn.addEventListener('click', () => {
+                    if (currentPage < maxPages) {
+                        currentPage++;
+                        updateIqraDisplay();
+                    }
+                });
+            }
+            
+            // Update display function
+            function updateIqraDisplay() {
+                const moduleData = iqraModules[currentModule];
+                
+                // Update title
+                if (currentIqraTitle) {
+                    currentIqraTitle.textContent = `📖 ${moduleData.title}`;
+                }
+                
+                // Update page info
+                if (pageInfo) {
+                    pageInfo.textContent = `Page ${currentPage} of ${maxPages}`;
+                }
+                
+                // Update frame source
+                if (iqraFrame) {
+                    // Use local Iqra book files
+                    const localUrl = `./assets/iqra/iqra-${currentModule}/page-${currentPage}.html`;
+                    iqraFrame.src = localUrl;
+                    
+                    // Handle loading error gracefully
+                    iqraFrame.onerror = () => {
+                        console.log(`Page ${currentPage} not found for module ${currentModule}`);
+                    };
+                }
+                
+                // Update navigation buttons
+                if (prevPageBtn) {
+                    prevPageBtn.disabled = currentPage === 1;
+                    prevPageBtn.style.opacity = currentPage === 1 ? '0.5' : '1';
+                }
+                
+                if (nextPageBtn) {
+                    nextPageBtn.disabled = currentPage === maxPages;
+                    nextPageBtn.style.opacity = currentPage === maxPages ? '0.5' : '1';
+                }
+            }
+            
+            // Initialize display
+            updateIqraDisplay();
+        }
+
+        // Mobile menu functionality
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize Al-Quran Learning Section
+            initializeAlQuranSection();
+            
+            // Mobile menu toggle
+            const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+            const mobileMenu = document.getElementById('mobileMenu');
+            const menuIcon = document.getElementById('menuIcon');
+            
+            if (mobileMenuToggle && mobileMenu) {
+                mobileMenuToggle.addEventListener('click', () => {
+                    mobileMenu.classList.toggle('hidden');
+                    
+                    // Animate hamburger icon
+                    if (mobileMenu.classList.contains('hidden')) {
+                        menuIcon.setAttribute('d', 'M4 6h16M4 12h16M4 18h16');
+                    } else {
+                        menuIcon.setAttribute('d', 'M6 18L18 6M6 6l12 12');
+                    }
+                });
+            }
+        });
+    </script>
+
+</body>
+</html>

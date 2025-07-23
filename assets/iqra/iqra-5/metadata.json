@@ -1,0 +1,169 @@
+{
+  "module": 5,
+  "title": "Mad & Waqaf",
+  "theme": "green",
+  "focus": "Lengthening & Stops",
+  "total_pages": 32,
+  "pages": [
+    {
+      "page_num": 1,
+      "image_path": "./images/page-01.jpg",
+      "file_size": 492955
+    },
+    {
+      "page_num": 2,
+      "image_path": "./images/page-02.jpg",
+      "file_size": 402345
+    },
+    {
+      "page_num": 3,
+      "image_path": "./images/page-03.jpg",
+      "file_size": 453523
+    },
+    {
+      "page_num": 4,
+      "image_path": "./images/page-04.jpg",
+      "file_size": 448920
+    },
+    {
+      "page_num": 5,
+      "image_path": "./images/page-05.jpg",
+      "file_size": 442576
+    },
+    {
+      "page_num": 6,
+      "image_path": "./images/page-06.jpg",
+      "file_size": 485785
+    },
+    {
+      "page_num": 7,
+      "image_path": "./images/page-07.jpg",
+      "file_size": 496418
+    },
+    {
+      "page_num": 8,
+      "image_path": "./images/page-08.jpg",
+      "file_size": 477020
+    },
+    {
+      "page_num": 9,
+      "image_path": "./images/page-09.jpg",
+      "file_size": 478339
+    },
+    {
+      "page_num": 10,
+      "image_path": "./images/page-10.jpg",
+      "file_size": 480026
+    },
+    {
+      "page_num": 11,
+      "image_path": "./images/page-11.jpg",
+      "file_size": 470950
+    },
+    {
+      "page_num": 12,
+      "image_path": "./images/page-12.jpg",
+      "file_size": 448932
+    },
+    {
+      "page_num": 13,
+      "image_path": "./images/page-13.jpg",
+      "file_size": 468911
+    },
+    {
+      "page_num": 14,
+      "image_path": "./images/page-14.jpg",
+      "file_size": 468260
+    },
+    {
+      "page_num": 15,
+      "image_path": "./images/page-15.jpg",
+      "file_size": 479151
+    },
+    {
+      "page_num": 16,
+      "image_path": "./images/page-16.jpg",
+      "file_size": 463119
+    },
+    {
+      "page_num": 17,
+      "image_path": "./images/page-17.jpg",
+      "file_size": 457641
+    },
+    {
+      "page_num": 18,
+      "image_path": "./images/page-18.jpg",
+      "file_size": 469448
+    },
+    {
+      "page_num": 19,
+      "image_path": "./images/page-19.jpg",
+      "file_size": 463173
+    },
+    {
+      "page_num": 20,
+      "image_path": "./images/page-20.jpg",
+      "file_size": 484754
+    },
+    {
+      "page_num": 21,
+      "image_path": "./images/page-21.jpg",
+      "file_size": 459922
+    },
+    {
+      "page_num": 22,
+      "image_path": "./images/page-22.jpg",
+      "file_size": 489074
+    },
+    {
+      "page_num": 23,
+      "image_path": "./images/page-23.jpg",
+      "file_size": 499172
+    },
+    {
+      "page_num": 24,
+      "image_path": "./images/page-24.jpg",
+      "file_size": 483116
+    },
+    {
+      "page_num": 25,
+      "image_path": "./images/page-25.jpg",
+      "file_size": 482561
+    },
+    {
+      "page_num": 26,
+      "image_path": "./images/page-26.jpg",
+      "file_size": 472863
+    },
+    {
+      "page_num": 27,
+      "image_path": "./images/page-27.jpg",
+      "file_size": 473733
+    },
+    {
+      "page_num": 28,
+      "image_path": "./images/page-28.jpg",
+      "file_size": 489401
+    },
+    {
+      "page_num": 29,
+      "image_path": "./images/page-29.jpg",
+      "file_size": 488462
+    },
+    {
+      "page_num": 30,
+      "image_path": "./images/page-30.jpg",
+      "file_size": 491395
+    },
+    {
+      "page_num": 31,
+      "image_path": "./images/page-31.jpg",
+      "file_size": 482630
+    },
+    {
+      "page_num": 32,
+      "image_path": "./images/page-32.jpg",
+      "file_size": 485728
+    }
+  ]
+}

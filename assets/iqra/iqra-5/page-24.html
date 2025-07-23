@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iqra 5 - Halaman 24 - Mad dan Waqaf</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Scheherazade+New:wght@400;700&display=swap&family=Sora:wght@400;600;700&display=swap');
+        
+        body {
+            margin: 0;
+            padding: 10px;
+            background: linear-gradient(135deg, #f0fdf4 0%, #f8fafc 100%);
+            font-family: 'Amiri', 'Scheherazade New', serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .page-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+            overflow: hidden;
+            max-width: 95vw;
+            max-height: 95vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .page-header {
+            background: linear-gradient(135deg, #16a34a 0%, #22c55e 100%);
+            color: white;
+            padding: 15px 20px;
+            text-align: center;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .page-title {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .page-number {
+            background: rgba(255,255,255,0.2);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+        
+        .image-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            background: #fafafa;
+        }
+        
+        .page-image {
+            max-width: 100%;
+            max-height: 70vh;
+            width: auto;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        
+        .page-image:hover {
+            transform: scale(1.02);
+        }
+        
+        .controls {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            border-top: 1px solid #e2e8f0;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #16a34a 0%, #22c55e 100%);
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            min-width: 100px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+        }
+        
+        .progress-bar {
+            background: #e2e8f0;
+            height: 4px;
+            width: 100%;
+        }
+        
+        .progress-fill {
+            background: linear-gradient(90deg, #16a34a 0%, #22c55e 100%);
+            height: 100%;
+            width: 75.0%;
+            transition: width 0.3s ease;
+        }
+        
+        @media (max-width: 600px) {
+            .page-header {
+                padding: 10px 15px;
+            }
+            
+            .page-title {
+                font-size: 16px;
+            }
+            
+            .btn {
+                min-width: 80px;
+                padding: 8px 12px;
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="progress-bar">
+        <div class="progress-fill"></div>
+    </div>
+    
+    <div class="page-container">
+        <div class="page-header">
+            <div class="page-title">
+                إقرأ 5 - Mad & Waqaf
+            </div>
+            <div class="page-number">
+                24 / 32
+            </div>
+        </div>
+        
+        <div class="image-container">
+            <img src="./images/page-24.jpg" 
+                 alt="Iqra 5 Halaman 24" 
+                 class="page-image"
+                 onclick="toggleFullscreen(this)"
+                 loading="lazy">
+        </div>
+        
+        <div class="controls">
+            <button class="btn" onclick="playPageAudio()">
+                🔊 Dengar
+            </button>
+            <button class="btn" onclick="repeatAudio()">
+                🔄 Ulang
+            </button>
+            <button class="btn" onclick="slowAudio()">
+                🐌 Perlahan
+            </button>
+            <button class="btn" onclick="showTajwid()">
+                📖 Tajwid
+            </button>
+        </div>
+    </div>
+    
+    <script>
+        // Audio system
+        function playPageAudio() {
+            const audio = new Audio(`../../audio/iqra/iqra5/page-24.mp3`);
+            audio.play().catch(e => {
+                console.log('Audio not available, showing visual feedback');
+                showAudioFeedback();
+            });
+        }
+        
+        function repeatAudio() {
+            playPageAudio();
+        }
+        
+        function slowAudio() {
+            const audio = new Audio(`../../audio/iqra/iqra5/page-24-slow.mp3`);
+            audio.play().catch(e => playPageAudio());
+        }
+        
+        function showAudioFeedback() {
+            document.body.style.animation = 'pulse 0.5s ease-in-out';
+            setTimeout(() => document.body.style.animation = '', 500);
+        }
+        
+        function showTajwid() {
+            // Show Tajwid rules overlay
+            alert('Tajwid rules untuk halaman ini akan ditunjukkan di sini.\n\nFitur ini akan dikembangkan dengan audio dan visual guide.');
+        }
+        
+        function toggleFullscreen(img) {
+            if (img.requestFullscreen) {
+                img.requestFullscreen();
+            } else if (img.webkitRequestFullscreen) {
+                img.webkitRequestFullscreen();
+            } else if (img.msRequestFullscreen) {
+                img.msRequestFullscreen();
+            }
+        }
+        
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') {
+                window.parent.postMessage({action: 'nextPage'}, '*');
+            }
+            if (e.key === 'ArrowRight') {
+                window.parent.postMessage({action: 'prevPage'}, '*');
+            }
+            if (e.key === ' ') {
+                e.preventDefault();
+                playPageAudio();
+            }
+            if (e.key === 'f') {
+                const img = document.querySelector('.page-image');
+                toggleFullscreen(img);
+            }
+        });
+        
+        // Loading animation
+        document.addEventListener('DOMContentLoaded', () => {
+            const img = document.querySelector('.page-image');
+            img.onload = () => {
+                img.style.opacity = '0';
+                img.style.animation = 'fadeIn 0.5s ease-in-out forwards';
+            };
+        });
+        
+        // Add CSS for animations
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(20px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+            @keyframes pulse {
+                0%, 100% { transform: scale(1); }
+                50% { transform: scale(1.02); }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+
+    <!-- Load Ustaz Radhi AI Chatbox -->
+    <script src="../ustaz-radhi-chatbox.js"></script>
+</body>
+</html>

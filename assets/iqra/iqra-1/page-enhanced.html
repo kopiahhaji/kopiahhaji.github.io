@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <title>Iqra 1 - Enhanced Learning</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Scheherazade+New:wght@400;700&display=swap');
+        
+        body { 
+            font-family: 'Amiri', 'Scheherazade New', 'Traditional Arabic', serif; 
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            margin: 0; 
+            padding: 10px;
+            min-height: 100vh;
+            direction: rtl;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header { 
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+            color: white; 
+            padding: 20px; 
+            text-align: center;
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .header .subtitle {
+            margin: 5px 0 0 0;
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .content { 
+            padding: 20px;
+        }
+        
+        .lesson-section {
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .lesson-title {
+            background: linear-gradient(135deg, #e8f5e8 0%, #d1fae5 100%);
+            color: #059669;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+            border: 2px solid #bbf7d0;
+        }
+        
+        .arabic-display {
+            text-align: center;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            margin: 20px 0;
+        }
+        
+        .arabic-letters { 
+            font-size: 64px; 
+            line-height: 1.2; 
+            color: #059669;
+            margin: 20px 0;
+            letter-spacing: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .arabic-letters:hover {
+            color: #047857;
+            transform: scale(1.05);
+        }
+        
+        .pronunciation {
+            color: #059669;
+            font-size: 16px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        
+        .pronunciation-detail {
+            font-size: 14px;
+            color: #666;
+            font-style: italic;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            min-width: 120px;
+        }
+        
+        .btn:hover {
+            background: linear-gradient(135deg, #047857 0%, #065f46 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(5, 150, 105, 0.3);
+        }
+        
+        .btn:disabled {
+            background: #cbd5e0;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, #0891b2 0%, #0e7490 100%);
+        }
+        
+        .btn-secondary:hover {
+            background: linear-gradient(135deg, #0e7490 0%, #155e75 100%);
+        }
+        
+        .instruction-panel {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border: 2px solid #f59e0b;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .instruction-title {
+            color: #92400e;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .instruction-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .instruction-list li {
+            background: white;
+            margin: 8px 0;
+            padding: 12px;
+            border-radius: 6px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-left: 4px solid #f59e0b;
+        }
+        
+        .tajwid-rules {
+            background: linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%);
+            border: 2px solid #8b5cf6;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .tajwid-title {
+            color: #6b21a8;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .rule-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .rule-title {
+            color: #7c3aed;
+            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+        
+        .rule-example {
+            font-size: 24px;
+            color: #7c3aed;
+            text-align: center;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+        
+        .navigation {
+            background: #f1f5f9;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 2px solid #e2e8f0;
+        }
+        
+        .page-info {
+            background: #059669;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #059669 0%, #10b981 100%);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+        
+        .audio-player {
+            background: #f0f9ff;
+            border: 2px solid #0891b2;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+            text-align: center;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                margin: 0;
+                border-radius: 0;
+            }
+            
+            .arabic-letters {
+                font-size: 48px;
+                letter-spacing: 10px;
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                min-width: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>إقرأ ١ - تعلم الحروف الهجائية</h1>
+            <div class="subtitle">Iqra 1 - Learning Arabic Letters (Mazhab Syafie)</div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill" style="width: 25%;"></div>
+            </div>
+        </div>
+        
+        <!-- Content -->
+        <div class="content">
+            <!-- Lesson Introduction -->
+            <div class="lesson-section">
+                <div class="lesson-title">
+                    بِسْمِ اللهِ الرَّحْمٰنِ الرَّحِيْمِ
+                </div>
+                
+                <div class="arabic-display">
+                    <div style="font-size: 20px; color: #059669; margin-bottom: 15px;">
+                        اقْرَأْ بِاسْمِ رَبِّكَ الَّذِي خَلَقَ
+                    </div>
+                    <div style="font-size: 14px; color: #666; font-style: italic;">
+                        "Bacalah dengan nama Tuhanmu yang menciptakan" (Al-Alaq: 1)
+                    </div>
+                </div>
+                
+                <!-- Current Letters Display -->
+                <div class="arabic-display">
+                    <div id="currentLetters" class="arabic-letters" onclick="playAudio()">
+                        ا ب ت ث
+                    </div>
+                    <div id="pronunciation" class="pronunciation">Alif - Ba - Ta - Tsa</div>
+                    <div class="pronunciation-detail">Klik huruf untuk mendengar sebutan</div>
+                </div>
+                
+                <!-- Audio Player -->
+                <div class="audio-player" id="audioPlayer">
+                    <div style="color: #0891b2; font-weight: bold; margin-bottom: 10px;">
+                        🔊 Sebutan Audio
+                    </div>
+                    <audio id="letterAudio" controls style="width: 100%;">
+                        <source src="../../audio/iqra/iqra1-alif-ba-ta-tsa.mp3" type="audio/mpeg">
+                        Browser anda tidak menyokong audio player.
+                    </audio>
+                </div>
+                
+                <!-- Controls -->
+                <div class="controls">
+                    <button class="btn" onclick="playAudio()">
+                        🔊 Dengar Sebutan
+                    </button>
+                    <button class="btn btn-secondary" onclick="repeatLesson()">
+                        🔄 Ulang Pelajaran
+                    </button>
+                    <button class="btn btn-secondary" onclick="showInstructions()">
+                        📖 Panduan
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Instructions Panel -->
+            <div class="instruction-panel" id="instructionPanel">
+                <div class="instruction-title">
+                    📚 Panduan Pembelajaran Iqra 1
+                </div>
+                <ul class="instruction-list">
+                    <li><strong>Langkah 1:</strong> Dengar sebutan setiap huruf dengan teliti</li>
+                    <li><strong>Langkah 2:</strong> Ulang sebutan mengikut audio 3-5 kali</li>
+                    <li><strong>Langkah 3:</strong> Latih sebutan tanpa melihat teks</li>
+                    <li><strong>Langkah 4:</strong> Minta ustaz/guru sahkan sebutan anda</li>
+                    <li><strong>Ingat:</strong> Kesabaran dan konsistensi adalah kunci kejayaan</li>
+                </ul>
+            </div>
+            
+            <!-- Tajwid Rules -->
+            <div class="tajwid-rules" id="tajwidRules">
+                <div class="tajwid-title">
+                    🎯 Tajwid Asas - Huruf Hijaiyyah
+                </div>
+                
+                <div class="rule-item">
+                    <div class="rule-title">1. Makharij Al-Huruf (Tempat Keluar Huruf)</div>
+                    <div style="color: #666; font-size: 14px;">
+                        Setiap huruf mempunyai tempat keluar yang khusus dari tenggorok, lidah, atau bibir
+                    </div>
+                    <div class="rule-example">ا (الف) - Keluar dari tenggorok dalam</div>
+                </div>
+                
+                <div class="rule-item">
+                    <div class="rule-title">2. Sifat Al-Huruf (Sifat Huruf)</div>
+                    <div style="color: #666; font-size: 14px;">
+                        Huruf ب (Ba) - Sifat: Jahr (terang), Syiddah (kuat), Qalqalah
+                    </div>
+                    <div class="rule-example">ب - بَ - بِ - بُ</div>
+                </div>
+                
+                <div class="rule-item">
+                    <div class="rule-title">3. Adab Membaca</div>
+                    <div style="color: #666; font-size: 14px;">
+                        • Berwudhu terlebih dahulu<br>
+                        • Duduk menghadap kiblat<br>
+                        • Mulakan dengan Ta'awwudz dan Basmalah
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Navigation -->
+        <div class="navigation">
+            <button class="btn" id="prevBtn" onclick="previousPage()" disabled>
+                ← Sebelum
+            </button>
+            
+            <div class="page-info" id="pageInfo">
+                Halaman 1 dari 20
+            </div>
+            
+            <button class="btn" id="nextBtn" onclick="nextPage()">
+                Seterusnya →
+            </button>
+        </div>
+    </div>
+    
+    <script>
+        // Iqra Learning System JavaScript
+        class IqraLearningSystem {
+            constructor() {
+                this.currentPage = 1;
+                this.totalPages = 20;
+                this.currentModule = 1;
+                this.showingInstructions = false;
+                
+                // Letter groups for Iqra 1
+                this.letterGroups = {
+                    1: { letters: 'ا ب ت ث', pronunciation: 'Alif - Ba - Ta - Tsa', audio: 'iqra1-alif-ba-ta-tsa.mp3' },
+                    2: { letters: 'ج ح خ د', pronunciation: 'Jim - Ha - Kha - Dal', audio: 'iqra1-jim-ha-kha-dal.mp3' },
+                    3: { letters: 'ذ ر ز س', pronunciation: 'Dzal - Ra - Zay - Sin', audio: 'iqra1-dzal-ra-zay-sin.mp3' },
+                    4: { letters: 'ش ص ض ط', pronunciation: 'Syin - Shad - Dhad - Tha', audio: 'iqra1-syin-shad-dhad-tha.mp3' },
+                    5: { letters: 'ظ ع غ ف', pronunciation: 'Zha - Ain - Ghain - Fa', audio: 'iqra1-zha-ain-ghain-fa.mp3' }
+                };
+                
+                this.updateDisplay();
+                this.initializeEventListeners();
+            }
+            
+            updateDisplay() {
+                const group = this.letterGroups[Math.min(this.currentPage, 5)] || this.letterGroups[1];
+                
+                document.getElementById('currentLetters').textContent = group.letters;
+                document.getElementById('pronunciation').textContent = group.pronunciation;
+                document.getElementById('pageInfo').textContent = `Halaman ${this.currentPage} dari ${this.totalPages}`;
+                
+                // Update audio source
+                const audio = document.getElementById('letterAudio');
+                audio.src = `../../audio/iqra/${group.audio}`;
+                
+                // Update progress
+                const progress = (this.currentPage / this.totalPages) * 100;
+                document.getElementById('progressFill').style.width = `${progress}%`;
+                
+                // Update navigation buttons
+                document.getElementById('prevBtn').disabled = this.currentPage === 1;
+                document.getElementById('nextBtn').disabled = this.currentPage === this.totalPages;
+            }
+            
+            initializeEventListeners() {
+                // Keyboard navigation
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'ArrowLeft') this.nextPage();
+                    if (e.key === 'ArrowRight') this.previousPage();
+                    if (e.key === ' ') { e.preventDefault(); this.playAudio(); }
+                });
+            }
+            
+            playAudio() {
+                const audio = document.getElementById('letterAudio');
+                audio.play().catch(e => {
+                    console.log('Audio playback failed:', e);
+                    // Fallback: show visual feedback
+                    const letters = document.getElementById('currentLetters');
+                    letters.style.animation = 'pulse 0.5s ease-in-out';
+                    setTimeout(() => letters.style.animation = '', 500);
+                });
+            }
+            
+            nextPage() {
+                if (this.currentPage < this.totalPages) {
+                    this.currentPage++;
+                    this.updateDisplay();
+                    this.hideInstructions();
+                }
+            }
+            
+            previousPage() {
+                if (this.currentPage > 1) {
+                    this.currentPage--;
+                    this.updateDisplay();
+                    this.hideInstructions();
+                }
+            }
+            
+            repeatLesson() {
+                // Reset to current lesson and play audio
+                this.playAudio();
+                
+                // Visual feedback
+                const display = document.getElementById('currentLetters');
+                display.style.animation = 'bounce 1s ease-in-out';
+                setTimeout(() => display.style.animation = '', 1000);
+            }
+            
+            showInstructions() {
+                const panel = document.getElementById('instructionPanel');
+                const tajwid = document.getElementById('tajwidRules');
+                
+                if (this.showingInstructions) {
+                    panel.classList.add('hidden');
+                    tajwid.classList.add('hidden');
+                    this.showingInstructions = false;
+                } else {
+                    panel.classList.remove('hidden');
+                    tajwid.classList.remove('hidden');
+                    this.showingInstructions = true;
+                    
+                    // Scroll to instructions
+                    panel.scrollIntoView({ behavior: 'smooth' });
+                }
+            }
+            
+            hideInstructions() {
+                document.getElementById('instructionPanel').classList.add('hidden');
+                document.getElementById('tajwidRules').classList.add('hidden');
+                this.showingInstructions = false;
+            }
+        }
+        
+        // Global functions for HTML onclick events
+        let iqraSystem;
+        
+        function playAudio() {
+            iqraSystem.playAudio();
+        }
+        
+        function nextPage() {
+            iqraSystem.nextPage();
+        }
+        
+        function previousPage() {
+            iqraSystem.previousPage();
+        }
+        
+        function repeatLesson() {
+            iqraSystem.repeatLesson();
+        }
+        
+        function showInstructions() {
+            iqraSystem.showInstructions();
+        }
+        
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            iqraSystem = new IqraLearningSystem();
+            
+            // Add CSS animations
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes pulse {
+                    0%, 100% { transform: scale(1); }
+                    50% { transform: scale(1.1); }
+                }
+                
+                @keyframes bounce {
+                    0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+                    40% { transform: translateY(-10px); }
+                    60% { transform: translateY(-5px); }
+                }
+            `;
+            document.head.appendChild(style);
+        });
+    </script>
+</body>
+</html>

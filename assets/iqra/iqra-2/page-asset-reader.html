@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <title>Iqra 2 - Enhanced with Assets</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Scheherazade+New:wght@400;700&display=swap');
+        
+        body { 
+            font-family: 'Amiri', 'Scheherazade New', 'Traditional Arabic', serif; 
+            background: linear-gradient(135deg, #f0f8ff 0%, #e6f3ff 100%);
+            margin: 0; 
+            padding: 10px;
+            min-height: 100vh;
+            direction: rtl;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header { 
+            background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%);
+            color: white; 
+            padding: 20px; 
+            text-align: center;
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .content { 
+            padding: 20px;
+        }
+        
+        .page-viewer {
+            background: #f8fafc;
+            border: 3px solid #e2e8f0;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .page-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            margin: 20px 0;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        
+        .page-image:hover {
+            transform: scale(1.05);
+        }
+        
+        .page-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        .page-selector {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 10px;
+            margin: 20px 0;
+            max-height: 200px;
+            overflow-y: auto;
+            padding: 15px;
+            background: #f1f5f9;
+            border-radius: 10px;
+        }
+        
+        .page-thumb {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .page-thumb:hover {
+            border-color: #1e40af;
+            background: #dbeafe;
+        }
+        
+        .page-thumb.active {
+            border-color: #1e40af;
+            background: #1e40af;
+            color: white;
+        }
+        
+        .audio-section {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            border: 2px solid #0891b2;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .audio-title {
+            color: #0891b2;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .audio-controls {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 15px 0;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            min-width: 120px;
+        }
+        
+        .btn:hover {
+            background: linear-gradient(135deg, #1e3a8a 0%, #1e293b 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(30, 64, 175, 0.3);
+        }
+        
+        .btn-audio {
+            background: linear-gradient(135deg, #0891b2 0%, #0e7490 100%);
+        }
+        
+        .btn-audio:hover {
+            background: linear-gradient(135deg, #0e7490 0%, #155e75 100%);
+        }
+        
+        .progress-section {
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+            border: 2px solid #22c55e;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 12px;
+            background: #e2e8f0;
+            border-radius: 6px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #22c55e 0%, #16a34a 100%);
+            border-radius: 6px;
+            transition: width 0.5s ease;
+        }
+        
+        .navigation {
+            background: #f1f5f9;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 2px solid #e2e8f0;
+        }
+        
+        .fullscreen-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .fullscreen-image {
+            max-width: 95%;
+            max-height: 95%;
+            border-radius: 10px;
+        }
+        
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #333;
+        }
+        
+        @media (max-width: 600px) {
+            .page-controls {
+                flex-direction: column;
+            }
+            
+            .btn {
+                min-width: 200px;
+            }
+            
+            .page-selector {
+                grid-template-columns: repeat(5, 1fr);
+            }
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+        
+        .error-message {
+            background: #fef2f2;
+            border: 2px solid #fca5a5;
+            color: #dc2626;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>إقرأ ٢ - الفتحة والحركات</h1>
+            <div class="subtitle">Iqra 2 - Interactive Book Reader with Assets</div>
+        </div>
+        
+        <!-- Content -->
+        <div class="content">
+            <!-- Page Viewer -->
+            <div class="page-viewer">
+                <div class="loading" id="loadingMessage">
+                    جاري التحميل... Loading page images...
+                </div>
+                
+                <img id="currentPageImage" class="page-image" style="display: none;" 
+                     onclick="openFullscreen()" alt="Iqra Page">
+                
+                <div class="error-message" id="errorMessage" style="display: none;">
+                    صفحة غير متوفرة - Page not available. Please add images to assets/iqra/images/iqra-2/
+                </div>
+                
+                <div class="page-controls">
+                    <button class="btn" onclick="previousPage()">
+                        ← الصفحة السابقة
+                    </button>
+                    
+                    <div style="background: #1e40af; color: white; padding: 8px 16px; border-radius: 20px; font-weight: bold;">
+                        <span id="pageNumber">صفحة 1</span>
+                    </div>
+                    
+                    <button class="btn" onclick="nextPage()">
+                        الصفحة التالية →
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Page Selector -->
+            <div class="progress-section">
+                <div style="color: #15803d; font-size: 18px; font-weight: bold; margin-bottom: 15px; text-align: center;">
+                    📖 اختر الصفحة - Page Selection
+                </div>
+                
+                <div class="page-selector" id="pageSelector">
+                    <!-- Pages will be generated by JavaScript -->
+                </div>
+                
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill" style="width: 5%;"></div>
+                </div>
+                
+                <div style="text-align: center; color: #15803d; font-weight: bold;">
+                    التقدم: <span id="progressText">1 من 20 صفحة</span>
+                </div>
+            </div>
+            
+            <!-- Audio Section -->
+            <div class="audio-section">
+                <div class="audio-title">
+                    🔊 الصوتيات والنطق - Audio & Pronunciation
+                </div>
+                
+                <audio id="pageAudio" controls style="width: 100%; margin: 15px 0;">
+                    <source id="audioSource" src="" type="audio/mpeg">
+                    متصفحك لا يدعم مشغل الصوت
+                </audio>
+                
+                <div class="audio-controls">
+                    <button class="btn btn-audio" onclick="playPageAudio()">
+                        🎵 صوت الصفحة
+                    </button>
+                    <button class="btn btn-audio" onclick="playSlowAudio()">
+                        🐌 نطق بطيء
+                    </button>
+                    <button class="btn btn-audio" onclick="repeatAudio()">
+                        🔄 إعادة
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Navigation -->
+        <div class="navigation">
+            <button class="btn" onclick="goToModule('iqra-1')">
+                ← إقرأ ١
+            </button>
+            
+            <div style="background: #1e40af; color: white; padding: 8px 16px; border-radius: 20px; font-weight: bold;">
+                Iqra 2 - Asset Reader
+            </div>
+            
+            <button class="btn" onclick="goToModule('iqra-3')">
+                إقرأ ٣ →
+            </button>
+        </div>
+    </div>
+    
+    <!-- Fullscreen Modal -->
+    <div class="fullscreen-modal" id="fullscreenModal" onclick="closeFullscreen()">
+        <button class="close-btn" onclick="closeFullscreen()">×</button>
+        <img class="fullscreen-image" id="fullscreenImage" alt="Fullscreen Page">
+    </div>
+    
+    <script>
+        // Enhanced Iqra Asset Reader System
+        class IqraAssetReader {
+            constructor() {
+                this.currentPage = 1;
+                this.totalPages = 20; // Adjust based on your Iqra 2 book
+                this.currentModule = 'iqra-2';
+                this.imageBasePath = '../images/iqra-2/';
+                this.audioBasePath = '../../audio/iqra/iqra-2/';
+                
+                // Common image formats to try
+                this.imageFormats = ['jpg', 'jpeg', 'png', 'webp'];
+                this.audioFormats = ['mp3', 'wav', 'ogg'];
+                
+                this.initializeReader();
+            }
+            
+            initializeReader() {
+                this.generatePageSelector();
+                this.loadPage(1);
+                this.setupKeyboardNavigation();
+                
+                console.log('Iqra Asset Reader initialized');
+            }
+            
+            generatePageSelector() {
+                const selector = document.getElementById('pageSelector');
+                selector.innerHTML = '';
+                
+                for (let i = 1; i <= this.totalPages; i++) {
+                    const pageThumb = document.createElement('div');
+                    pageThumb.className = 'page-thumb';
+                    pageThumb.textContent = i;
+                    pageThumb.onclick = () => this.loadPage(i);
+                    
+                    if (i === this.currentPage) {
+                        pageThumb.classList.add('active');
+                    }
+                    
+                    selector.appendChild(pageThumb);
+                }
+            }
+            
+            async loadPage(pageNumber) {
+                if (pageNumber < 1 || pageNumber > this.totalPages) return;
+                
+                this.currentPage = pageNumber;
+                this.updateProgress();
+                
+                // Show loading
+                document.getElementById('loadingMessage').style.display = 'block';
+                document.getElementById('currentPageImage').style.display = 'none';
+                document.getElementById('errorMessage').style.display = 'none';
+                
+                // Try to load image
+                const imagePath = await this.findImageFile(pageNumber);
+                if (imagePath) {
+                    this.displayImage(imagePath);
+                } else {
+                    this.showError();
+                }
+                
+                // Try to load audio
+                const audioPath = await this.findAudioFile(pageNumber);
+                if (audioPath) {
+                    this.loadAudio(audioPath);
+                }
+                
+                // Update page selector
+                this.updatePageSelector();
+            }
+            
+            async findImageFile(pageNumber) {
+                const paddedNumber = pageNumber.toString().padStart(2, '0');
+                const possibleNames = [
+                    `page-${paddedNumber}`,
+                    `page${paddedNumber}`,
+                    `${paddedNumber}`,
+                    `iqra2-page-${paddedNumber}`,
+                    `iqra-2-page-${paddedNumber}`
+                ];
+                
+                for (const name of possibleNames) {
+                    for (const format of this.imageFormats) {
+                        const imagePath = `${this.imageBasePath}${name}.${format}`;
+                        if (await this.checkFileExists(imagePath)) {
+                            return imagePath;
+                        }
+                    }
+                }
+                
+                return null;
+            }
+            
+            async findAudioFile(pageNumber) {
+                const paddedNumber = pageNumber.toString().padStart(2, '0');
+                const possibleNames = [
+                    `page-${paddedNumber}`,
+                    `page${paddedNumber}`,
+                    `${paddedNumber}`,
+                    `iqra2-page-${paddedNumber}`
+                ];
+                
+                for (const name of possibleNames) {
+                    for (const format of this.audioFormats) {
+                        const audioPath = `${this.audioBasePath}${name}.${format}`;
+                        if (await this.checkFileExists(audioPath)) {
+                            return audioPath;
+                        }
+                    }
+                }
+                
+                return null;
+            }
+            
+            async checkFileExists(url) {
+                try {
+                    const response = await fetch(url, { method: 'HEAD' });
+                    return response.ok;
+                } catch (error) {
+                    return false;
+                }
+            }
+            
+            displayImage(imagePath) {
+                const img = document.getElementById('currentPageImage');
+                img.src = imagePath;
+                img.style.display = 'block';
+                document.getElementById('loadingMessage').style.display = 'none';
+                
+                // Update page number display
+                document.getElementById('pageNumber').textContent = `صفحة ${this.currentPage}`;
+            }
+            
+            showError() {
+                document.getElementById('loadingMessage').style.display = 'none';
+                document.getElementById('errorMessage').style.display = 'block';
+            }
+            
+            loadAudio(audioPath) {
+                const audioSource = document.getElementById('audioSource');
+                const audio = document.getElementById('pageAudio');
+                audioSource.src = audioPath;
+                audio.load();
+            }
+            
+            updateProgress() {
+                const progress = (this.currentPage / this.totalPages) * 100;
+                document.getElementById('progressFill').style.width = `${progress}%`;
+                document.getElementById('progressText').textContent = `${this.currentPage} من ${this.totalPages} صفحة`;
+            }
+            
+            updatePageSelector() {
+                const thumbs = document.querySelectorAll('.page-thumb');
+                thumbs.forEach((thumb, index) => {
+                    thumb.classList.toggle('active', index + 1 === this.currentPage);
+                });
+            }
+            
+            setupKeyboardNavigation() {
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'ArrowLeft') this.nextPage();
+                    if (e.key === 'ArrowRight') this.previousPage();
+                    if (e.key === ' ') { e.preventDefault(); this.playPageAudio(); }
+                    if (e.key === 'f' || e.key === 'F') this.openFullscreen();
+                    if (e.key === 'Escape') this.closeFullscreen();
+                });
+            }
+            
+            nextPage() {
+                if (this.currentPage < this.totalPages) {
+                    this.loadPage(this.currentPage + 1);
+                }
+            }
+            
+            previousPage() {
+                if (this.currentPage > 1) {
+                    this.loadPage(this.currentPage - 1);
+                }
+            }
+            
+            playPageAudio() {
+                const audio = document.getElementById('pageAudio');
+                audio.play().catch(e => {
+                    console.log('Audio playback failed:', e);
+                });
+            }
+            
+            playSlowAudio() {
+                const audio = document.getElementById('pageAudio');
+                audio.playbackRate = 0.7;
+                audio.play().catch(e => {
+                    console.log('Audio playback failed:', e);
+                });
+            }
+            
+            repeatAudio() {
+                const audio = document.getElementById('pageAudio');
+                audio.currentTime = 0;
+                audio.playbackRate = 1.0;
+                audio.play().catch(e => {
+                    console.log('Audio playback failed:', e);
+                });
+            }
+            
+            openFullscreen() {
+                const img = document.getElementById('currentPageImage');
+                if (img.src) {
+                    document.getElementById('fullscreenImage').src = img.src;
+                    document.getElementById('fullscreenModal').style.display = 'flex';
+                }
+            }
+            
+            closeFullscreen() {
+                document.getElementById('fullscreenModal').style.display = 'none';
+            }
+            
+            goToModule(module) {
+                // Send message to parent window for navigation
+                window.parent.postMessage({action: 'navigate', module: module}, '*');
+            }
+        }
+        
+        // Global functions for HTML onclick events
+        let iqraReader;
+        
+        function nextPage() {
+            iqraReader.nextPage();
+        }
+        
+        function previousPage() {
+            iqraReader.previousPage();
+        }
+        
+        function playPageAudio() {
+            iqraReader.playPageAudio();
+        }
+        
+        function playSlowAudio() {
+            iqraReader.playSlowAudio();
+        }
+        
+        function repeatAudio() {
+            iqraReader.repeatAudio();
+        }
+        
+        function openFullscreen() {
+            iqraReader.openFullscreen();
+        }
+        
+        function closeFullscreen() {
+            iqraReader.closeFullscreen();
+        }
+        
+        function goToModule(module) {
+            iqraReader.goToModule(module);
+        }
+        
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            iqraReader = new IqraAssetReader();
+        });
+    </script>
+</body>
+</html>

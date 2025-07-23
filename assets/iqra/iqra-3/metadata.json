@@ -1,0 +1,169 @@
+{
+  "module": 3,
+  "title": "Kasrah & Sukukun",
+  "theme": "purple",
+  "focus": "Vowel Marks",
+  "total_pages": 32,
+  "pages": [
+    {
+      "page_num": 1,
+      "image_path": "./images/page-01.jpg",
+      "file_size": 432962
+    },
+    {
+      "page_num": 2,
+      "image_path": "./images/page-02.jpg",
+      "file_size": 447857
+    },
+    {
+      "page_num": 3,
+      "image_path": "./images/page-03.jpg",
+      "file_size": 476388
+    },
+    {
+      "page_num": 4,
+      "image_path": "./images/page-04.jpg",
+      "file_size": 478130
+    },
+    {
+      "page_num": 5,
+      "image_path": "./images/page-05.jpg",
+      "file_size": 482309
+    },
+    {
+      "page_num": 6,
+      "image_path": "./images/page-06.jpg",
+      "file_size": 475017
+    },
+    {
+      "page_num": 7,
+      "image_path": "./images/page-07.jpg",
+      "file_size": 481349
+    },
+    {
+      "page_num": 8,
+      "image_path": "./images/page-08.jpg",
+      "file_size": 469089
+    },
+    {
+      "page_num": 9,
+      "image_path": "./images/page-09.jpg",
+      "file_size": 475838
+    },
+    {
+      "page_num": 10,
+      "image_path": "./images/page-10.jpg",
+      "file_size": 468589
+    },
+    {
+      "page_num": 11,
+      "image_path": "./images/page-11.jpg",
+      "file_size": 478680
+    },
+    {
+      "page_num": 12,
+      "image_path": "./images/page-12.jpg",
+      "file_size": 477972
+    },
+    {
+      "page_num": 13,
+      "image_path": "./images/page-13.jpg",
+      "file_size": 476099
+    },
+    {
+      "page_num": 14,
+      "image_path": "./images/page-14.jpg",
+      "file_size": 484190
+    },
+    {
+      "page_num": 15,
+      "image_path": "./images/page-15.jpg",
+      "file_size": 477796
+    },
+    {
+      "page_num": 16,
+      "image_path": "./images/page-16.jpg",
+      "file_size": 464170
+    },
+    {
+      "page_num": 17,
+      "image_path": "./images/page-17.jpg",
+      "file_size": 474993
+    },
+    {
+      "page_num": 18,
+      "image_path": "./images/page-18.jpg",
+      "file_size": 478286
+    },
+    {
+      "page_num": 19,
+      "image_path": "./images/page-19.jpg",
+      "file_size": 476769
+    },
+    {
+      "page_num": 20,
+      "image_path": "./images/page-20.jpg",
+      "file_size": 504834
+    },
+    {
+      "page_num": 21,
+      "image_path": "./images/page-21.jpg",
+      "file_size": 488487
+    },
+    {
+      "page_num": 22,
+      "image_path": "./images/page-22.jpg",
+      "file_size": 489547
+    },
+    {
+      "page_num": 23,
+      "image_path": "./images/page-23.jpg",
+      "file_size": 486530
+    },
+    {
+      "page_num": 24,
+      "image_path": "./images/page-24.jpg",
+      "file_size": 487820
+    },
+    {
+      "page_num": 25,
+      "image_path": "./images/page-25.jpg",
+      "file_size": 493222
+    },
+    {
+      "page_num": 26,
+      "image_path": "./images/page-26.jpg",
+      "file_size": 485452
+    },
+    {
+      "page_num": 27,
+      "image_path": "./images/page-27.jpg",
+      "file_size": 497852
+    },
+    {
+      "page_num": 28,
+      "image_path": "./images/page-28.jpg",
+      "file_size": 482248
+    },
+    {
+      "page_num": 29,
+      "image_path": "./images/page-29.jpg",
+      "file_size": 493179
+    },
+    {
+      "page_num": 30,
+      "image_path": "./images/page-30.jpg",
+      "file_size": 503226
+    },
+    {
+      "page_num": 31,
+      "image_path": "./images/page-31.jpg",
+      "file_size": 512458
+    },
+    {
+      "page_num": 32,
+      "image_path": "./images/page-32.jpg",
+      "file_size": 510418
+    }
+  ]
+}

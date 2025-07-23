@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buku Iqra Lengkap - Digital Learning</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .title {
+            font-size: 36px;
+            color: #2d3748;
+            margin: 0 0 10px 0;
+        }
+        
+        .subtitle {
+            color: #666;
+            font-size: 18px;
+        }
+        
+        .modules-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .module-card {
+            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+            border: 2px solid #e2e8f0;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .module-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            border-color: #4299e1;
+        }
+        
+        .module-number {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+        
+        .module-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2d3748;
+            margin-bottom: 10px;
+        }
+        
+        .module-description {
+            color: #666;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="title">📚 Buku Iqra Lengkap</h1>
+            <p class="subtitle">Platform Pembelajaran Digital Islam</p>
+        </div>
+        
+        <div class="modules-grid">
+            <div class="module-card" onclick="openModule(1)">
+                <div class="module-number">📖</div>
+                <div class="module-title">Iqra 1</div>
+                <div style="color: #4299e1; font-weight: bold; margin: 5px 0;">Huruf Hijaiyyah</div>
+                <div class="module-description">Basic Arabic Letters</div>
+            </div>
+            <div class="module-card" onclick="openModule(2)">
+                <div class="module-number">📖</div>
+                <div class="module-title">Iqra 2</div>
+                <div style="color: #4299e1; font-weight: bold; margin: 5px 0;">Fathah & Baris</div>
+                <div class="module-description">Harakat System</div>
+            </div>
+            <div class="module-card" onclick="openModule(3)">
+                <div class="module-number">📖</div>
+                <div class="module-title">Iqra 3</div>
+                <div style="color: #4299e1; font-weight: bold; margin: 5px 0;">Kasrah & Sukukun</div>
+                <div class="module-description">Vowel Marks</div>
+            </div>
+            <div class="module-card" onclick="openModule(4)">
+                <div class="module-number">📖</div>
+                <div class="module-title">Iqra 4</div>
+                <div style="color: #4299e1; font-weight: bold; margin: 5px 0;">Mad & Tanwin</div>
+                <div class="module-description">Extended Vowels</div>
+            </div>
+            <div class="module-card" onclick="openModule(5)">
+                <div class="module-number">📖</div>
+                <div class="module-title">Iqra 5</div>
+                <div style="color: #4299e1; font-weight: bold; margin: 5px 0;">Mad & Waqaf</div>
+                <div class="module-description">Lengthening & Stops</div>
+            </div>
+            <div class="module-card" onclick="openModule(6)">
+                <div class="module-number">📖</div>
+                <div class="module-title">Iqra 6</div>
+                <div style="color: #4299e1; font-weight: bold; margin: 5px 0;">Tajwid Asas</div>
+                <div class="module-description">Basic Tajwid Rules</div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function openModule(moduleNum) {
+            window.open(`iqra-${moduleNum}/index.html`, '_blank');
+        }
+    </script>
+</body>
+</html>
