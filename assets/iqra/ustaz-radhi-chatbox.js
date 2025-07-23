@@ -15,10 +15,10 @@ class UstazRadhiIqraChatbox {
             ...config
         };
 
-        // Gemini AI Configuration (same as main ustaz.html)
+        // Secure Gemini AI Configuration - API key moved to server-side proxy
         this.GEMINI_CONFIG = {
-            API_KEY: 'AIzaSyCpJ2hv2x4AJeofGNlISs-_9AEebuDF7OA',
-            API_URL: 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent',
+            // API_KEY removed for security - now handled by server proxy
+            PROXY_URL: '/api/gemini-proxy', // Cloudflare Pages function endpoint
             MAX_TOKENS: 1000,
             TEMPERATURE: 0.7,
             RETRY_ATTEMPTS: 2,
@@ -914,30 +914,30 @@ class UstazRadhiIqraChatbox {
     async callGeminiAPI(message) {
         const prompt = this.buildContextualPrompt(message);
         
-        const response = await fetch(`${this.GEMINI_CONFIG.API_URL}?key=${this.GEMINI_CONFIG.API_KEY}`, {
+        // Use secure proxy endpoint instead of direct API call
+        const response = await fetch(this.GEMINI_CONFIG.PROXY_URL, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                contents: [{
-                    parts: [{
-                        text: prompt
-                    }]
-                }],
-                generationConfig: {
-                    temperature: this.GEMINI_CONFIG.TEMPERATURE,
-                    maxOutputTokens: this.GEMINI_CONFIG.MAX_TOKENS
-                }
+                prompt: prompt,
+                temperature: this.GEMINI_CONFIG.TEMPERATURE,
+                maxTokens: this.GEMINI_CONFIG.MAX_TOKENS
             })
         });
 
         if (!response.ok) {
-            throw new Error('Gemini API failed');
+            throw new Error('Proxy API failed');
         }
 
         const data = await response.json();
-        return data.candidates[0].content.parts[0].text;
+        
+        if (data.success && data.response) {
+            return data.response;
+        }
+        
+        throw new Error('No valid response from API');
     }
 
     buildContextualPrompt(message) {

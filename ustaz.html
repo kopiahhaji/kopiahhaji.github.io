@@ -7,15 +7,18 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&display=swap" rel="stylesheet">
     <script>
-        // Gemini AI Configuration
+        // Secure Gemini AI Configuration - API key moved to server-side proxy
         const GEMINI_CONFIG = {
-            API_KEY: 'AIzaSyCpJ2hv2x4AJeofGNlISs-_9AEebuDF7OA',
-            API_URL: 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent',
+            // API_KEY removed for security - now handled by server proxy
+            PROXY_URL: '/api/gemini-proxy', // Secure server endpoint
             MAX_TOKENS: 1000,
             TEMPERATURE: 0.7,
             RETRY_ATTEMPTS: 2,
             TIMEOUT: 10000
         };
+        
+        // Security note: API key is now securely stored on server-side
+        // and accessed through the proxy endpoint above
     </script>
     <style>
         body { font-family: 'Sora', sans-serif; }
@@ -873,48 +876,35 @@ Sila berasa selesa untuk bertanya apa sahaja! Mari kita teruskan pembelajaran ya
                 try {
                     const prompt = this.buildIslamicPrompt(message);
                     
-                    const response = await fetch(`${GEMINI_CONFIG.API_URL}?key=${GEMINI_CONFIG.API_KEY}`, {
+                    // Use secure proxy endpoint instead of direct API call
+                    const response = await fetch(GEMINI_CONFIG.PROXY_URL, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
                         },
                         body: JSON.stringify({
-                            contents: [{
-                                parts: [{
-                                    text: prompt
-                                }]
-                            }],
-                            generationConfig: {
-                                temperature: GEMINI_CONFIG.TEMPERATURE,
-                                maxOutputTokens: GEMINI_CONFIG.MAX_TOKENS,
-                                candidateCount: 1,
-                            },
-                            safetySettings: [
-                                {
-                                    category: "HARM_CATEGORY_HARASSMENT",
-                                    threshold: "BLOCK_MEDIUM_AND_ABOVE"
-                                },
-                                {
-                                    category: "HARM_CATEGORY_HATE_SPEECH", 
-                                    threshold: "BLOCK_MEDIUM_AND_ABOVE"
-                                }
-                            ]
+                            prompt: prompt,
+                            temperature: GEMINI_CONFIG.TEMPERATURE,
+                            maxTokens: GEMINI_CONFIG.MAX_TOKENS
                         })
                     });
 
                     if (!response.ok) {
-                        throw new Error(`Gemini API error: ${response.status}`);
+                        throw new Error(`Proxy API error: ${response.status}`);
                     }
 
                     const data = await response.json();
                     
-                    if (data.candidates && data.candidates[0] && data.candidates[0].content) {
-                        return data.candidates[0].content.parts[0].text;
+                    if (data.success && data.response) {
+                        return data.response;
                     }
                     
                     return null;
                 } catch (error) {
                     console.error('Gemini API call failed:', error);
+                    throw error;
+                }
+            }
                     return null;
                 }
             }
