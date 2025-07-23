@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚀 Deployment Verification - Digital Dakwah Platform</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+            padding: 40px;
+            max-width: 800px;
+            width: 100%;
+            text-align: center;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+        
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+        
+        .test-section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+            text-align: left;
+        }
+        
+        .test-button {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .test-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        }
+        
+        .test-button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .result {
+            margin: 15px 0;
+            padding: 15px;
+            border-radius: 10px;
+            font-weight: 500;
+        }
+        
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .warning {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+        
+        .info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .status-card {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .status-icon {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+        
+        .log-area {
+            background: #1a1a1a;
+            color: #00ff00;
+            border-radius: 10px;
+            padding: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            height: 200px;
+            overflow-y: auto;
+            margin-top: 20px;
+            text-align: left;
+        }
+        
+        .endpoint {
+            font-family: 'Courier New', monospace;
+            background: #e9ecef;
+            padding: 5px 8px;
+            border-radius: 5px;
+            display: inline-block;
+            margin: 2px;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: #e9ecef;
+            border-radius: 3px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                margin: 10px;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+            
+            .test-button {
+                width: 100%;
+                margin: 5px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Deployment Verification</h1>
+        <p class="subtitle">Quick verification of your Cloudflare Pages deployment</p>
+        
+        <!-- Current Status -->
+        <div class="test-section">
+            <h3>📊 Deployment Status</h3>
+            <div class="status-grid">
+                <div class="status-card">
+                    <div class="status-icon">🌐</div>
+                    <strong>Domain</strong><br>
+                    <span id="currentDomain" class="endpoint">-</span>
+                </div>
+                <div class="status-card">
+                    <div class="status-icon">📡</div>
+                    <strong>Environment</strong><br>
+                    <span id="environment">-</span>
+                </div>
+                <div class="status-card">
+                    <div class="status-icon">⚡</div>
+                    <strong>Functions</strong><br>
+                    <span id="functionsStatus">-</span>
+                </div>
+                <div class="status-card">
+                    <div class="status-icon">🗃️</div>
+                    <strong>KV Storage</strong><br>
+                    <span id="kvStatus">-</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Quick Tests -->
+        <div class="test-section">
+            <h3>⚡ Quick Tests</h3>
+            <button class="test-button" onclick="runQuickTest()">🏃‍♂️ Run Quick Test (30s)</button>
+            <button class="test-button" onclick="runFullTest()">🔍 Full System Test (2min)</button>
+            <button class="test-button" onclick="testSpecific('gemini')">🤖 Test Gemini Only</button>
+            <button class="test-button" onclick="testSpecific('kv')">🗄️ Test KV Only</button>
+            
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressBar"></div>
+            </div>
+        </div>
+        
+        <!-- Results Area -->
+        <div class="test-section">
+            <h3>📋 Test Results</h3>
+            <div id="results"></div>
+        </div>
+        
+        <!-- Console Log -->
+        <div class="test-section">
+            <h3>🖥️ Console Log</h3>
+            <div id="console" class="log-area">Ready to run tests...</div>
+        </div>
+        
+        <!-- Quick Fix Guide -->
+        <div class="test-section" id="fixGuide" style="display: none;">
+            <h3>🔧 Quick Fix Guide</h3>
+            <div id="fixContent"></div>
+        </div>
+    </div>
+
+    <script>
+        // Configuration
+        const CONFIG = {
+            domain: 'https://digital.zikirnurani.com',
+            endpoints: {
+                gemini: '/api/gemini-proxy',
+                kvSave: '/api/conversation/save',
+                kvLoad: '/api/conversation/load'
+            },
+            testTimeout: 10000
+        };
+
+        let testResults = {};
+        let currentTest = 0;
+        let totalTests = 0;
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeStatus();
+        });
+
+        function initializeStatus() {
+            const currentDomain = window.location.origin;
+            const isCloudflare = currentDomain.includes('digital.zikirnurani.com');
+            
+            document.getElementById('currentDomain').textContent = currentDomain;
+            document.getElementById('environment').textContent = isCloudflare ? 
+                '✅ Cloudflare Pages' : '⚠️ Local/Other';
+            document.getElementById('functionsStatus').textContent = '⏳ Not tested';
+            document.getElementById('kvStatus').textContent = '⏳ Not tested';
+        }
+
+        function log(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const console = document.getElementById('console');
+            const logEntry = document.createElement('div');
+            
+            const colors = {
+                info: '#00ff00',
+                success: '#00ff00',
+                error: '#ff6b6b',
+                warning: '#ffd43b'
+            };
+            
+            logEntry.style.color = colors[type] || '#00ff00';
+            logEntry.innerHTML = `<span style="color: #888">[${timestamp}]</span> ${message}`;
+            console.appendChild(logEntry);
+            console.scrollTop = console.scrollHeight;
+        }
+
+        function showResult(message, type) {
+            const results = document.getElementById('results');
+            const result = document.createElement('div');
+            result.className = `result ${type}`;
+            result.innerHTML = message;
+            results.appendChild(result);
+        }
+
+        function updateProgress(percent) {
+            document.getElementById('progressBar').style.width = `${percent}%`;
+        }
+
+        async function runQuickTest() {
+            log('🚀 Starting quick deployment test...', 'info');
+            clearResults();
+            
+            totalTests = 3;
+            currentTest = 0;
+            
+            const tests = [
+                { name: 'Domain Access', func: testDomainAccess },
+                { name: 'Gemini API', func: testGeminiAPI },
+                { name: 'KV Storage', func: testKVStorage }
+            ];
+            
+            testResults = {};
+            
+            for (const test of tests) {
+                currentTest++;
+                updateProgress((currentTest / totalTests) * 100);
+                
+                log(`📋 Running test: ${test.name}`, 'info');
+                
+                try {
+                    const result = await test.func();
+                    testResults[test.name] = result;
+                    log(`✅ ${test.name}: ${result ? 'PASSED' : 'FAILED'}`, result ? 'success' : 'error');
+                } catch (error) {
+                    testResults[test.name] = false;
+                    log(`❌ ${test.name}: ERROR - ${error.message}`, 'error');
+                }
+                
+                // Small delay between tests
+                await new Promise(resolve => setTimeout(resolve, 500));
+            }
+            
+            showTestSummary();
+        }
+
+        async function runFullTest() {
+            log('🔍 Starting comprehensive system test...', 'info');
+            clearResults();
+            
+            totalTests = 6;
+            currentTest = 0;
+            
+            const tests = [
+                { name: 'Domain Access', func: testDomainAccess },
+                { name: 'Static Files', func: testStaticFiles },
+                { name: 'Functions Deployment', func: testFunctionsDeployment },
+                { name: 'Gemini API', func: testGeminiAPI },
+                { name: 'KV Storage', func: testKVStorage },
+                { name: 'Chatbox Integration', func: testChatboxIntegration }
+            ];
+            
+            testResults = {};
+            
+            for (const test of tests) {
+                currentTest++;
+                updateProgress((currentTest / totalTests) * 100);
+                
+                log(`📋 Running test: ${test.name}`, 'info');
+                
+                try {
+                    const result = await test.func();
+                    testResults[test.name] = result;
+                    log(`✅ ${test.name}: ${result ? 'PASSED' : 'FAILED'}`, result ? 'success' : 'error');
+                } catch (error) {
+                    testResults[test.name] = false;
+                    log(`❌ ${test.name}: ERROR - ${error.message}`, 'error');
+                }
+                
+                // Small delay between tests
+                await new Promise(resolve => setTimeout(resolve, 1000));
+            }
+            
+            showTestSummary();
+        }
+
+        async function testSpecific(type) {
+            clearResults();
+            log(`🎯 Testing ${type.toUpperCase()} specifically...`, 'info');
+            
+            if (type === 'gemini') {
+                const result = await testGeminiAPI();
+                showResult(`Gemini API Test: ${result ? '✅ PASSED' : '❌ FAILED'}`, result ? 'success' : 'error');
+            } else if (type === 'kv') {
+                const result = await testKVStorage();
+                showResult(`KV Storage Test: ${result ? '✅ PASSED' : '❌ FAILED'}`, result ? 'success' : 'error');
+            }
+        }
+
+        // Test Functions
+        async function testDomainAccess() {
+            try {
+                const response = await fetch(CONFIG.domain, { 
+                    method: 'HEAD',
+                    timeout: CONFIG.testTimeout 
+                });
+                
+                if (response.ok) {
+                    document.getElementById('environment').textContent = '✅ Cloudflare Pages';
+                    return true;
+                } else {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+            } catch (error) {
+                document.getElementById('environment').textContent = '❌ Not accessible';
+                throw error;
+            }
+        }
+
+        async function testStaticFiles() {
+            try {
+                const files = ['/', '/ustaz.html', '/index.html'];
+                let passed = 0;
+                
+                for (const file of files) {
+                    try {
+                        const response = await fetch(CONFIG.domain + file, { method: 'HEAD' });
+                        if (response.ok) passed++;
+                    } catch (e) {
+                        // File might not exist, that's ok
+                    }
+                }
+                
+                return passed > 0; // At least one file should be accessible
+            } catch (error) {
+                throw new Error('Static file test failed');
+            }
+        }
+
+        async function testFunctionsDeployment() {
+            try {
+                // Test if functions directory is deployed
+                const endpoints = [CONFIG.endpoints.gemini, CONFIG.endpoints.kvSave];
+                let functionsFound = 0;
+                
+                for (const endpoint of endpoints) {
+                    try {
+                        const response = await fetch(CONFIG.domain + endpoint, { 
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ test: true })
+                        });
+                        
+                        // Any response (even error) means function is deployed
+                        if (response.status !== 404) {
+                            functionsFound++;
+                        }
+                    } catch (e) {
+                        // Network error is ok, 404 is not
+                    }
+                }
+                
+                const result = functionsFound > 0;
+                document.getElementById('functionsStatus').textContent = result ? 
+                    '✅ Deployed' : '❌ Not found';
+                return result;
+            } catch (error) {
+                document.getElementById('functionsStatus').textContent = '❌ Error';
+                throw error;
+            }
+        }
+
+        async function testGeminiAPI() {
+            try {
+                log('🤖 Testing Gemini API endpoint...', 'info');
+                
+                const response = await fetch(CONFIG.domain + CONFIG.endpoints.gemini, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        prompt: 'Test message',
+                        temperature: 0.7,
+                        maxTokens: 50
+                    })
+                });
+
+                log(`📡 Gemini response: ${response.status} ${response.statusText}`, 'info');
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.success) {
+                        showResult('🤖 Gemini API: ✅ Working correctly!', 'success');
+                        return true;
+                    } else {
+                        showResult(`🤖 Gemini API: ⚠️ Response error - ${data.error}`, 'warning');
+                        return false;
+                    }
+                } else if (response.status === 500) {
+                    showResult('🤖 Gemini API: ❌ Server error - Check API key configuration', 'error');
+                    showQuickFix('gemini-500');
+                    return false;
+                } else if (response.status === 429) {
+                    showResult('🤖 Gemini API: ⚠️ Rate limited - This is normal', 'warning');
+                    return true; // Rate limit means API is working
+                } else {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+            } catch (error) {
+                showResult(`🤖 Gemini API: ❌ ${error.message}`, 'error');
+                return false;
+            }
+        }
+
+        async function testKVStorage() {
+            try {
+                log('🗄️ Testing KV Storage endpoints...', 'info');
+                
+                const testData = {
+                    userId: 'test_' + Date.now(),
+                    conversation: { test: true }
+                };
+
+                const response = await fetch(CONFIG.domain + CONFIG.endpoints.kvSave, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(testData)
+                });
+
+                log(`💾 KV response: ${response.status} ${response.statusText}`, 'info');
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.success) {
+                        showResult('🗄️ KV Storage: ✅ Working correctly!', 'success');
+                        document.getElementById('kvStatus').textContent = '✅ Working';
+                        return true;
+                    } else if (data.fallback) {
+                        showResult('🗄️ KV Storage: ⚠️ Using localStorage fallback', 'warning');
+                        showQuickFix('kv-not-configured');
+                        document.getElementById('kvStatus').textContent = '⚠️ Fallback';
+                        return false;
+                    }
+                } else if (response.status === 405) {
+                    showResult('🗄️ KV Storage: ❌ Method not allowed - Configuration issue', 'error');
+                    showQuickFix('kv-405');
+                    document.getElementById('kvStatus').textContent = '❌ Config Error';
+                    return false;
+                } else {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+            } catch (error) {
+                showResult(`🗄️ KV Storage: ❌ ${error.message}`, 'error');
+                document.getElementById('kvStatus').textContent = '❌ Error';
+                return false;
+            }
+        }
+
+        async function testChatboxIntegration() {
+            try {
+                // Test if ustaz.html loads and has the chat class
+                const response = await fetch(CONFIG.domain + '/ustaz.html');
+                
+                if (response.ok) {
+                    const html = await response.text();
+                    
+                    // Check for key components
+                    const hasChat = html.includes('UstazRadhiChat');
+                    const hasGeminiConfig = html.includes('GEMINI_CONFIG');
+                    const hasMessageInput = html.includes('messageInput');
+                    
+                    if (hasChat && hasGeminiConfig && hasMessageInput) {
+                        showResult('💬 Chatbox Integration: ✅ All components found', 'success');
+                        return true;
+                    } else {
+                        showResult('💬 Chatbox Integration: ⚠️ Some components missing', 'warning');
+                        return false;
+                    }
+                } else {
+                    throw new Error('ustaz.html not accessible');
+                }
+            } catch (error) {
+                showResult(`💬 Chatbox Integration: ❌ ${error.message}`, 'error');
+                return false;
+            }
+        }
+
+        function showTestSummary() {
+            const passed = Object.values(testResults).filter(Boolean).length;
+            const total = Object.keys(testResults).length;
+            
+            updateProgress(100);
+            
+            if (passed === total) {
+                showResult(`🎉 All Tests Passed! (${passed}/${total}) - Deployment is fully functional!`, 'success');
+                log('🎉 Deployment verification completed successfully!', 'success');
+            } else {
+                showResult(`⚠️ Some Tests Failed (${passed}/${total}) - Check issues below`, 'warning');
+                log(`⚠️ ${total - passed} issues found in deployment`, 'warning');
+            }
+            
+            // Show detailed results
+            const detailsHtml = Object.entries(testResults)
+                .map(([name, result]) => `
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 5px 0; border-bottom: 1px solid #eee;">
+                        <span>${name}</span>
+                        <span style="color: ${result ? '#28a745' : '#dc3545'}">
+                            ${result ? '✅ PASSED' : '❌ FAILED'}
+                        </span>
+                    </div>
+                `).join('');
+            
+            showResult(`<strong>📊 Detailed Results:</strong><br>${detailsHtml}`, 'info');
+        }
+
+        function showQuickFix(errorType) {
+            const fixes = {
+                'gemini-500': `
+                    <strong>🔧 Fix Gemini API Error:</strong><br>
+                    1. Go to Cloudflare Pages Dashboard<br>
+                    2. Settings → Environment variables<br>
+                    3. Add: <code>GEMINI_API_KEY</code> = [your API key]<br>
+                    4. Save and redeploy
+                `,
+                'kv-not-configured': `
+                    <strong>🗄️ Setup KV Storage:</strong><br>
+                    1. Create KV namespace: <code>USTAZ_CONVERSATIONS</code><br>
+                    2. Bind to Pages Functions<br>
+                    3. Variable name: <code>USTAZ_CONVERSATIONS</code><br>
+                    4. Redeploy
+                `,
+                'kv-405': `
+                    <strong>🚫 Fix KV 405 Error:</strong><br>
+                    1. Check <code>functions/api/conversation.js</code> exists<br>
+                    2. Verify exports: <code>onRequestPost</code>, <code>onRequestGet</code><br>
+                    3. Push to GitHub and wait for deployment
+                `
+            };
+
+            if (fixes[errorType]) {
+                document.getElementById('fixGuide').style.display = 'block';
+                document.getElementById('fixContent').innerHTML = fixes[errorType];
+            }
+        }
+
+        function clearResults() {
+            document.getElementById('results').innerHTML = '';
+            document.getElementById('console').innerHTML = 'Running tests...<br>';
+            document.getElementById('fixGuide').style.display = 'none';
+            updateProgress(0);
+        }
+    </script>
+</body>
+</html>

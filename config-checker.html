@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configuration Checker - Ustaz Radhi System</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f7fa;
+            color: #333;
+        }
+        .header {
+            background: linear-gradient(135deg, #059669, #10b981);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .section {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        .test-button {
+            background: #059669;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px;
+            transition: all 0.3s ease;
+        }
+        .test-button:hover {
+            background: #10b981;
+            transform: translateY(-2px);
+        }
+        .test-button:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .status-box {
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-weight: 600;
+            border-left: 5px solid;
+        }
+        .status-success {
+            background: #d1fae5;
+            color: #065f46;
+            border-color: #10b981;
+        }
+        .status-error {
+            background: #fee2e2;
+            color: #991b1b;
+            border-color: #ef4444;
+        }
+        .status-warning {
+            background: #fef3c7;
+            color: #92400e;
+            border-color: #f59e0b;
+        }
+        .status-info {
+            background: #dbeafe;
+            color: #1e40af;
+            border-color: #3b82f6;
+        }
+        .log-container {
+            background: #1a1a1a;
+            color: #00ff00;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 20px;
+        }
+        .config-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .config-item:last-child {
+            border-bottom: none;
+        }
+        .checklist {
+            list-style: none;
+            padding: 0;
+        }
+        .checklist li {
+            padding: 8px 0;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .checklist li:before {
+            content: "☐ ";
+            margin-right: 10px;
+            font-size: 18px;
+        }
+        .checklist li.completed:before {
+            content: "✅ ";
+            color: #10b981;
+        }
+        .endpoint-url {
+            font-family: 'Courier New', monospace;
+            background: #f3f4f6;
+            padding: 5px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🔧 Configuration Checker</h1>
+        <p>Comprehensive system verification for Ustaz Radhi Platform</p>
+    </div>
+
+    <div class="section">
+        <h2>📊 Current System Status</h2>
+        <div id="systemStatus">
+            <div class="config-item">
+                <span><strong>Current Domain:</strong></span>
+                <span id="currentDomain" class="endpoint-url"></span>
+            </div>
+            <div class="config-item">
+                <span><strong>Gemini API Endpoint:</strong></span>
+                <span id="geminiEndpoint" class="endpoint-url"></span>
+            </div>
+            <div class="config-item">
+                <span><strong>KV Storage Endpoint:</strong></span>
+                <span id="kvEndpoint" class="endpoint-url"></span>
+            </div>
+            <div class="config-item">
+                <span><strong>Expected to Work:</strong></span>
+                <span id="expectedStatus"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>🧪 Automated Tests</h2>
+        <button class="test-button" onclick="runAllTests()">🚀 Run All Tests</button>
+        <button class="test-button" onclick="testGeminiAPI()">🤖 Test Gemini API</button>
+        <button class="test-button" onclick="testKVStorage()">🗄️ Test KV Storage</button>
+        <button class="test-button" onclick="testChatbox()">💬 Test Chatbox Integration</button>
+        
+        <div id="testResults"></div>
+    </div>
+
+    <div class="section">
+        <h2>📋 Cloudflare Pages Setup Checklist</h2>
+        
+        <h3>🔑 1. Environment Variables Setup</h3>
+        <ul class="checklist">
+            <li id="check-dashboard">Go to Cloudflare Dashboard → Pages → digital.zikirnurani.com</li>
+            <li id="check-settings">Click "Settings" tab</li>
+            <li id="check-env-vars">Scroll to "Environment variables" section</li>
+            <li id="check-gemini-key">Add variable: GEMINI_API_KEY = [your-api-key]</li>
+            <li id="check-deploy">Save and wait for automatic deployment</li>
+        </ul>
+
+        <h3>🗄️ 2. KV Storage Setup</h3>
+        <ul class="checklist">
+            <li id="check-kv-create">Workers & Pages → KV → Create namespace: USTAZ_CONVERSATIONS</li>
+            <li id="check-kv-bind">Pages → Settings → Functions → Add KV binding</li>
+            <li id="check-kv-var">Variable name: USTAZ_CONVERSATIONS</li>
+            <li id="check-kv-namespace">KV namespace: Select USTAZ_CONVERSATIONS</li>
+            <li id="check-kv-deploy">Save and wait for deployment</li>
+        </ul>
+
+        <h3>🔗 3. Verify API Endpoints</h3>
+        <ul class="checklist">
+            <li id="check-gemini-url">Gemini API: https://digital.zikirnurani.com/api/gemini-proxy</li>
+            <li id="check-conv-save">KV Save: https://digital.zikirnurani.com/api/conversation/save</li>
+            <li id="check-conv-load">KV Load: https://digital.zikirnurani.com/api/conversation/load</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>🔍 Troubleshooting Guide</h2>
+        
+        <div id="troubleshootingResults">
+            <div class="status-info">
+                Run tests above to get specific troubleshooting guidance
+            </div>
+        </div>
+    </div>
+
+    <div id="logs" class="log-container"></div>
+
+    <script>
+        // Configuration
+        const CONFIG = {
+            domain: 'https://digital.zikirnurani.com',
+            endpoints: {
+                gemini: '/api/gemini-proxy',
+                kvSave: '/api/conversation/save',
+                kvLoad: '/api/conversation/load'
+            }
+        };
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeStatus();
+        });
+
+        function initializeStatus() {
+            const currentDomain = window.location.origin;
+            const isCloudflare = currentDomain.includes('digital.zikirnurani.com');
+            
+            document.getElementById('currentDomain').textContent = currentDomain;
+            document.getElementById('geminiEndpoint').textContent = CONFIG.domain + CONFIG.endpoints.gemini;
+            document.getElementById('kvEndpoint').textContent = CONFIG.domain + CONFIG.endpoints.kvSave;
+            
+            const expectedStatus = isCloudflare ? 
+                '✅ YES - On Cloudflare Pages (should work)' : 
+                '⚠️ Testing via proxy to Cloudflare Pages';
+            document.getElementById('expectedStatus').innerHTML = expectedStatus;
+        }
+
+        function log(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const logContainer = document.getElementById('logs');
+            const logEntry = document.createElement('div');
+            logEntry.style.color = type === 'error' ? '#ff6b6b' : 
+                                 type === 'success' ? '#51cf66' : 
+                                 type === 'warning' ? '#ffd43b' : '#00ff00';
+            logEntry.textContent = `[${timestamp}] ${message}`;
+            logContainer.appendChild(logEntry);
+            logContainer.scrollTop = logContainer.scrollHeight;
+        }
+
+        function showResult(message, type, containerId = 'testResults') {
+            const container = document.getElementById(containerId);
+            const resultDiv = document.createElement('div');
+            resultDiv.className = `status-box status-${type}`;
+            resultDiv.innerHTML = message;
+            container.appendChild(resultDiv);
+        }
+
+        function clearResults() {
+            document.getElementById('testResults').innerHTML = '';
+            document.getElementById('troubleshootingResults').innerHTML = '';
+            document.getElementById('logs').innerHTML = '';
+        }
+
+        async function testGeminiAPI() {
+            log('🤖 Testing Gemini API endpoint...', 'info');
+            
+            try {
+                const response = await fetch(CONFIG.domain + CONFIG.endpoints.gemini, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        prompt: 'Assalamualaikum, test connection',
+                        temperature: 0.7,
+                        maxTokens: 100
+                    })
+                });
+
+                log(`Gemini API Response: ${response.status} ${response.statusText}`, response.ok ? 'success' : 'error');
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.success) {
+                        showResult('✅ Gemini API: Working correctly!', 'success');
+                        log('✅ Gemini API test passed', 'success');
+                        updateChecklist('check-gemini-url', true);
+                        return true;
+                    } else {
+                        showResult(`⚠️ Gemini API: Response error - ${data.error}`, 'warning');
+                        showTroubleshooting('gemini-error', data.error);
+                        return false;
+                    }
+                } else if (response.status === 500) {
+                    showResult('❌ Gemini API: Server error (500) - Check API key configuration', 'error');
+                    showTroubleshooting('gemini-500');
+                    return false;
+                } else if (response.status === 429) {
+                    showResult('⚠️ Gemini API: Rate limit exceeded (429) - Try again in a few minutes', 'warning');
+                    showTroubleshooting('gemini-429');
+                    return false;
+                } else {
+                    const errorText = await response.text();
+                    showResult(`❌ Gemini API: Error ${response.status} - ${errorText}`, 'error');
+                    return false;
+                }
+            } catch (error) {
+                log(`Gemini API Network Error: ${error.message}`, 'error');
+                showResult(`❌ Gemini API: Network error - ${error.message}`, 'error');
+                showTroubleshooting('gemini-network');
+                return false;
+            }
+        }
+
+        async function testKVStorage() {
+            log('🗄️ Testing KV Storage endpoints...', 'info');
+            
+            const testUserId = 'test_' + Date.now();
+            const testData = {
+                currentTopic: 'test',
+                messageHistory: [{ content: 'test', sender: 'user', timestamp: Date.now() }],
+                userProfile: { interests: ['test'] }
+            };
+
+            try {
+                // Test Save
+                log('Testing KV Save endpoint...', 'info');
+                const saveResponse = await fetch(CONFIG.domain + CONFIG.endpoints.kvSave, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        userId: testUserId,
+                        conversation: testData
+                    })
+                });
+
+                log(`KV Save Response: ${saveResponse.status} ${saveResponse.statusText}`, saveResponse.ok ? 'success' : 'error');
+
+                if (saveResponse.ok) {
+                    const saveData = await saveResponse.json();
+                    if (saveData.success) {
+                        showResult('✅ KV Storage Save: Working correctly!', 'success');
+                        updateChecklist('check-conv-save', true);
+                        
+                        // Test Load
+                        log('Testing KV Load endpoint...', 'info');
+                        const loadResponse = await fetch(`${CONFIG.domain}${CONFIG.endpoints.kvLoad}?userId=${testUserId}`, {
+                            method: 'GET',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            }
+                        });
+
+                        log(`KV Load Response: ${loadResponse.status} ${loadResponse.statusText}`, loadResponse.ok ? 'success' : 'error');
+
+                        if (loadResponse.ok) {
+                            const loadData = await loadResponse.json();
+                            if (loadData.success) {
+                                showResult('✅ KV Storage Load: Working correctly!', 'success');
+                                updateChecklist('check-conv-load', true);
+                                return true;
+                            } else if (loadData.fallback) {
+                                showResult('⚠️ KV Storage: Not configured, using localStorage fallback', 'warning');
+                                showTroubleshooting('kv-not-configured');
+                                return false;
+                            }
+                        }
+                    } else if (saveData.fallback) {
+                        showResult('⚠️ KV Storage: Not configured, using localStorage fallback', 'warning');
+                        showTroubleshooting('kv-not-configured');
+                        return false;
+                    }
+                } else if (saveResponse.status === 405) {
+                    showResult('❌ KV Storage: Method not allowed (405) - Endpoint configuration issue', 'error');
+                    showTroubleshooting('kv-405');
+                    return false;
+                } else if (saveResponse.status === 404) {
+                    showResult('❌ KV Storage: Endpoint not found (404) - Function not deployed', 'error');
+                    showTroubleshooting('kv-404');
+                    return false;
+                }
+            } catch (error) {
+                log(`KV Storage Network Error: ${error.message}`, 'error');
+                showResult(`❌ KV Storage: Network error - ${error.message}`, 'error');
+                showTroubleshooting('kv-network');
+                return false;
+            }
+        }
+
+        async function testChatbox() {
+            log('💬 Testing Chatbox Integration...', 'info');
+            
+            try {
+                // Test if chatbox class can be instantiated
+                if (typeof UstazRadhiChat !== 'undefined') {
+                    showResult('✅ Chatbox: Class definition found', 'success');
+                    
+                    // Test chatbox methods
+                    const testChat = new UstazRadhiChat();
+                    if (testChat.callGeminiAPI) {
+                        showResult('✅ Chatbox: Methods properly defined', 'success');
+                        return true;
+                    } else {
+                        showResult('❌ Chatbox: Missing required methods', 'error');
+                        return false;
+                    }
+                } else {
+                    showResult('❌ Chatbox: Class not found - Check ustaz.html', 'error');
+                    return false;
+                }
+            } catch (error) {
+                log(`Chatbox Integration Error: ${error.message}`, 'error');
+                showResult(`❌ Chatbox: Integration error - ${error.message}`, 'error');
+                return false;
+            }
+        }
+
+        async function runAllTests() {
+            clearResults();
+            log('🚀 Starting comprehensive system test...', 'info');
+            
+            const results = {
+                gemini: await testGeminiAPI(),
+                kv: await testKVStorage(),
+                chatbox: await testChatbox()
+            };
+            
+            // Wait a moment before showing summary
+            setTimeout(() => {
+                const passedTests = Object.values(results).filter(Boolean).length;
+                const totalTests = Object.keys(results).length;
+                
+                if (passedTests === totalTests) {
+                    showResult(`🎉 All Tests Passed! (${passedTests}/${totalTests}) - System is fully functional!`, 'success');
+                    log('🎉 All tests completed successfully!', 'success');
+                } else {
+                    showResult(`⚠️ Some Tests Failed (${passedTests}/${totalTests}) - Check troubleshooting guide below`, 'warning');
+                    log(`⚠️ ${totalTests - passedTests} tests failed`, 'warning');
+                }
+                
+                showSystemSummary(results);
+            }, 1000);
+        }
+
+        function showTroubleshooting(errorType, details = '') {
+            const troubleshooting = {
+                'gemini-500': `
+                    <h4>🔧 Fix Gemini API 500 Error:</h4>
+                    <ol>
+                        <li>Go to Cloudflare Pages Dashboard</li>
+                        <li>Select your site: <strong>digital.zikirnurani.com</strong></li>
+                        <li>Settings → Environment variables</li>
+                        <li>Add: <code>GEMINI_API_KEY</code> = [your API key]</li>
+                        <li>Save and wait for deployment (1-2 minutes)</li>
+                    </ol>
+                `,
+                'gemini-429': `
+                    <h4>⏰ Gemini API Rate Limit:</h4>
+                    <p>You've hit the rate limit. This is normal behavior.</p>
+                    <ul>
+                        <li>Wait 2-3 minutes before testing again</li>
+                        <li>The chatbox will automatically fallback to static responses</li>
+                        <li>Consider upgrading your Google AI Studio quota if this happens frequently</li>
+                    </ul>
+                `,
+                'kv-not-configured': `
+                    <h4>🗄️ Setup KV Storage:</h4>
+                    <ol>
+                        <li>Cloudflare Dashboard → Workers & Pages → KV</li>
+                        <li>Create namespace: <strong>USTAZ_CONVERSATIONS</strong></li>
+                        <li>Pages → digital.zikirnurani.com → Settings → Functions</li>
+                        <li>Add KV binding: Variable name = <code>USTAZ_CONVERSATIONS</code></li>
+                        <li>KV namespace = Select the namespace you created</li>
+                        <li>Save and wait for deployment</li>
+                    </ol>
+                `,
+                'kv-405': `
+                    <h4>🚫 KV 405 Method Not Allowed:</h4>
+                    <p>The conversation API endpoints are not properly configured.</p>
+                    <ol>
+                        <li>Check if <code>functions/api/conversation.js</code> is deployed</li>
+                        <li>Verify the file exports <code>onRequestPost</code> and <code>onRequestGet</code></li>
+                        <li>Wait for Cloudflare Pages to deploy the functions</li>
+                    </ol>
+                `,
+                'kv-404': `
+                    <h4>❌ KV 404 Not Found:</h4>
+                    <p>The conversation API function is not deployed.</p>
+                    <ol>
+                        <li>Ensure <code>functions/api/conversation.js</code> exists in your repo</li>
+                        <li>Push changes to GitHub</li>
+                        <li>Wait for Cloudflare Pages automatic deployment</li>
+                        <li>Check deployment logs in Cloudflare Pages dashboard</li>
+                    </ol>
+                `
+            };
+
+            if (troubleshooting[errorType]) {
+                showResult(troubleshooting[errorType], 'warning', 'troubleshootingResults');
+            }
+        }
+
+        function showSystemSummary(results) {
+            const summary = `
+                <h3>📊 System Status Summary</h3>
+                <div class="config-item">
+                    <span>🤖 Gemini AI API:</span>
+                    <span style="color: ${results.gemini ? '#10b981' : '#ef4444'}">${results.gemini ? '✅ Working' : '❌ Failed'}</span>
+                </div>
+                <div class="config-item">
+                    <span>🗄️ KV Storage:</span>
+                    <span style="color: ${results.kv ? '#10b981' : '#f59e0b'}">${results.kv ? '✅ Working' : '⚠️ Fallback Mode'}</span>
+                </div>
+                <div class="config-item">
+                    <span>💬 Chatbox Integration:</span>
+                    <span style="color: ${results.chatbox ? '#10b981' : '#ef4444'}">${results.chatbox ? '✅ Working' : '❌ Failed'}</span>
+                </div>
+            `;
+            showResult(summary, 'info', 'troubleshootingResults');
+        }
+
+        function updateChecklist(itemId, completed) {
+            const item = document.getElementById(itemId);
+            if (item && completed) {
+                item.classList.add('completed');
+            }
+        }
+    </script>
+</body>
+</html>

@@ -655,10 +655,18 @@
             }
 
             async saveConversationToKV() {
+                // Temporarily disable KV storage to prevent 405 errors
+                console.log('💾 KV storage temporarily disabled - using localStorage only');
+                
+                // Always save to localStorage as primary storage
+                this.saveConversationToLocalStorage();
+                
+                // TODO: Re-enable KV when conversation API is properly configured
+                /*
                 try {
                     const memory = {
                         currentTopic: this.currentTopic,
-                        messageHistory: this.messageHistory.slice(-20), // Keep last 20 messages
+                        messageHistory: this.messageHistory.slice(-20),
                         userProfile: this.userProfile,
                         sessionStart: this.conversationMemory.sessionStart || Date.now(),
                         totalInteractions: this.messageHistory.length,
@@ -687,9 +695,7 @@
                 } catch (error) {
                     console.log('⚠️ KV save error, using localStorage backup:', error.message);
                 }
-                
-                // Always save to localStorage as backup
-                this.saveConversationToLocalStorage();
+                */
             }
 
             showWelcomeBackMessage() {
@@ -1026,7 +1032,33 @@ Sila berasa selesa untuk bertanya apa sahaja! Mari kita teruskan pembelajaran ya
                         return response;
                     }
                 } catch (error) {
-                    console.log('Gemini API failed, using static responses:', error);
+                    console.log('Gemini API failed, using static responses:', error.message);
+                    
+                    // If it's a rate limit error, show specific message
+                    if (error.message === 'API_RATE_LIMIT') {
+                        this.hideTypingIndicator();
+                        return `**⏰ Sistem Agak Sibuk Sekarang**
+
+Assalamualaikum saudara/saudari yang dirahmati Allah.
+
+Maaf, sistem AI sedang mengalami **traffic yang tinggi** sekarang. Ini adalah tanda yang baik - ramai umat yang ingin belajar agama! 😊
+
+**🎯 Apa Yang Boleh Saya Lakukan:**
+• Memberikan jawapan berdasarkan **pengetahuan sedia ada**
+• Panduan asas **Fiqh Syafie**
+• Nasihat **akhlak dan ibadah**
+• **Motivasi** dan sokongan spiritual
+
+**💡 Untuk soalan yang lebih kompleks:**
+Sila cuba lagi dalam **2-3 minit** untuk akses penuh kepada sistem AI yang canggih.
+
+**🌟 Sementara itu, boleh saya bantu dengan:**
+Soalan: *"${message}"*
+
+${this.getStaticResponse(message)}
+
+Terima kasih atas kesabaran saudara/saudari. Sistem akan kembali normal sebentar lagi, insyaAllah! 🤲`;
+                    }
                 }
                 
                 // Fallback to static responses
@@ -1047,6 +1079,9 @@ Sila berasa selesa untuk bertanya apa sahaja! Mari kita teruskan pembelajaran ya
                         maxTokens: GEMINI_CONFIG.MAX_TOKENS 
                     });
                     
+                    // Add rate limiting delay to prevent 429 errors
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                    
                     // Use secure proxy endpoint instead of direct API call
                     const response = await fetch(GEMINI_CONFIG.PROXY_URL, {
                         method: 'POST',
@@ -1062,16 +1097,23 @@ Sila berasa selesa untuk bertanya apa sahaja! Mari kita teruskan pembelajaran ya
                     });
 
                     console.log('🔍 USTAZ DEBUG: Response status:', response.status, response.statusText);
-                    console.log('🔍 USTAZ DEBUG: Response headers:', Object.fromEntries(response.headers.entries()));
 
                     if (!response.ok) {
                         const errorText = await response.text();
                         console.error('❌ USTAZ ERROR: Proxy response not OK:', response.status, response.statusText, errorText);
                         
-                        // More specific error messages
-                        if (response.status === 404) {
+                        // Handle specific error codes
+                        if (response.status === 429) {
+                            console.log('⚠️ Rate limit exceeded, using static response');
+                            throw new Error('API_RATE_LIMIT');
+                        } else if (response.status === 404) {
                             throw new Error(`API endpoint not found (404). Check if proxy is deployed correctly.`);
                         } else if (response.status === 500) {
+                            // Check if it's a 429 error from Gemini wrapped in 500
+                            if (errorText.includes('"error":"Gemini API error: 429"')) {
+                                console.log('⚠️ Gemini rate limit exceeded, using static response');
+                                throw new Error('API_RATE_LIMIT');
+                            }
                             throw new Error(`Server error (500). Check API key configuration.`);
                         } else if (response.status === 403) {
                             throw new Error(`Access forbidden (403). Check CORS settings.`);
