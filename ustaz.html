@@ -655,14 +655,10 @@
             }
 
             async saveConversationToKV() {
-                // Temporarily disable KV storage to prevent 405 errors
-                console.log('💾 KV storage temporarily disabled - using localStorage only');
-                
-                // Always save to localStorage as primary storage
+                // Always save to localStorage as backup
                 this.saveConversationToLocalStorage();
                 
-                // TODO: Re-enable KV when conversation API is properly configured
-                /*
+                // Try to save to KV storage for persistence across devices
                 try {
                     const memory = {
                         currentTopic: this.currentTopic,
@@ -695,7 +691,6 @@
                 } catch (error) {
                     console.log('⚠️ KV save error, using localStorage backup:', error.message);
                 }
-                */
             }
 
             showWelcomeBackMessage() {
