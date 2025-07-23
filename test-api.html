@@ -94,7 +94,8 @@
                 return `${protocol}//${hostname}${port}/api/gemini-proxy`;
             }
             
-            return `${protocol}//${hostname}/api/gemini-proxy`;
+            // Always use Cloudflare Pages domain for API (where the function is deployed)
+            return 'https://digital.zikirnurani.com/api/gemini-proxy';
         }
         
         const PROXY_URL = getProxyURL();

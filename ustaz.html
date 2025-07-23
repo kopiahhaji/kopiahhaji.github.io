@@ -18,8 +18,9 @@
                 return `${protocol}//${hostname}${port}/api/gemini-proxy`;
             }
             
-            // For GitHub Pages or Cloudflare Pages
-            return `${protocol}//${hostname}/api/gemini-proxy`;
+            // Always use Cloudflare Pages domain for API (where the function is deployed)
+            // GitHub Pages doesn't support server-side functions
+            return 'https://digital.zikirnurani.com/api/gemini-proxy';
         }
 
         // Secure Gemini AI Configuration - API key moved to server-side proxy
@@ -1069,13 +1070,6 @@ Sila berasa selesa untuk bertanya apa sahaja! Mari kita teruskan pembelajaran ya
                     }
                     
                     throw fetchError;
-                }
-                } catch (error) {
-                    console.error('Gemini API call failed:', error);
-                    throw error;
-                }
-            }
-                    return null;
                 }
             }
 

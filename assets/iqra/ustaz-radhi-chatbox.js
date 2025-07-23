@@ -42,13 +42,9 @@ class UstazRadhiIqraChatbox {
             return `${protocol}//${hostname}${port}/api/gemini-proxy`;
         }
         
-        // For GitHub Pages (username.github.io)
-        if (hostname.includes('github.io')) {
-            return `${protocol}//${hostname}/api/gemini-proxy`;
-        }
-        
-        // For Cloudflare Pages or custom domains
-        return `${protocol}//${hostname}/api/gemini-proxy`;
+        // Always use Cloudflare Pages domain for API (where the function is deployed)
+        // GitHub Pages doesn't support server-side functions
+        return 'https://digital.zikirnurani.com/api/gemini-proxy';
     }
 
     init() {
