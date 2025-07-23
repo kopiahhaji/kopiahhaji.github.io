@@ -7,10 +7,25 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&display=swap" rel="stylesheet">
     <script>
+        // Function to get dynamic proxy URL
+        function getProxyURL() {
+            const protocol = window.location.protocol;
+            const hostname = window.location.hostname;
+            const port = window.location.port ? `:${window.location.port}` : '';
+            
+            // For local development
+            if (hostname === 'localhost' || hostname === '127.0.0.1') {
+                return `${protocol}//${hostname}${port}/api/gemini-proxy`;
+            }
+            
+            // For GitHub Pages or Cloudflare Pages
+            return `${protocol}//${hostname}/api/gemini-proxy`;
+        }
+
         // Secure Gemini AI Configuration - API key moved to server-side proxy
         const GEMINI_CONFIG = {
             // API_KEY removed for security - now handled by server proxy
-            PROXY_URL: '/api/gemini-proxy', // Secure server endpoint
+            PROXY_URL: getProxyURL(), // Dynamic secure server endpoint
             MAX_TOKENS: 1000,
             TEMPERATURE: 0.7,
             RETRY_ATTEMPTS: 2,
@@ -19,6 +34,7 @@
         
         // Security note: API key is now securely stored on server-side
         // and accessed through the proxy endpoint above
+        console.log('🔗 Ustaz Chat: Proxy URL configured as:', GEMINI_CONFIG.PROXY_URL);
     </script>
     <style>
         body { font-family: 'Sora', sans-serif; }
@@ -71,6 +87,82 @@
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
         }
+        
+        /* Enhanced Mobile Compatibility */
+        @media (max-width: 768px) {
+            /* Container padding adjustments */
+            .container {
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+            
+            /* Chat container mobile optimization */
+            #chatMessages {
+                height: 70vh;
+                padding: 1rem;
+            }
+            
+            /* Message bubbles mobile spacing */
+            .chat-bubble-user,
+            .chat-bubble-ustaz {
+                max-width: 90%;
+                padding: 0.75rem;
+                font-size: 0.9rem;
+                line-height: 1.4;
+            }
+            
+            /* Input area mobile optimization */
+            .flex.space-x-4 {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            #messageInput {
+                margin-bottom: 0.5rem;
+                font-size: 1rem;
+            }
+            
+            #sendButton {
+                width: 100%;
+                padding: 0.875rem;
+                font-size: 1rem;
+            }
+            
+            /* Quick action buttons mobile */
+            .quick-greeting,
+            .popular-question,
+            .topic-button {
+                font-size: 0.8rem;
+                padding: 0.5rem;
+            }
+            
+            /* Grid adjustments for mobile */
+            .grid[class*="grid-cols-2"] {
+                grid-template-columns: 1fr;
+                gap: 0.5rem;
+            }
+            
+            /* Header mobile adjustments */
+            h1 {
+                font-size: 1.5rem;
+            }
+            
+            /* Sources section mobile */
+            #sourcesContent > div {
+                padding: 0.75rem;
+            }
+            
+            /* Better touch targets */
+            button {
+                min-height: 44px;
+            }
+        }
+        
+        /* Landscape phone optimization */
+        @media (max-width: 768px) and (orientation: landscape) {
+            #chatMessages {
+                height: 60vh;
+            }
     </style>
 </head>
 <body class="bg-[#000711] text-gray-200 min-h-screen">
@@ -265,6 +357,32 @@
                         <button class="topic-button w-full text-center p-2 rounded-lg bg-orange-500/5 hover:bg-orange-500/15 transition-all duration-200 text-xs text-gray-300 border border-orange-500/20 hover:border-orange-400/40">
                             🤲 Doa
                         </button>
+                    </div>
+                </div>
+
+                <!-- Collapsible Islamic Sources Section -->
+                <div class="bg-blue-500/10 rounded-lg border border-blue-500/20 mx-0 mb-4">
+                    <button id="sourcesToggle" class="w-full text-left p-4 flex items-center justify-between hover:bg-blue-500/5 transition-all duration-200">
+                        <h4 class="text-blue-300 font-semibold">📚 Sumber Islam Utama (Masadir Asasiyyah)</h4>
+                        <span id="sourcesArrow" class="text-blue-300 transform transition-transform duration-200">▼</span>
+                    </button>
+                    <div id="sourcesContent" class="px-4 pb-4 space-y-3 hidden">
+                        <div class="bg-blue-500/5 rounded-lg p-3 border border-blue-500/10">
+                            <h5 class="text-blue-200 font-medium mb-2">📖 Al-Quran al-Kareem</h5>
+                            <p class="text-gray-300 text-sm">Kitab suci umat Islam, firman Allah SWT yang diturunkan kepada Nabi Muhammad SAW.</p>
+                        </div>
+                        <div class="bg-blue-500/5 rounded-lg p-3 border border-blue-500/10">
+                            <h5 class="text-blue-200 font-medium mb-2">📝 Hadis & Sunnah</h5>
+                            <p class="text-gray-300 text-sm">Sabda, perbuatan dan ketetapan Rasulullah SAW sebagai panduan hidup.</p>
+                        </div>
+                        <div class="bg-blue-500/5 rounded-lg p-3 border border-blue-500/10">
+                            <h5 class="text-blue-200 font-medium mb-2">⚖️ Fiqh Mazhab Syafie</h5>
+                            <p class="text-gray-300 text-sm">Panduan hukum Islam mengikut mazhab yang diamalkan di Malaysia dan Asia Tenggara.</p>
+                        </div>
+                        <div class="bg-blue-500/5 rounded-lg p-3 border border-blue-500/10">
+                            <h5 class="text-blue-200 font-medium mb-2">🏛️ Institusi Islam Malaysia</h5>
+                            <p class="text-gray-300 text-sm">JAKIM, Mufti negeri, dan institusi Islam yang diiktiraf di Malaysia.</p>
+                        </div>
                     </div>
                 </div>
 
@@ -876,11 +994,20 @@ Sila berasa selesa untuk bertanya apa sahaja! Mari kita teruskan pembelajaran ya
                 try {
                     const prompt = this.buildIslamicPrompt(message);
                     
+                    console.log('🔍 USTAZ DEBUG: Calling API proxy at:', GEMINI_CONFIG.PROXY_URL);
+                    console.log('🔍 USTAZ DEBUG: Current location:', window.location.href);
+                    console.log('🔍 USTAZ DEBUG: Request payload:', { 
+                        prompt: prompt.substring(0, 100) + '...', 
+                        temperature: GEMINI_CONFIG.TEMPERATURE, 
+                        maxTokens: GEMINI_CONFIG.MAX_TOKENS 
+                    });
+                    
                     // Use secure proxy endpoint instead of direct API call
                     const response = await fetch(GEMINI_CONFIG.PROXY_URL, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
+                            'Accept': 'application/json'
                         },
                         body: JSON.stringify({
                             prompt: prompt,
@@ -889,17 +1016,60 @@ Sila berasa selesa untuk bertanya apa sahaja! Mari kita teruskan pembelajaran ya
                         })
                     });
 
+                    console.log('🔍 USTAZ DEBUG: Response status:', response.status, response.statusText);
+                    console.log('🔍 USTAZ DEBUG: Response headers:', Object.fromEntries(response.headers.entries()));
+
                     if (!response.ok) {
-                        throw new Error(`Proxy API error: ${response.status}`);
+                        const errorText = await response.text();
+                        console.error('❌ USTAZ ERROR: Proxy response not OK:', response.status, response.statusText, errorText);
+                        
+                        // More specific error messages
+                        if (response.status === 404) {
+                            throw new Error(`API endpoint not found (404). Check if proxy is deployed correctly.`);
+                        } else if (response.status === 500) {
+                            throw new Error(`Server error (500). Check API key configuration.`);
+                        } else if (response.status === 403) {
+                            throw new Error(`Access forbidden (403). Check CORS settings.`);
+                        }
+                        
+                        throw new Error(`Proxy API error: ${response.status} - ${errorText}`);
                     }
 
-                    const data = await response.json();
+                    let data;
+                    try {
+                        const responseText = await response.text();
+                        console.log('🔍 USTAZ DEBUG: Raw response:', responseText);
+                        
+                        // Check for null or empty responses
+                        if (!responseText || responseText === 'null' || responseText.trim() === '') {
+                            throw new Error('Empty or null response from server');
+                        }
+                        
+                        data = JSON.parse(responseText);
+                    } catch (jsonError) {
+                        console.error('❌ USTAZ ERROR: Failed to parse JSON response:', jsonError);
+                        throw new Error(`Invalid JSON response from proxy: ${jsonError.message}`);
+                    }
                     
-                    if (data.success && data.response) {
+                    console.log('✅ USTAZ DEBUG: Parsed response data:', data);
+                    
+                    if (data && data.success && data.response) {
                         return data.response;
                     }
                     
-                    return null;
+                    console.error('❌ USTAZ ERROR: API returned error or invalid structure:', data);
+                    throw new Error(data?.error || 'No valid response from API');
+                    
+                } catch (fetchError) {
+                    console.error('❌ USTAZ ERROR: Fetch error:', fetchError);
+                    
+                    // Add more specific error handling
+                    if (fetchError.name === 'TypeError' && fetchError.message.includes('Failed to fetch')) {
+                        throw new Error('Network error: Could not connect to proxy server. Check if server is running.');
+                    }
+                    
+                    throw fetchError;
+                }
                 } catch (error) {
                     console.error('Gemini API call failed:', error);
                     throw error;
@@ -1890,7 +2060,35 @@ Wallahu a'lam bissawab. Semoga Allah makbulkan doa kita semua! 🌟✨`
 
         // Initialize chat when page loads
         document.addEventListener('DOMContentLoaded', () => {
-            new UstazRadhiChat();
+            console.log('🚀 Ustaz HTML: DOM loaded, initializing chat...');
+            console.log('🔍 Ustaz HTML: Current URL:', window.location.href);
+            console.log('🔗 Ustaz HTML: Proxy URL configured as:', GEMINI_CONFIG.PROXY_URL);
+            
+            try {
+                const ustazChat = new UstazRadhiChat();
+                console.log('✅ Ustaz HTML: Chat initialized successfully');
+                
+                // Make chat instance globally accessible for debugging
+                window.ustazChat = ustazChat;
+                
+                // Add a test function for debugging
+                window.testUstazChatAPI = async function(testMessage = "Assalamualaikum, test message") {
+                    console.log('🧪 Testing Ustaz Chat API connection...');
+                    try {
+                        const response = await ustazChat.callGeminiAPI(testMessage);
+                        console.log('✅ Ustaz Chat API Test Success:', response);
+                        return response;
+                    } catch (error) {
+                        console.error('❌ Ustaz Chat API Test Failed:', error);
+                        return error.message;
+                    }
+                };
+                
+                console.log('🧪 Use window.testUstazChatAPI() in console to test the API connection');
+                
+            } catch (initError) {
+                console.error('❌ Failed to initialize Ustaz Chat:', initError);
+            }
             
             // Mobile menu functionality
             const mobileMenuToggle = document.getElementById('mobileMenuToggle');
@@ -1922,6 +2120,26 @@ Wallahu a'lam bissawab. Semoga Allah makbulkan doa kita semua! 🌟✨`
                     if (e.key === 'Escape' && !mobileMenu.classList.contains('hidden')) {
                         mobileMenu.classList.add('hidden');
                         menuIcon.style.transform = 'rotate(0deg)';
+                    }
+                });
+            }
+
+            // Islamic Sources Toggle functionality
+            const sourcesToggle = document.getElementById('sourcesToggle');
+            const sourcesContent = document.getElementById('sourcesContent');
+            const sourcesArrow = document.getElementById('sourcesArrow');
+
+            if (sourcesToggle && sourcesContent && sourcesArrow) {
+                sourcesToggle.addEventListener('click', () => {
+                    sourcesContent.classList.toggle('hidden');
+                    
+                    // Toggle arrow animation
+                    if (sourcesContent.classList.contains('hidden')) {
+                        sourcesArrow.style.transform = 'rotate(0deg)';
+                        sourcesArrow.textContent = '▼';
+                    } else {
+                        sourcesArrow.style.transform = 'rotate(180deg)';
+                        sourcesArrow.textContent = '▲';
                     }
                 });
             }

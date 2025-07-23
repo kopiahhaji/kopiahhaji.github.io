@@ -18,7 +18,7 @@ class UstazRadhiIqraChatbox {
         // Secure Gemini AI Configuration - API key moved to server-side proxy
         this.GEMINI_CONFIG = {
             // API_KEY removed for security - now handled by server proxy
-            PROXY_URL: '/api/gemini-proxy', // Cloudflare Pages function endpoint (auto-mapped)
+            PROXY_URL: this.getProxyURL(), // Dynamic URL based on current location
             MAX_TOKENS: 1000,
             TEMPERATURE: 0.7,
             RETRY_ATTEMPTS: 2,
@@ -29,6 +29,26 @@ class UstazRadhiIqraChatbox {
         this.isOpen = false;
         this.messageHistory = [];
         this.init();
+    }
+
+    getProxyURL() {
+        // Get the base URL for the current site
+        const protocol = window.location.protocol;
+        const hostname = window.location.hostname;
+        const port = window.location.port ? `:${window.location.port}` : '';
+        
+        // For local development vs production
+        if (hostname === 'localhost' || hostname === '127.0.0.1') {
+            return `${protocol}//${hostname}${port}/api/gemini-proxy`;
+        }
+        
+        // For GitHub Pages (username.github.io)
+        if (hostname.includes('github.io')) {
+            return `${protocol}//${hostname}/api/gemini-proxy`;
+        }
+        
+        // For Cloudflare Pages or custom domains
+        return `${protocol}//${hostname}/api/gemini-proxy`;
     }
 
     init() {
@@ -79,14 +99,6 @@ class UstazRadhiIqraChatbox {
                         <!-- Welcome message will be inserted here -->
                     </div>
 
-                    <!-- Quick Actions -->
-                    <div class="quick-actions">
-                        <div class="quick-actions-title">Soalan Pantas:</div>
-                        <div id="quickButtons" class="quick-buttons">
-                            <!-- Quick action buttons will be inserted here -->
-                        </div>
-                    </div>
-
                     <!-- Chat Input -->
                     <div class="chat-input-container">
                         <div class="chat-input-wrapper">
@@ -98,6 +110,14 @@ class UstazRadhiIqraChatbox {
                         <div class="chat-help-text">
                             Tekan Enter untuk hantar • Maksimum 300 aksara
                         </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions - Now Outside Chatbox -->
+                <div id="quickActionsExternal" class="quick-actions-external">
+                    <div class="quick-actions-title">💡 Soalan Pantas:</div>
+                    <div id="quickButtons" class="quick-buttons">
+                        <!-- Quick action buttons will be inserted here -->
                     </div>
                 </div>
             </div>
@@ -188,8 +208,8 @@ class UstazRadhiIqraChatbox {
                     position: absolute;
                     bottom: 70px;
                     right: 0;
-                    width: 350px;
-                    height: 500px;
+                    width: 420px;
+                    height: 550px;
                     background: white;
                     border-radius: 20px;
                     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
@@ -321,11 +341,13 @@ class UstazRadhiIqraChatbox {
 
                 .message-content {
                     background: white;
-                    padding: 12px 16px;
+                    padding: 14px 18px;
                     border-radius: 16px;
-                    max-width: 70%;
+                    max-width: 85%;
                     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
                     border: 1px solid #e5e7eb;
+                    word-wrap: break-word;
+                    text-align: left;
                 }
 
                 .message-user .message-content {
@@ -336,8 +358,11 @@ class UstazRadhiIqraChatbox {
 
                 .message-text {
                     font-size: 14px;
-                    line-height: 1.4;
+                    line-height: 1.6;
                     margin: 0;
+                    text-align: left;
+                    direction: ltr;
+                    unicode-bidi: plaintext;
                 }
 
                 .message-time {
@@ -352,33 +377,49 @@ class UstazRadhiIqraChatbox {
                     border-top: 1px solid #e5e7eb;
                 }
 
+                .quick-actions-external {
+                    position: absolute;
+                    bottom: -80px;
+                    right: 0;
+                    left: 0;
+                    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+                    border: 1px solid rgba(5, 150, 105, 0.2);
+                    border-radius: 16px;
+                    padding: 12px 16px;
+                    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+                    display: none;
+                }
+
                 .quick-actions-title {
-                    font-size: 12px;
+                    font-size: 13px;
                     font-weight: bold;
-                    color: #374151;
-                    margin-bottom: 8px;
+                    color: #059669;
+                    margin-bottom: 10px;
+                    text-align: center;
                 }
 
                 .quick-buttons {
                     display: flex;
                     flex-wrap: wrap;
-                    gap: 6px;
+                    gap: 8px;
+                    justify-content: center;
                 }
 
                 .quick-btn {
-                    background: #f3f4f6;
-                    border: 1px solid #d1d5db;
-                    color: #374151;
-                    padding: 6px 12px;
-                    border-radius: 12px;
+                    background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+                    border: none;
+                    color: white;
+                    padding: 8px 14px;
+                    border-radius: 20px;
                     font-size: 11px;
                     cursor: pointer;
-                    transition: all 0.2s ease;
+                    transition: all 0.3s ease;
+                    box-shadow: 0 2px 8px rgba(5, 150, 105, 0.3);
                 }
 
                 .quick-btn:hover {
-                    background: #e5e7eb;
-                    border-color: #9ca3af;
+                    transform: translateY(-2px);
+                    box-shadow: 0 4px 12px rgba(5, 150, 105, 0.4);
                 }
 
                 .chat-input-container {
@@ -589,10 +630,18 @@ class UstazRadhiIqraChatbox {
 
     openChatbox() {
         const chatWindow = document.getElementById('chatWindow');
+        const quickActionsExternal = document.getElementById('quickActionsExternal');
         const notificationDot = document.querySelector('.notification-dot');
         
         chatWindow.style.display = 'flex';
         chatWindow.style.animation = 'slideIn 0.3s ease-out';
+        
+        // Show external quick actions
+        if (quickActionsExternal) {
+            quickActionsExternal.style.display = 'block';
+            quickActionsExternal.style.animation = 'slideIn 0.3s ease-out 0.2s both';
+        }
+        
         this.isOpen = true;
         
         // Hide notification dot
@@ -608,7 +657,17 @@ class UstazRadhiIqraChatbox {
 
     closeChatbox() {
         const chatWindow = document.getElementById('chatWindow');
+        const quickActionsExternal = document.getElementById('quickActionsExternal');
+        
         chatWindow.style.animation = 'slideOut 0.3s ease-in';
+        
+        // Hide external quick actions
+        if (quickActionsExternal) {
+            quickActionsExternal.style.animation = 'slideOut 0.3s ease-in';
+            setTimeout(() => {
+                quickActionsExternal.style.display = 'none';
+            }, 300);
+        }
         
         setTimeout(() => {
             chatWindow.style.display = 'none';
@@ -915,14 +974,20 @@ class UstazRadhiIqraChatbox {
         const prompt = this.buildContextualPrompt(message);
         
         try {
-            console.log('Calling API proxy at:', this.GEMINI_CONFIG.PROXY_URL);
-            console.log('Request payload:', { prompt, temperature: this.GEMINI_CONFIG.TEMPERATURE, maxTokens: this.GEMINI_CONFIG.MAX_TOKENS });
+            console.log('🔍 DEBUG: Calling API proxy at:', this.GEMINI_CONFIG.PROXY_URL);
+            console.log('🔍 DEBUG: Current location:', window.location.href);
+            console.log('🔍 DEBUG: Request payload:', { 
+                prompt: prompt.substring(0, 100) + '...', 
+                temperature: this.GEMINI_CONFIG.TEMPERATURE, 
+                maxTokens: this.GEMINI_CONFIG.MAX_TOKENS 
+            });
             
             // Use secure proxy endpoint instead of direct API call
             const response = await fetch(this.GEMINI_CONFIG.PROXY_URL, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
                 },
                 body: JSON.stringify({
                     prompt: prompt,
@@ -931,36 +996,58 @@ class UstazRadhiIqraChatbox {
                 })
             });
 
-            console.log('Response status:', response.status, response.statusText);
-            console.log('Response headers:', response.headers);
+            console.log('🔍 DEBUG: Response status:', response.status, response.statusText);
+            console.log('🔍 DEBUG: Response headers:', Object.fromEntries(response.headers.entries()));
 
             if (!response.ok) {
                 const errorText = await response.text();
-                console.error('Proxy response not OK:', response.status, response.statusText, errorText);
+                console.error('❌ Proxy response not OK:', response.status, response.statusText, errorText);
+                
+                // More specific error messages
+                if (response.status === 404) {
+                    throw new Error(`API endpoint not found (404). Check if proxy is deployed correctly.`);
+                } else if (response.status === 500) {
+                    throw new Error(`Server error (500). Check API key configuration.`);
+                } else if (response.status === 403) {
+                    throw new Error(`Access forbidden (403). Check CORS settings.`);
+                }
+                
                 throw new Error(`Proxy API failed: ${response.status} - ${errorText}`);
             }
 
             let data;
             try {
                 const responseText = await response.text();
-                console.log('Raw response:', responseText);
+                console.log('🔍 DEBUG: Raw response:', responseText);
+                
+                // Check for null or empty responses
+                if (!responseText || responseText === 'null' || responseText.trim() === '') {
+                    throw new Error('Empty or null response from server');
+                }
+                
                 data = JSON.parse(responseText);
             } catch (jsonError) {
-                console.error('Failed to parse JSON response:', jsonError);
-                throw new Error('Invalid JSON response from proxy');
+                console.error('❌ Failed to parse JSON response:', jsonError);
+                throw new Error(`Invalid JSON response from proxy: ${jsonError.message}`);
             }
             
-            console.log('Parsed response data:', data);
+            console.log('✅ DEBUG: Parsed response data:', data);
             
-            if (data.success && data.response) {
+            if (data && data.success && data.response) {
                 return data.response;
             }
             
-            console.error('API returned error:', data);
-            throw new Error(data.error || 'No valid response from API');
+            console.error('❌ API returned error or invalid structure:', data);
+            throw new Error(data?.error || 'No valid response from API');
             
         } catch (fetchError) {
-            console.error('Fetch error:', fetchError);
+            console.error('❌ Fetch error:', fetchError);
+            
+            // Add more specific error handling
+            if (fetchError.name === 'TypeError' && fetchError.message.includes('Failed to fetch')) {
+                throw new Error('Network error: Could not connect to proxy server. Check if server is running.');
+            }
+            
             throw fetchError;
         }
     }
@@ -996,12 +1083,15 @@ Sila berikan jawapan yang berguna untuk pembelajaran mereka di halaman ${this.co
     }
 
     getFallbackResponse(message) {
+        const currentUrl = this.GEMINI_CONFIG.PROXY_URL;
+        const timestamp = new Date().toLocaleTimeString();
+        
         const responses = [
-            `**🔄 Sedang cuba sambung ke AI...** \n\n**Sementara itu, untuk halaman ${this.config.pageNumber}:**\n\n• Gunakan butang "Soalan Pantas" di bawah untuk panduan\n• Baca perlahan-lahan dan ulang 3-5 kali\n• Fokus pada pembelajaran halaman ini\n\nSaya akan cuba jawab dengan AI sebaik mungkin! 🌟\n\n**Debug Info:** Calling ${this.GEMINI_CONFIG.PROXY_URL}`,
+            `**🔄 AI Connection Issue (${timestamp})** \n\n**Debug Info:**\n• Trying: ${currentUrl}\n• Location: ${window.location.href}\n\n**Sementara itu, untuk halaman ${this.config.pageNumber}:**\n\n• Gunakan butang "Soalan Pantas" di bawah untuk panduan\n• Baca perlahan-lahan dan ulang 3-5 kali\n• Fokus pada pembelajaran halaman ini\n\nSaya akan cuba jawab dengan AI sebaik mungkin! 🌟`,
             
-            `**⚡ Masalah sambungan AI** 🤲\n\n**Tips untuk halaman ${this.config.pageNumber} Iqra ${this.config.iqraModule}:**\n\n• Baca dengan tartil (perlahan dan jelas)\n• Gunakan audio untuk dengar sebutan betul\n• Ulang hingga lancar sebelum sambung\n\nCuba tanya lagi - mungkin AI sudah boleh sambung! 📚`,
+            `**⚡ Network Error (${timestamp})** 🤲\n\n**Troubleshooting:**\n• Proxy URL: ${currentUrl}\n• Status: Connection failed\n\n**Tips untuk halaman ${this.config.pageNumber} Iqra ${this.config.iqraModule}:**\n\n• Baca dengan tartil (perlahan dan jelas)\n• Gunakan audio untuk dengar sebutan betul\n• Ulang hingga lancar sebelum sambung\n\nCuba tanya lagi - mungkin AI sudah boleh sambung! 📚`,
             
-            `**🛠️ AI dalam penyelenggaraan** 🌟\n\n**Untuk pembelajaran berkesan:**\n• Pastikan faham halaman sebelum ini\n• Praktis bacaan ikut contoh\n• Jangan tergesa-gesa ke halaman seterusnya\n\nTeruskan usaha! Setiap huruf yang dipelajari adalah pahala! 💚`
+            `**🛠️ Server Issue (${timestamp})** 🌟\n\n**System Info:**\n• Endpoint: ${currentUrl}\n• Page: ${window.location.pathname}\n\n**Untuk pembelajaran berkesan:**\n• Pastikan faham halaman sebelum ini\n• Praktis bacaan ikut contoh\n• Jangan tergesa-gesa ke halaman seterusnya\n\nTeruskan usaha! Setiap huruf yang dipelajari adalah pahala! 💚`
         ];
         
         return responses[Math.floor(Math.random() * responses.length)];
@@ -1335,6 +1425,10 @@ Gunakan butang di bawah untuk soalan pantas, atau taip soalan anda! 🤲`;
 
 // Auto-initialize when script loads
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('🚀 Ustaz Radhi Chatbox: DOM loaded, initializing...');
+    console.log('🔍 Current URL:', window.location.href);
+    console.log('🔍 Current pathname:', window.location.pathname);
+    
     // Extract context from page URL and content
     const urlParts = window.location.pathname.split('/');
     const pageFile = urlParts[urlParts.length - 1];
@@ -1348,12 +1442,14 @@ document.addEventListener('DOMContentLoaded', function() {
     const iqraMatch = window.location.pathname.match(/iqra-(\d+)/);
     if (iqraMatch) {
         iqraModule = parseInt(iqraMatch[1]);
+        console.log('📚 Detected Iqra module from URL:', iqraModule);
     }
     
     // Try to get page number from filename
     const pageMatch = pageFile.match(/page-(\d+)/);
     if (pageMatch) {
         pageNumber = parseInt(pageMatch[1]);
+        console.log('📄 Detected page from filename:', pageNumber);
     }
     
     // Set total pages based on module
@@ -1371,15 +1467,41 @@ document.addEventListener('DOMContentLoaded', function() {
                   document.title.includes('Tajwid') ? 'Basic Tajwid Rules' :
                   'Al-Quran Reading';
     
-    // Initialize chatbox
-    const chatbox = new UstazRadhiIqraChatbox({
-        iqraModule: iqraModule,
-        pageNumber: pageNumber,
-        totalPages: totalPages,
-        focus: focus,
-        position: 'top-right',
-        autoOpen: false
-    });
+    console.log('🎯 Final configuration:', { iqraModule, pageNumber, totalPages, focus });
     
-    console.log(`🤖 Ustaz Radhi AI initialized for Iqra ${iqraModule}, Page ${pageNumber}/${totalPages}`);
+    // Initialize chatbox
+    try {
+        const chatbox = new UstazRadhiIqraChatbox({
+            iqraModule: iqraModule,
+            pageNumber: pageNumber,
+            totalPages: totalPages,
+            focus: focus,
+            position: 'top-right',
+            autoOpen: false
+        });
+        
+        console.log(`✅ Ustaz Radhi AI initialized successfully for Iqra ${iqraModule}, Page ${pageNumber}/${totalPages}`);
+        console.log('🔗 Proxy URL configured as:', chatbox.GEMINI_CONFIG.PROXY_URL);
+        
+        // Make the chatbox globally accessible for debugging
+        window.ustazChatbox = chatbox;
+        
+        // Add a test function for debugging
+        window.testUstazAPI = async function(testMessage = "Hello, test message") {
+            console.log('🧪 Testing Ustaz API connection...');
+            try {
+                const response = await chatbox.callGeminiAPI(testMessage);
+                console.log('✅ API Test Success:', response);
+                return response;
+            } catch (error) {
+                console.error('❌ API Test Failed:', error);
+                return error.message;
+            }
+        };
+        
+        console.log('🧪 Use window.testUstazAPI() in console to test the API connection');
+        
+    } catch (initError) {
+        console.error('❌ Failed to initialize Ustaz Radhi chatbox:', initError);
+    }
 });

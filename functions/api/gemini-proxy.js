@@ -84,7 +84,8 @@ export async function onRequestPost(context) {
             console.error('No response text from Gemini:', data);
             return new Response(JSON.stringify({ 
                 success: false, 
-                error: 'No response from AI' 
+                error: 'No response from AI',
+                debug: 'Response data structure was unexpected'
             }), {
                 status: 500,
                 headers: { 
@@ -96,7 +97,7 @@ export async function onRequestPost(context) {
         
         return new Response(JSON.stringify({
             success: true,
-            response: responseText
+            response: responseText || 'AI response was empty'
         }), {
             headers: { 
                 'Content-Type': 'application/json',
@@ -123,9 +124,10 @@ export async function onRequestPost(context) {
 
 // Handle CORS preflight requests
 export async function onRequestOptions() {
-    return new Response('', {
+    return new Response(JSON.stringify({}), {
         status: 200,
         headers: {
+            'Content-Type': 'application/json',
             'Access-Control-Allow-Origin': '*',
             'Access-Control-Allow-Methods': 'POST, OPTIONS',
             'Access-Control-Allow-Headers': 'Content-Type',

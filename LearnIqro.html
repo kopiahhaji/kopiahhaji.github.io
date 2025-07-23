@@ -50,6 +50,33 @@
             color: white !important;
         }
         
+        /* Improved Text Alignment for Malay Content */
+        .text-malay {
+            text-align: left;
+            direction: ltr;
+            unicode-bidi: plaintext;
+        }
+        
+        /* Override center alignment for better readability */
+        p.text-gray-300,
+        .text-sm.text-gray-400,
+        .module-description {
+            text-align: left !important;
+        }
+        
+        /* Mobile text alignment improvements */
+        @media (max-width: 768px) {
+            .text-center {
+                text-align: left !important;
+            }
+            
+            /* Keep only headers centered */
+            h1, h2, h3, .keep-centered {
+                text-align: center !important;
+            }
+        }
+        }
+        
         .iqra-module-btn.active div {
             background: rgba(5, 150, 105, 0.3) !important;
             border-color: rgba(5, 150, 105, 0.5) !important;
@@ -222,7 +249,7 @@
                     <div id="beginnerContent" class="quran-level-content">
                         <div class="bg-white/5 rounded-xl p-6 mb-6">
                             <h3 class="text-emerald-300 font-semibold text-xl mb-4 text-center">📚 Iqra Learning Modules</h3>
-                            <p class="text-gray-300 text-center mb-6">Belajar membaca Al-Quran dengan kaedah Iqra yang berperingkat-peringkat</p>
+                            <p class="text-gray-300 text-malay mb-6">Belajar membaca Al-Quran dengan kaedah Iqra yang berperingkat-peringkat</p>
                             
                             <!-- Iqra Module Selector -->
                             <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
