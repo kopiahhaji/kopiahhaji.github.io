@@ -4,7 +4,6 @@
 export async function onRequestPost(context) {
     const { request, env } = context;
     const url = new URL(request.url);
-    const pathname = url.pathname;
 
     // CORS headers for all responses
     const corsHeaders = {
@@ -15,23 +14,21 @@ export async function onRequestPost(context) {
     };
 
     try {
-        // Handle different endpoints
-        if (pathname.endsWith('/conversation/save')) {
+        // Only handle save endpoint for POST requests
+        if (url.pathname.endsWith('/conversation/save')) {
             return await handleSaveConversation(request, env, corsHeaders);
-        } else if (pathname.endsWith('/conversation/load')) {
-            return await handleLoadConversation(request, env, corsHeaders);
         } else {
             return new Response(JSON.stringify({
                 success: false,
                 error: "Endpoint not found",
-                message: "Sila gunakan /api/conversation/save atau /api/conversation/load"
+                message: "POST method hanya untuk /api/conversation/save"
             }), {
                 status: 404,
                 headers: corsHeaders
             });
         }
     } catch (error) {
-        console.error('Conversation API Error:', error);
+        console.error('Conversation Save API Error:', error);
         return new Response(JSON.stringify({
             success: false,
             error: 'Internal server error',
@@ -55,20 +52,21 @@ export async function onRequestGet(context) {
     };
 
     try {
+        // Only handle load endpoint for GET requests
         if (url.pathname.endsWith('/conversation/load')) {
             return await handleLoadConversation(request, env, corsHeaders);
         } else {
             return new Response(JSON.stringify({
                 success: false,
                 error: "Endpoint not found",
-                message: "Sila gunakan /api/conversation/load"
+                message: "GET method hanya untuk /api/conversation/load"
             }), {
                 status: 404,
                 headers: corsHeaders
             });
         }
     } catch (error) {
-        console.error('Conversation API Error:', error);
+        console.error('Conversation Load API Error:', error);
         return new Response(JSON.stringify({
             success: false,
             error: 'Internal server error',
