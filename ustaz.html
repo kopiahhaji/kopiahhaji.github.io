@@ -484,7 +484,8 @@
             constructor() {
                 // Cloudflare KV Integration
                 this.userId = this.generateUserId();
-                this.workerEndpoint = 'https://ustaz-radhi-memory.rodhirahman30.workers.dev';
+                // KV Worker configuration - using Cloudflare Pages API
+                this.workerEndpoint = 'https://digital.zikirnurani.com'; // Cloudflare Pages domain
                 
                 // Conversation memory structure
                 this.conversationMemory = {
@@ -533,11 +534,11 @@
                 try {
                     console.log('🔄 Initializing conversation system...');
                     
-                    // Load existing conversation from Cloudflare KV
+                    // Load existing conversation from Cloudflare KV (with localStorage fallback)
                     const loaded = await this.loadConversationFromKV();
                     
                     if (loaded) {
-                        console.log('✅ Conversation loaded from Cloudflare KV');
+                        console.log('✅ Conversation loaded from storage');
                         // Show welcome back message if returning user
                         if (this.messageHistory.length > 0) {
                             setTimeout(() => {
@@ -559,9 +560,56 @@
                     });
 
                 } catch (error) {
-                    console.error('❌ Failed to initialize conversation system:', error);
+                    console.log('ℹ️ Conversation system initialized with fallback mode:', error.message);
                     // Fallback to existing local storage method
                     this.loadConversationMemory();
+                }
+            }
+
+            loadConversationFromLocalStorage() {
+                try {
+                    console.log('📥 Loading conversation from localStorage for user:', this.userId);
+                    
+                    // Load from localStorage backup
+                    const backupData = localStorage.getItem(`ustaz_conversation_${this.userId}`);
+                    if (backupData) {
+                        const data = JSON.parse(backupData);
+                        this.currentTopic = data.currentTopic || null;
+                        this.messageHistory = data.messageHistory || [];
+                        this.userProfile = data.userProfile || this.userProfile;
+                        this.conversationMemory = data;
+                        
+                        console.log('✅ Conversation loaded from localStorage - Messages:', this.messageHistory.length);
+                        return true;
+                    } else {
+                        console.log('🆕 No existing conversation found in localStorage');
+                        return false;
+                    }
+                    
+                } catch (error) {
+                    console.log('ℹ️ localStorage load failed:', error.message);
+                    return false;
+                }
+            }
+
+            saveConversationToLocalStorage() {
+                try {
+                    const memory = {
+                        currentTopic: this.currentTopic,
+                        messageHistory: this.messageHistory.slice(-20), // Keep last 20 messages
+                        userProfile: this.userProfile,
+                        sessionStart: this.conversationMemory.sessionStart || Date.now(),
+                        totalInteractions: this.messageHistory.length,
+                        lastActivity: Date.now()
+                    };
+
+                    console.log('💾 Saving conversation to localStorage...', memory);
+                    
+                    localStorage.setItem(`ustaz_conversation_${this.userId}`, JSON.stringify(memory));
+                    console.log('✅ Conversation saved to localStorage successfully');
+                    
+                } catch (error) {
+                    console.log('ℹ️ localStorage save failed:', error.message);
                 }
             }
 
@@ -587,19 +635,22 @@
                             this.userProfile = data.conversation.userProfile || this.userProfile;
                             this.conversationMemory = data.conversation;
                             
-                            console.log('✅ Conversation loaded - Messages:', this.messageHistory.length);
+                            console.log('✅ Conversation loaded from KV - Messages:', this.messageHistory.length);
                             return true;
+                        } else if (data.fallback) {
+                            console.log('⚠️ KV not configured, falling back to localStorage');
+                            return this.loadConversationFromLocalStorage();
                         } else {
-                            console.log('🆕 No existing conversation found');
+                            console.log('🆕 No existing conversation found in KV');
                             return false;
                         }
                     } else {
-                        console.error('❌ KV load failed:', response.status, response.statusText);
-                        return false;
+                        console.log('⚠️ KV load failed, falling back to localStorage:', response.status);
+                        return this.loadConversationFromLocalStorage();
                     }
                 } catch (error) {
-                    console.error('❌ KV load error:', error);
-                    return false;
+                    console.log('⚠️ KV load error, falling back to localStorage:', error.message);
+                    return this.loadConversationFromLocalStorage();
                 }
             }
 
@@ -631,25 +682,14 @@
                         const result = await response.json();
                         console.log('✅ Saved to Cloudflare KV:', result.message);
                     } else {
-                        const errorData = await response.json();
-                        console.error('❌ KV save failed:', errorData);
-                        throw new Error('KV save failed');
+                        console.log('⚠️ KV save failed, using localStorage backup:', response.status);
                     }
                 } catch (error) {
-                    console.error('❌ KV save error:', error);
+                    console.log('⚠️ KV save error, using localStorage backup:', error.message);
                 }
                 
                 // Always save to localStorage as backup
-                const backupMemory = {
-                    currentTopic: this.currentTopic,
-                    messageHistory: this.messageHistory.slice(-20),
-                    userProfile: this.userProfile,
-                    sessionStart: this.conversationMemory.sessionStart || Date.now(),
-                    totalInteractions: this.messageHistory.length,
-                    lastActivity: Date.now()
-                };
-                localStorage.setItem('ustazRadhiMemory', JSON.stringify(backupMemory));
-                console.log('💾 Backup saved to localStorage');
+                this.saveConversationToLocalStorage();
             }
 
             showWelcomeBackMessage() {
@@ -800,7 +840,7 @@ Sila berasa selesa untuk bertanya apa sahaja! Mari kita teruskan pembelajaran ya
                 this.showTypingIndicator();
 
                 try {
-                    // Simulate API call to Ustaz Radhi AI
+                    // Call Ustaz Radhi AI
                     const response = await this.callUstazRadhiAPI(message);
                     
                     // Hide typing indicator
@@ -813,8 +853,12 @@ Sila berasa selesa untuk bertanya apa sahaja! Mari kita teruskan pembelajaran ya
                     this.updateConversationMemory(response, 'ustaz');
                     
                 } catch (error) {
+                    console.error('Send message error:', error);
                     this.hideTypingIndicator();
                     this.addMessage('Maaf, ada masalah teknikal. Sila cuba lagi sebentar lagi.', 'ustaz');
+                } finally {
+                    // Re-enable send button
+                    this.sendButton.disabled = false;
                 }
             }
 
@@ -906,7 +950,7 @@ Sila berasa selesa untuk bertanya apa sahaja! Mari kita teruskan pembelajaran ya
                 this.conversationMemory.userProfile = this.userProfile;
                 this.conversationMemory.totalInteractions = this.messageHistory.length;
 
-                // Auto-save to KV (will be called by interval, but also save immediately for important updates)
+                // Auto-save to KV (immediate save for important updates)
                 if (sender === 'user') {
                     setTimeout(() => this.saveConversationToKV(), 1000);
                 }
