@@ -376,9 +376,18 @@
                         type="text"
                         id="messageInput"
                         placeholder="Be respectful, Jazakallahu khairan."
-                        class="w-full bg-white/10 border border-white/20 rounded-lg pl-4 pr-20 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-transparent"
+                        class="w-full bg-white/10 border border-white/20 rounded-lg pl-4 pr-32 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-transparent"
                         maxlength="300"
                     >
+                    <!-- Helper Button -->
+                    <button
+                        id="helpToggle"
+                        class="absolute right-20 top-1/2 transform -translate-y-1/2 bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 px-2 py-2 rounded-md text-xs font-medium transition-all duration-300 hover:scale-105 border border-blue-400/30"
+                        title="Quick Questions"
+                    >
+                        💡
+                    </button>
+                    <!-- Send Button -->
                     <button
                         id="sendButton"
                         class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-3 py-2 rounded-md text-sm font-semibold transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
@@ -386,6 +395,106 @@
                         Hantar
                     </button>
                 </div>
+
+                <!-- Helper Dropdown positioned below input -->
+                <div id="helpDropdown" class="hidden mt-2 relative">
+                    <div class="glass-card rounded-xl p-4 border border-white/20 shadow-2xl backdrop-blur-lg">
+                        <!-- Quick Helper Tabs -->
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <button class="help-tab active px-3 py-1 rounded-lg text-xs font-medium transition-all duration-200" data-category="sample">
+                                💡 Sample
+                            </button>
+                            <button class="help-tab px-3 py-1 rounded-lg text-xs font-medium transition-all duration-200" data-category="greetings">
+                                👋 Greetings
+                            </button>
+                            <button class="help-tab px-3 py-1 rounded-lg text-xs font-medium transition-all duration-200" data-category="popular">
+                                🔥 Popular
+                            </button>
+                            <button class="help-tab px-3 py-1 rounded-lg text-xs font-medium transition-all duration-200" data-category="topics">
+                                📚 Topics
+                            </button>
+                        </div>
+
+                        <!-- Sample Questions Content -->
+                        <div id="help-sample" class="help-content">
+                            <div class="space-y-2">
+                                <button class="sample-question w-full text-left p-2 rounded-lg bg-blue-500/10 hover:bg-blue-500/20 transition-all duration-200 text-xs text-gray-300 border border-blue-500/30 hover:border-blue-400/50">
+                                    "Bagaimana cara solat dengan sempurna menurut mazhab Syafie?"
+                                </button>
+                                <button class="sample-question w-full text-left p-2 rounded-lg bg-blue-500/10 hover:bg-blue-500/20 transition-all duration-200 text-xs text-gray-300 border border-blue-500/30 hover:border-blue-400/50">
+                                    "Apakah hukum zakat fitrah dan berapa kadarnya?"
+                                </button>
+                                <button class="sample-question w-full text-left p-2 rounded-lg bg-blue-500/10 hover:bg-blue-500/20 transition-all duration-200 text-xs text-gray-300 border border-blue-500/30 hover:border-blue-400/50">
+                                    "Boleh terangkan tentang adab ketika membaca Al-Quran?"
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Greetings Content -->
+                        <div id="help-greetings" class="help-content hidden">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                                <button class="quick-greeting w-full text-left p-2 rounded-lg bg-green-500/10 hover:bg-green-500/20 transition-all duration-200 text-xs text-gray-300 border border-green-500/30 hover:border-green-400/50">
+                                    🕌 Assalamualaikum
+                                </button>
+                                <button class="quick-greeting w-full text-left p-2 rounded-lg bg-green-500/10 hover:bg-green-500/20 transition-all duration-200 text-xs text-gray-300 border border-green-500/30 hover:border-green-400/50">
+                                    😊 Selamat pagi Ustaz
+                                </button>
+                                <button class="quick-greeting w-full text-left p-2 rounded-lg bg-green-500/10 hover:bg-green-500/20 transition-all duration-200 text-xs text-gray-300 border border-green-500/30 hover:border-green-400/50">
+                                    🌙 Selamat petang Ustaz
+                                </button>
+                                <button class="quick-greeting w-full text-left p-2 rounded-lg bg-green-500/10 hover:bg-green-500/20 transition-all duration-200 text-xs text-gray-300 border border-green-500/30 hover:border-green-400/50">
+                                    🤝 Apa khabar Ustaz?
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Popular Questions Content -->
+                        <div id="help-popular" class="help-content hidden">
+                            <div class="space-y-2">
+                                <button class="popular-question w-full text-left p-2 rounded-lg bg-purple-500/10 hover:bg-purple-500/20 transition-all duration-200 text-xs text-gray-300 border border-purple-500/30 hover:border-purple-400/50">
+                                    📿 Cara bertaubat yang betul
+                                </button>
+                                <button class="popular-question w-full text-left p-2 rounded-lg bg-purple-500/10 hover:bg-purple-500/20 transition-all duration-200 text-xs text-gray-300 border border-purple-500/30 hover:border-purple-400/50">
+                                    💰 Hukum simpan wang dalam bank
+                                </button>
+                                <button class="popular-question w-full text-left p-2 rounded-lg bg-purple-500/10 hover:bg-purple-500/20 transition-all duration-200 text-xs text-gray-300 border border-purple-500/30 hover:border-purple-400/50">
+                                    🤲 Doa selepas solat yang mustajab
+                                </button>
+                                <button class="popular-question w-full text-left p-2 rounded-lg bg-purple-500/10 hover:bg-purple-500/20 transition-all duration-200 text-xs text-gray-300 border border-purple-500/30 hover:border-purple-400/50">
+                                    👥 Adab bergaul dalam Islam
+                                </button>
+                                <button class="popular-question w-full text-left p-2 rounded-lg bg-purple-500/10 hover:bg-purple-500/20 transition-all duration-200 text-xs text-gray-300 border border-purple-500/30 hover:border-purple-400/50">
+                                    🍽️ Hukum makanan halal dan haram
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Topics Content -->
+                        <div id="help-topics" class="help-content hidden">
+                            <div class="grid grid-cols-2 md:grid-cols-3 gap-2">
+                                <button class="topic-button w-full text-center p-2 rounded-lg bg-orange-500/10 hover:bg-orange-500/20 transition-all duration-200 text-xs text-gray-300 border border-orange-500/30 hover:border-orange-400/50">
+                                    🕌 Solat
+                                </button>
+                                <button class="topic-button w-full text-center p-2 rounded-lg bg-orange-500/10 hover:bg-orange-500/20 transition-all duration-200 text-xs text-gray-300 border border-orange-500/30 hover:border-orange-400/50">
+                                    💰 Zakat
+                                </button>
+                                <button class="topic-button w-full text-center p-2 rounded-lg bg-orange-500/10 hover:bg-orange-500/20 transition-all duration-200 text-xs text-gray-300 border border-orange-500/30 hover:border-orange-400/50">
+                                    🌙 Puasa
+                                </button>
+                                <button class="topic-button w-full text-center p-2 rounded-lg bg-orange-500/10 hover:bg-orange-500/20 transition-all duration-200 text-xs text-gray-300 border border-orange-500/30 hover:border-orange-400/50">
+                                    🕋 Haji
+                                </button>
+                                <button class="topic-button w-full text-center p-2 rounded-lg bg-orange-500/10 hover:bg-orange-500/20 transition-all duration-200 text-xs text-gray-300 border border-orange-500/30 hover:border-orange-400/50">
+                                    📖 Al-Quran
+                                </button>
+                                <button class="topic-button w-full text-center p-2 rounded-lg bg-orange-500/10 hover:bg-orange-500/20 transition-all duration-200 text-xs text-gray-300 border border-orange-500/30 hover:border-orange-400/50">
+                                    🤲 Doa
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="mt-2 text-xs text-gray-500">
                     Tekan Enter untuk hantar. Maksimum 200 aksara.
                 </div>
@@ -1962,7 +2071,7 @@ Barakallahu feek atas soalan tentang zakat. Zakat adalah **pembersihan harta** d
 • **Wang**: Setara dengan nilai 85 gram emas
 
 **📖 Dalil Al-Quran:**
-"خُذْ مِنْ أَمْوَالِهِمْ صَدَقَةً تُطَهِّرُهُمْ وَتُزَكِّيهِم بِهَا"
+"خُذْ مِنْ أَمْوَالِهِمْ صَدَقَةً تُطَهِّرُهُ��ْ وَتُزَكِّيهِم بِهَا"
 *"Ambillah zakat dari harta mereka untuk membersihkan dan mensucikan mereka"* (At-Taubah: 103)
 
 **🌟 8 Asnaf Penerima Zakat:**
@@ -1999,7 +2108,7 @@ Subhanallah! Soalan yang sangat mulia tentang **Kalamullah** - firman Allah yang
 *"Dan bacalah Al-Quran dengan tartil"* (Al-Muzzammil: 4)
 
 **• Dengan Tadabbur:**
-"كِتَابٌ أَنزَلْنَاهُ إِلَيْكَ مُبَارَكٌ لِّيَدَّبَّرُوا آيَاتِهِ"
+"كِتَابٌ أَنزَلْنَاهُ إِل��يْكَ مُبَارَكٌ لِّيَدَّبَّرُوا آيَاتِهِ"
 *"Kitab yang Kami turunkan kepadamu penuh berkah, supaya mereka menghayati ayat-ayatNya"* (Saad: 29)
 
 **🌟 Manfaat & Keutamaan:**
@@ -2081,7 +2190,7 @@ Masya Allah! Soalan tentang **rukun Islam yang kelima** - ibadah yang sangat mul
 *"Ya Tuhan kami, berikanlah kami kebaikan di dunia dan kebaikan di akhirat, dan lindungilah kami dari azab neraka"*
 
 **Talbiyah:**
-"لَبَّيْكَ اللَّهُمَّ لَبَّيْكَ، لَبَّيْكَ لَا شَرِيكَ لَكَ لَبَّيْكَ"
+"لَبَّيْكَ اللَّهُمَّ لَبَّيْكَ، لَبَّيْكَ لَا شَرِيكَ لَكَ ل��بَّيْكَ"
 *"Labbaika Allahumma labbaik, labbaika la syarika laka labbaik"*
 
 **🌟 Persiapan Penting:**
@@ -2150,7 +2259,7 @@ Subhanallah! Soalan yang sangat baik tentang **doa dan zikir** - ibadah yang pal
 • **Perlindungan** dari syaitan dan bala
 • **Pembersihan dosa** dan peningkatan darjat
 
-**💝 Tip Istimewa:**
+**���� Tip Istimewa:**
 Zikir yang paling ringan tapi sangat besar pahalanya: "لَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللَّهِ" (La hawla wa la quwwata illa billah)
 
 Wallahu a'lam bissawab. Semoga Allah makbulkan doa kita semua! 🌟✨`
