@@ -838,14 +838,16 @@ Sila berasa selesa untuk bertanya apa sahaja! Mari kita teruskan pembelajaran ya
             initializeHelpDropdown() {
                 const helpToggle = document.getElementById('helpToggle');
                 const helpDropdown = document.getElementById('helpDropdown');
-                const helpArrow = document.getElementById('helpArrow');
                 const helpTabs = document.querySelectorAll('.help-tab');
                 const helpContents = document.querySelectorAll('.help-content');
 
+                if (!helpToggle || !helpDropdown) return;
+
                 // Toggle dropdown
-                helpToggle.addEventListener('click', () => {
+                helpToggle.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
                     helpDropdown.classList.toggle('hidden');
-                    helpArrow.style.transform = helpDropdown.classList.contains('hidden') ? 'rotate(0deg)' : 'rotate(180deg)';
                 });
 
                 // Tab switching
@@ -872,7 +874,6 @@ Sila berasa selesa untuk bertanya apa sahaja! Mari kita teruskan pembelajaran ya
                 document.addEventListener('click', (e) => {
                     if (!helpToggle.contains(e.target) && !helpDropdown.contains(e.target)) {
                         helpDropdown.classList.add('hidden');
-                        helpArrow.style.transform = 'rotate(0deg)';
                     }
                 });
 
@@ -883,7 +884,6 @@ Sila berasa selesa untuk bertanya apa sahaja! Mari kita teruskan pembelajaran ya
                         e.target.classList.contains('popular-question') ||
                         e.target.classList.contains('topic-button')) {
                         helpDropdown.classList.add('hidden');
-                        helpArrow.style.transform = 'rotate(0deg)';
                     }
                 });
             }
@@ -1014,7 +1014,7 @@ Sila berasa selesa untuk bertanya apa sahaja! Mari kita teruskan pembelajaran ya
                 } else {
                     messageDiv.innerHTML = `
                         <div class="w-8 h-8 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center flex-shrink-0">
-                            <span class="text-white text-sm">🧠</span>
+                            <span class="text-white text-sm">��</span>
                         </div>
                         <div class="chat-bubble-ustaz rounded-lg p-4 max-w-2xl">
                             <div class="text-sm text-green-300 font-semibold mb-1">Ustaz Radhi</div>
@@ -1790,7 +1790,7 @@ Masya Allah! Soalan yang sangat mulia - **bertaubat adalah pintu rahmat** Allah 
 
 **🤲 Doa Taubat:**
 \`\`\`
-اللَّهُمَّ أَنْتَ رَبِّي لاَ إِلَهَ إِلاَّ أَنْتَ خَلَقْتَنِي وَأَنَا عَبْدُكَ وَأَنَا عَلَى عَهْدِكَ وَوَعْدِكَ مَا اسْتَطَعْتُ أَعُوذُ بِكَ مِنْ شَرِّ مَا صَنَعْتُ أَبُوءُ لَكَ بِنِعْمَتِكَ عَلَيَّ وَأَبُوءُ بِذَنْبِي فَاغْفِرْ لِي فَإِنَّهُ لاَ يَغْفِرُ الذُّنُوبَ إِلاَّ أَنْتَ
+اللَّهُمَّ أَنْتَ رَبِّي لاَ إِلَهَ إِلاَّ أَنْتَ خَلَقْتَنِي وَأَنَا عَبْدُكَ وَأَنَا عَلَى عَهْدِكَ وَوَعْدِكَ مَا اسْتَطَعْتُ أَعُوذُ بِكَ مِنْ شَرِّ مَا صَنَعْتُ أَبُوءُ لَكَ بِ��ِعْمَتِكَ عَلَيَّ وَأَبُوءُ بِذَنْبِي فَاغْفِرْ لِي فَإِنَّهُ لاَ يَغْفِرُ الذُّنُوبَ إِلاَّ أَنْتَ
 \`\`\`
 
 **📖 Dalil Al-Quran:**
@@ -2071,7 +2071,7 @@ Barakallahu feek atas soalan tentang zakat. Zakat adalah **pembersihan harta** d
 • **Wang**: Setara dengan nilai 85 gram emas
 
 **📖 Dalil Al-Quran:**
-"خُذْ مِنْ أَمْوَالِهِمْ صَدَقَةً تُطَهِّرُهُ��ْ وَتُزَكِّيهِم بِهَا"
+"خُذْ مِنْ أَمْوَالِهِمْ صَدَقَةً تُطَهِّرُهُمْ وَتُزَكِّيهِم بِهَا"
 *"Ambillah zakat dari harta mereka untuk membersihkan dan mensucikan mereka"* (At-Taubah: 103)
 
 **🌟 8 Asnaf Penerima Zakat:**
@@ -2108,7 +2108,7 @@ Subhanallah! Soalan yang sangat mulia tentang **Kalamullah** - firman Allah yang
 *"Dan bacalah Al-Quran dengan tartil"* (Al-Muzzammil: 4)
 
 **• Dengan Tadabbur:**
-"كِتَابٌ أَنزَلْنَاهُ إِل��يْكَ مُبَارَكٌ لِّيَدَّبَّرُوا آيَاتِهِ"
+"كِتَابٌ أَنزَلْنَاهُ إِلَيْكَ مُبَارَكٌ لِّيَدَّبَّرُوا آيَاتِهِ"
 *"Kitab yang Kami turunkan kepadamu penuh berkah, supaya mereka menghayati ayat-ayatNya"* (Saad: 29)
 
 **🌟 Manfaat & Keutamaan:**
@@ -2190,7 +2190,7 @@ Masya Allah! Soalan tentang **rukun Islam yang kelima** - ibadah yang sangat mul
 *"Ya Tuhan kami, berikanlah kami kebaikan di dunia dan kebaikan di akhirat, dan lindungilah kami dari azab neraka"*
 
 **Talbiyah:**
-"لَبَّيْكَ اللَّهُمَّ لَبَّيْكَ، لَبَّيْكَ لَا شَرِيكَ لَكَ ل��بَّيْكَ"
+"لَبَّيْكَ اللَّهُمَّ لَبَّيْكَ، لَبَّيْكَ لَا شَرِ��كَ لَكَ لَبَّيْكَ"
 *"Labbaika Allahumma labbaik, labbaika la syarika laka labbaik"*
 
 **🌟 Persiapan Penting:**
@@ -2259,7 +2259,7 @@ Subhanallah! Soalan yang sangat baik tentang **doa dan zikir** - ibadah yang pal
 • **Perlindungan** dari syaitan dan bala
 • **Pembersihan dosa** dan peningkatan darjat
 
-**���� Tip Istimewa:**
+**💝 Tip Istimewa:**
 Zikir yang paling ringan tapi sangat besar pahalanya: "لَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللَّهِ" (La hawla wa la quwwata illa billah)
 
 Wallahu a'lam bissawab. Semoga Allah makbulkan doa kita semua! 🌟✨`
